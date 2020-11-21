@@ -11,10 +11,22 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
+#include <array>
 
 //==============================================================================
 /**
 */
+template<typename T>
+struct Fifo
+{
+private:
+    static constexpr int Capacity = 5;
+    std::array<T, Capacity> buffer;
+};
+
+//==============================================================================
+
+
 class Pfmcpp_project10AudioProcessor  : public AudioProcessor
 {
 public:
