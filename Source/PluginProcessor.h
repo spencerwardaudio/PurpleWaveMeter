@@ -22,6 +22,7 @@ struct Fifo
 private:
     static constexpr int Capacity = 5;
     std::array<T, Capacity> buffer;
+    AbstractFifo fifo{ Capacity };
 };
 
 //==============================================================================
@@ -66,6 +67,8 @@ public:
     //==============================================================================
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
+    
+//    Fifo fifo;
 
 private:
     //==============================================================================
