@@ -13,10 +13,11 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PluginProcessor.h"
 
+
 //==============================================================================
 /**
 */
-class Pfmcpp_project10AudioProcessorEditor  : public AudioProcessorEditor
+class Pfmcpp_project10AudioProcessorEditor  : public AudioProcessorEditor, public Timer
 {
 public:
     Pfmcpp_project10AudioProcessorEditor (Pfmcpp_project10AudioProcessor&);
@@ -25,6 +26,7 @@ public:
     //==============================================================================
     void paint (Graphics&) override;
     void resized() override;
+    void timerCallback() override;
 
 private:
     // This reference is provided as a quick way for your editor to
