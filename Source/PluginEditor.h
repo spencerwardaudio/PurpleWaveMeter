@@ -29,9 +29,9 @@ public:
     void timerCallback() override;
 
 private:
-    // This reference is provided as a quick way for your editor to
-    // access the processor object that created it.
+
     Pfmcpp_project10AudioProcessor& processor;
+    AudioBuffer<float> bufferEditor;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Pfmcpp_project10AudioProcessorEditor)
 };

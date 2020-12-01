@@ -10,15 +10,6 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
-void VariableSizedBuffer::clone(const AudioBuffer<float>& other)
-{
-    clear(other);
-    buffer.copyFrom(0, 0, other, 0, 0, other.getNumSamples());
-    
-    numSamples = other.getNumSamples();
-}
-
-
 //==============================================================================
 Pfmcpp_project10AudioProcessor::Pfmcpp_project10AudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations

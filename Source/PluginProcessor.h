@@ -11,33 +11,6 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include <array>
-
-struct VariableSizedBuffer
-{
-    void prepare(int size)
-    {
-        buffer.setSize(1, size);
-        buffer.clear();
-        prepared = true;
-    }
-    
-    void clone(const AudioBuffer<float>& other);
-    AudioBuffer<float>& getBuffer() { return buffer; }
-    size_t getNumSamples() const { return numSamples; }
-private:
-    AudioBuffer<float> buffer;
-    size_t numSamples { 0 };
-    bool prepared = false;
-    
-    template<typename BufferType>
-    void clear(const BufferType& other)
-    {
-        jassert(prepared);
-        jassert(other.getNumSamples() <= buffer.getNumSamples() );
-        buffer.clear();
-    }
-};
 
 template<typename T>
 struct Fifo
@@ -46,8 +19,6 @@ struct Fifo
     {
         //initialize all Fifo buffers with Max size of sample block
         DBG("numSamples: " << numSamples);
-        for(auto& buffer : buffers )
-            buffer.prepare(numSamples);
     }
     
     bool push( const T& t)
@@ -55,10 +26,10 @@ struct Fifo
         auto write = fifo.write(1);
         if( write.blockSize1 >= 1 )
         {
-            auto& buffer = buffers[write.startIndex1];
-            buffer.clone(t);
+            buffer[write.startIndex1] = t;
             return true;
         }
+        DBG("push");
         return false;
     }
     
@@ -67,16 +38,17 @@ struct Fifo
         auto read = fifo.read(1);
         if( read.blockSize1 >= 1 )
         {
-            auto& buffer = buffers[read.startIndex1];
-            t.clone(buffer);
+            t = buffer[read.startIndex1];
             return true;
         }
+        DBG("pull");
         return false;
     }
     
+    
 private:
-    static constexpr int Capacity = 5;
-    std::array<VariableSizedBuffer, Capacity> buffers;
+    static constexpr int Capacity = 2;
+    std::array<AudioBuffer<float>, Capacity> buffer;
     AbstractFifo fifo{ Capacity };
 };
 
@@ -123,7 +95,7 @@ public:
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
     
-    Fifo<float> fifo;
+    Fifo<AudioBuffer<float>> fifo;
     
 private:
     
