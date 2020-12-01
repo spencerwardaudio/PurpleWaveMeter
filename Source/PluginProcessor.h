@@ -19,6 +19,17 @@ struct Fifo
     {
         //initialize all Fifo buffers with Max size of sample block
         DBG("numSamples: " << numSamples);
+        
+        //buffer for left channel
+        buffer[0].setSize(1, numSamples);
+        
+        //buffer for right channel
+        buffer[1].setSize(1, numSamples);
+        
+        buffer[0].clear();
+        buffer[1].clear();
+
+        prepared = true;
     }
     
     bool push( const T& t)
@@ -47,6 +58,8 @@ struct Fifo
     
     
 private:
+    
+    bool prepared = false;
     static constexpr int Capacity = 2;
     std::array<AudioBuffer<float>, Capacity> buffer;
     AbstractFifo fifo{ Capacity };
