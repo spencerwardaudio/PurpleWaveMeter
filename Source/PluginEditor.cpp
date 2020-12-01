@@ -49,6 +49,5 @@ void Pfmcpp_project10AudioProcessorEditor::timerCallback()
     if( processor.fifo.pull(bufferEditor) )
     {
         DBG("buffer pull: ");
-//        bufferEditor.addFrom(<#int destChannel#>, <#int destStartSample#>, <#const AudioBuffer<float> &source#>, <#int sourceChannel#>, <#int sourceStartSample#>, <#int numSamples#>)
     }
 }
