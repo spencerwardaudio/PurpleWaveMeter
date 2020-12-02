@@ -15,21 +15,16 @@
 template<typename T>
 struct Fifo
 {
-    void prepare(int numSamples)
+    void prepare(int numSamples, int numChannels)
     {
         //initialize all Fifo buffers with Max size of sample block
         DBG("numSamples: " << numSamples);
-        
-        //buffer for left channel
-        buffer[0].setSize(1, numSamples);
-        
-        //buffer for right channel
-        buffer[1].setSize(1, numSamples);
-        
-        buffer[0].clear();
-        buffer[1].clear();
 
-        prepared = true;
+        for(int i = 0; i < numChannels; ++i)
+        {
+            buffer[i].setSize(1, numSamples);
+            buffer[i].clear();
+        }
     }
     
     bool push( const T& t)
@@ -40,7 +35,6 @@ struct Fifo
             buffer[write.startIndex1] = t;
             return true;
         }
-        DBG("push");
         return false;
     }
     
@@ -52,14 +46,11 @@ struct Fifo
             t = buffer[read.startIndex1];
             return true;
         }
-        DBG("pull");
         return false;
     }
     
-    
 private:
-    
-    bool prepared = false;
+
     static constexpr int Capacity = 2;
     std::array<AudioBuffer<float>, Capacity> buffer;
     AbstractFifo fifo{ Capacity };

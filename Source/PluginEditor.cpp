@@ -46,8 +46,8 @@ void Pfmcpp_project10AudioProcessorEditor::resized()
 
 void Pfmcpp_project10AudioProcessorEditor::timerCallback()
 {
-    if( processor.fifo.pull(bufferEditor) )
+    if( processor.fifo.pull(editorBuffer) )
     {
-        DBG("buffer pull: ");
+        DBG("pull buffer: ");
     }
 }

@@ -31,7 +31,7 @@ public:
 private:
 
     Pfmcpp_project10AudioProcessor& processor;
-    AudioBuffer<float> bufferEditor;
+    AudioBuffer<float> editorBuffer;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Pfmcpp_project10AudioProcessorEditor)
 };
