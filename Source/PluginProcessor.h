@@ -20,9 +20,9 @@ struct Fifo
         //initialize all Fifo buffers with Max size of sample block
         DBG("numSamples: " << numSamples);
 
-        for(int i = 0; i < numChannels; ++i)
+        for(int i = 0; i < buffer.size(); ++i)
         {
-            buffer[i].setSize(1, numSamples);
+            buffer[i].setSize(numChannels, numSamples);
             buffer[i].clear();
         }
     }
