@@ -18,10 +18,13 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
     setSize (400, 300);
+    
+    startTimerHz(30);
 }
 
 Pfmcpp_project10AudioProcessorEditor::~Pfmcpp_project10AudioProcessorEditor()
 {
+    stopTimer();
 }
 
 //==============================================================================
@@ -39,4 +42,12 @@ void Pfmcpp_project10AudioProcessorEditor::resized()
 {
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
+}
+
+void Pfmcpp_project10AudioProcessorEditor::timerCallback()
+{
+    if( processor.fifo.pull(editorBuffer) )
+    {
+        DBG("pull buffer: ");
+    }
 }
