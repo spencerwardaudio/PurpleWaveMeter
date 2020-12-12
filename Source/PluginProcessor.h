@@ -11,7 +11,7 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
-
+ 
 template<typename T>
 struct Fifo
 {
@@ -20,10 +20,10 @@ struct Fifo
         //initialize all Fifo buffers with Max size of sample block
         DBG("numSamples: " << numSamples);
 
-        for(int i = 0; i < buffer.size(); ++i)
+        for( auto& buf : buffer )
         {
-            buffer[i].setSize(numChannels, numSamples);
-            buffer[i].clear();
+            buf.setSize(numChannels, numSamples);
+            buf.clear();
         }
     }
     
@@ -50,9 +50,9 @@ struct Fifo
     }
     
 private:
-
+    
     static constexpr int Capacity = 2;
-    std::array<AudioBuffer<float>, Capacity> buffer;
+    std::array<T, Capacity> buffer;
     AbstractFifo fifo{ Capacity };
 };
 
