@@ -12,12 +12,18 @@
 #include "PluginEditor.h"
 
 //==============================================================================
+
+
+//==============================================================================
 Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmcpp_project10AudioProcessor& p)
     : AudioProcessorEditor (&p), processor (p)
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-    setSize (400, 300);
+    setSize (100, 300);
+    
+    meter.setBounds(0, 0, 50, 300);
+    addAndMakeVisible(meter);
     
     startTimerHz(30);
 }
@@ -35,7 +41,6 @@ void Pfmcpp_project10AudioProcessorEditor::paint (Graphics& g)
 
     g.setColour (Colours::white);
     g.setFont (15.0f);
-    g.drawFittedText ("Hello World!", getLocalBounds(), Justification::centred, 1);
 }
 
 void Pfmcpp_project10AudioProcessorEditor::resized()
@@ -49,5 +54,7 @@ void Pfmcpp_project10AudioProcessorEditor::timerCallback()
     if( processor.fifo.pull(editorBuffer) )
     {
         DBG("pull buffer: ");
+        auto bufferLRMS = editorBuffer.getRMSLevel(0, 0, 10);
+        meter.update(bufferLRMS);
     }
 }
