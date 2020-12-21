@@ -28,13 +28,8 @@
 //Meter showing the Right AverageMeter showing the Right instant
 //Label at the bottom showing the name of the meter
 
-struct Meter : public Component
+struct Meter : Component
 {
-    Meter(int x, int y, int width, int height) : bounds(x, y, width, height)
-    {
-        
-    }
-    ~Meter();
     
     void update(float audioValue)
     {
@@ -45,25 +40,20 @@ struct Meter : public Component
     void paint(Graphics& g) override
     {
         auto h = bounds.getHeight();
-        auto level = (double)audioPassingVal;
+        auto level = jmap((double)audioPassingVal, NegativeInfinity, MaxDecibels, 0.0, 1.0);
         
-        g.setColour(Colours::lightblue);
+        g.setColour(Colours::blue);
         g.fillRect(bounds.withHeight(h * level).withY(h * (1.0 - level)));
+
         std::cout << level << std::endl;
         std::cout << h << std::endl;
         
     }
     
-    void resized() override
-    {
-
-    }
-    
-    
     float audioPassingVal {};
-//    static constexpr double NegativeInfinity = -38.0;
-//    static const double MaxDecibels = 0.0;
-    Rectangle<int> bounds (x, y, width, height);
+    const double NegativeInfinity = -38.0;
+    const double MaxDecibels = 0.0;
+    Rectangle<int> bounds {};
 };
 
 
