@@ -51,7 +51,7 @@ struct Fifo
     
 private:
     
-    static constexpr int Capacity = 2;
+    static const int Capacity = 2;
     std::array<T, Capacity> buffer;
     AbstractFifo fifo{ Capacity };
 };
