@@ -44,6 +44,7 @@ void Pfmcpp_project10AudioProcessorEditor::resized()
 {
     meter.setBounds(0, 0, 50, 300);
     meter.bounds.setSize(50, 300);
+
 }
 
 void Pfmcpp_project10AudioProcessorEditor::timerCallback()

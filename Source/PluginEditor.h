@@ -28,6 +28,18 @@
 //Meter showing the Right AverageMeter showing the Right instant
 //Label at the bottom showing the name of the meter
 
+struct Tick
+{
+    int y = 0;
+    float dB = 0.f;
+};
+
+struct DBScale : Component
+{
+    void paint(Graphics& g) override;
+    std::vector<Tick> ticks;
+};
+
 struct Meter : Component
 {
     
@@ -47,12 +59,27 @@ struct Meter : Component
 
         std::cout << level << std::endl;
         std::cout << h << std::endl;
-        
     }
     
+    void resized() override
+    {
+        auto h = 300;
+        
+        Tick tck;
+        for(int i = (int)NegativeInfinity; i < (int)MaxDecibels; i += 6)
+        {
+            tck.y = jmap(i, (int)NegativeInfinity, (int)MaxDecibels, h, 0);
+            std::cout << tck.y << std::endl;
+            
+            ticks.push_back(tck);
+        }
+    }
+    
+    std::vector<Tick> ticks;
+    
     float audioPassingVal {};
-    const double NegativeInfinity = -38.0;
-    const double MaxDecibels = 0.0;
+    const double NegativeInfinity = -66.0;
+    const double MaxDecibels = 12.0;
     Rectangle<int> bounds {};
 };
 
@@ -72,6 +99,7 @@ public:
 private:
     
     Meter meter;
+    DBScale dBscale;
 
     Pfmcpp_project10AudioProcessor& processor;
     AudioBuffer<float> editorBuffer;
