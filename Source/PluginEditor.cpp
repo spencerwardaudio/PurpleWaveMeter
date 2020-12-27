@@ -19,6 +19,7 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
     : AudioProcessorEditor (&p), processor (p)
 {
     addAndMakeVisible(meter);
+    addAndMakeVisible(dBScale);
     
     setSize (50, 300);
     
@@ -44,6 +45,9 @@ void Pfmcpp_project10AudioProcessorEditor::resized()
 {
     meter.setBounds(0, 0, 50, 300);
     meter.bounds.setSize(50, 300);
+    
+    dBScale.setBounds(meter.getRight(), 0, 50, getHeight());
+    dBScale.ticks = meter.ticks;
 
 }
 
