@@ -21,7 +21,7 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
     addAndMakeVisible(meter);
     addAndMakeVisible(dBScale);
     
-    setSize (50, 300);
+    setSize (300, 400);
     
     startTimerHz(30);
 }
@@ -43,19 +43,24 @@ void Pfmcpp_project10AudioProcessorEditor::paint (Graphics& g)
 
 void Pfmcpp_project10AudioProcessorEditor::resized()
 {
-    meter.setBounds(0, 0, 50, 300);
-    meter.bounds.setSize(50, 300);
+    meter.setBounds(0,
+                    JUCE_LIVE_CONSTANT(10),
+                    50,
+                    JUCE_LIVE_CONSTANT(200));
+    
+    meter.bounds.setSize(getWidth(), getHeight());
+    
+    dBScale.ticks = meter.ticks;
+    dBScale.yOffset = meter.getY();
     
     dBScale.setBounds(meter.getRight(), 0, 50, getHeight());
-    dBScale.ticks = meter.ticks;
-
+    
 }
 
 void Pfmcpp_project10AudioProcessorEditor::timerCallback()
 {
     if( processor.fifo.pull(editorBuffer) )
     {
-        DBG("pull buffer: ");
         auto bufferLRMS = editorBuffer.getRMSLevel(0, 0, 10);
         meter.update(bufferLRMS);
     }
