@@ -87,7 +87,9 @@ struct Meter : Component
     {
         auto h = getHeight();
         
+        ticks.clear();
         Tick tck;
+        
         for(int i = (int)NegativeInfinity; i <= (int)MaxDecibels; i += 6)
         {
             tck.y = jmap(i, (int)NegativeInfinity, (int)MaxDecibels, h, 0);
