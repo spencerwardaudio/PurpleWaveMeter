@@ -28,6 +28,38 @@
 //Meter showing the Right AverageMeter showing the Right instant
 //Label at the bottom showing the name of the meter
 
+#define MaxDecibels  12.0
+#define NegativeInfinity -66.0
+
+struct Tick
+{
+    int y = 0;
+    int dB = 0;
+};
+
+struct DBScale : Component
+{
+    void paint(Graphics& g) override
+    {
+        g.fillAll(Colours::black);
+        g.setColour(Colours::white);
+        
+        Rectangle<int> r;
+        r.setWidth(getWidth());
+        r.setHeight(14);
+        r.setX(0);
+        r.setY(0);
+    
+        for(auto t : ticks)
+        {
+            g.drawSingleLineText(juce::String(t.dB), 0, t.y + yOffset);
+        }
+    }
+
+    std::vector<Tick> ticks;
+    int yOffset = 0;
+};
+
 struct Meter : Component
 {
     
@@ -39,6 +71,8 @@ struct Meter : Component
     
     void paint(Graphics& g) override
     {
+        g.fillAll(Colours::white);
+        
         auto h = bounds.getHeight();
         auto level = jmap((double)audioPassingVal, NegativeInfinity, MaxDecibels, 0.0, 1.0);
         
@@ -47,12 +81,29 @@ struct Meter : Component
 
         std::cout << level << std::endl;
         std::cout << h << std::endl;
-        
     }
     
+    void resized() override
+    {
+        auto h = getHeight();
+        
+        ticks.clear();
+        Tick tck;
+        
+        for(int i = (int)NegativeInfinity; i <= (int)MaxDecibels; i += 6)
+        {
+            tck.y = jmap(i, (int)NegativeInfinity, (int)MaxDecibels, h, 0);
+            std::cout << tck.y << " : y " << std::endl;
+            tck.dB = i;
+            std::cout << tck.dB << " : dB " << std::endl;
+            
+            ticks.push_back(tck);
+        }
+    }
+    
+    std::vector<Tick> ticks;
+    
     float audioPassingVal {};
-    const double NegativeInfinity = -38.0;
-    const double MaxDecibels = 0.0;
     Rectangle<int> bounds {};
 };
 
@@ -72,7 +123,8 @@ public:
 private:
     
     Meter meter;
-
+    DBScale dBScale;
+    
     Pfmcpp_project10AudioProcessor& processor;
     AudioBuffer<float> editorBuffer;
     
