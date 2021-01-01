@@ -12,13 +12,23 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
-#define osc1Test = false;
-//#define osc2Gain = -18;
-//#define osc3Gain = 6;
-//#define osc4Gain = 12;
-#if osc1Test
-    #define osc1Gain = -3;
+#define oscGain = -3
+
+#if oscDBTest == 1
+    #undefine oscGain
+    #define oscGain = -3
+#elif oscDBTest == 2
+    #undefine oscGain
+    #define oscGain = -18
+#elif oscDBTest == 3
+    #undefine oscGain
+    #define oscGain = 6
+#elif oscDBTest == 4
+    #undefine oscGain
+    #define oscGain = 12
 #endif
+
+#define oscDBTest 1
  
 template<typename T>
 struct Fifo

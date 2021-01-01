@@ -105,10 +105,7 @@ void Pfmcpp_project10AudioProcessor::prepareToPlay (double sampleRate, int sampl
     gain.prepare(spec);
     
     oscl.setFrequency(440.f);
-    
-#ifdef osc1Gain 
-    gain.setGainDecibels(-3);
-#endif
+    gain.setGainDecibels(oscGain);
     
 }
 
