@@ -96,16 +96,17 @@ void Pfmcpp_project10AudioProcessor::prepareToPlay (double sampleRate, int sampl
 {
     fifo.prepare(samplesPerBlock, getTotalNumInputChannels());
     
+#if VerifyDbScale
+    
     dsp::ProcessSpec spec;
     spec.maximumBlockSize = samplesPerBlock;
     spec.sampleRate = sampleRate;
     spec.numChannels = getTotalNumOutputChannels();
     
     oscl.prepare(spec);
-    gain.prepare(spec);
-    
     oscl.setFrequency(440.f);
-    gain.setGainDecibels(oscGain);
+
+#endif
     
 }
 
@@ -149,17 +150,26 @@ void Pfmcpp_project10AudioProcessor::processBlock (AudioBuffer<float>& buffer, M
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
     
-    dsp::AudioBlock<float> audioBlock { buffer };
-    
-    oscl.process(dsp::ProcessContextReplacing<float> (audioBlock));
-    
-    gain.process(dsp::ProcessContextReplacing<float> (audioBlock));
-
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
         auto* channelData = buffer.getWritePointer (channel);
 
-        // ..do something to the data...
+    #if VerifyDbScale
+        
+        auto gainLvl = Decibels::decibelsToGain(-3.f);
+        
+        for(int i = 0; i <= buffer.getNumSamples(); ++i)
+        {
+            auto sample = oscl.processSample(buffer.getSample(0, i)) * gainLvl;
+            
+            for(int channel = 0; channel < totalNumInputChannels; ++channel)
+            {
+                buffer.setSample(i, channel, sample);
+            }
+        }
+        
+    #endif
+        
     }
     
     fifo.push(buffer);

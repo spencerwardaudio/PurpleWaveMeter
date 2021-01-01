@@ -12,23 +12,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
-#define oscGain = -3
-
-#if oscDBTest == 1
-    #undefine oscGain
-    #define oscGain = -3
-#elif oscDBTest == 2
-    #undefine oscGain
-    #define oscGain = -18
-#elif oscDBTest == 3
-    #undefine oscGain
-    #define oscGain = 6
-#elif oscDBTest == 4
-    #undefine oscGain
-    #define oscGain = 12
-#endif
-
-#define oscDBTest 1
+#define VerifyDbScale true
  
 template<typename T>
 struct Fifo
@@ -119,11 +103,11 @@ public:
     
     Fifo<AudioBuffer<float>> fifo;
     
-    dsp::Oscillator<float> oscl { [] (float x) { return std::sin (x); }};
-    dsp::Gain<float> gain;
-    
 private:
     
+#if VerifyDbScale
+    dsp::Oscillator<float> oscl { [] (float x) { return std::sin (x); }};
+#endif
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Pfmcpp_project10AudioProcessor)
