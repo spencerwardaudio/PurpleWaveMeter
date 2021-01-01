@@ -153,25 +153,25 @@ void Pfmcpp_project10AudioProcessor::processBlock (AudioBuffer<float>& buffer, M
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
         auto* channelData = buffer.getWritePointer (channel);
-
-    #if VerifyDbScale
+    
+#if VerifyDbScale
+    
+    auto gainLvl = Decibels::decibelsToGain(-3.f);
+    
+    for(int i = 0; i < buffer.getNumSamples(); ++i)
+    {
+        auto sample = oscl.processSample(buffer.getSample(0, i)) * gainLvl;
         
-        auto gainLvl = Decibels::decibelsToGain(-3.f);
-        
-        for(int i = 0; i <= buffer.getNumSamples(); ++i)
+        for(int channel = 0; channel < totalNumInputChannels; ++channel)
         {
-            auto sample = oscl.processSample(buffer.getSample(0, i)) * gainLvl;
-            
-            for(int channel = 0; channel < totalNumInputChannels; ++channel)
-            {
-                buffer.setSample(i, channel, sample);
-            }
+            buffer.setSample(channel, i, sample);
         }
-        
-    #endif
-        
     }
     
+#endif
+        
+    }
+
     fifo.push(buffer);
 
 }
