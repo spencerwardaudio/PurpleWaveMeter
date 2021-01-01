@@ -11,6 +11,14 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
+
+#define osc1Test = false;
+//#define osc2Gain = -18;
+//#define osc3Gain = 6;
+//#define osc4Gain = 12;
+#if osc1Test
+    #define osc1Gain = -3;
+#endif
  
 template<typename T>
 struct Fifo
@@ -100,6 +108,9 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
     
     Fifo<AudioBuffer<float>> fifo;
+    
+    dsp::Oscillator<float> oscl { [] (float x) { return std::sin (x); }};
+    dsp::Gain<float> gain;
     
 private:
     

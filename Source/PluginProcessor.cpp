@@ -95,6 +95,21 @@ void Pfmcpp_project10AudioProcessor::changeProgramName (int index, const String&
 void Pfmcpp_project10AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     fifo.prepare(samplesPerBlock, getTotalNumInputChannels());
+    
+    dsp::ProcessSpec spec;
+    spec.maximumBlockSize = samplesPerBlock;
+    spec.sampleRate = sampleRate;
+    spec.numChannels = getTotalNumOutputChannels();
+    
+    oscl.prepare(spec);
+    gain.prepare(spec);
+    
+    oscl.setFrequency(440.f);
+    
+#ifdef osc1Gain 
+    gain.setGainDecibels(-3);
+#endif
+    
 }
 
 void Pfmcpp_project10AudioProcessor::releaseResources()
@@ -136,7 +151,12 @@ void Pfmcpp_project10AudioProcessor::processBlock (AudioBuffer<float>& buffer, M
 
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
-
+    
+    dsp::AudioBlock<float> audioBlock { buffer };
+    
+    oscl.process(dsp::ProcessContextReplacing<float> (audioBlock));
+    
+    gain.process(dsp::ProcessContextReplacing<float> (audioBlock));
 
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
