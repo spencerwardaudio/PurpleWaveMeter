@@ -12,7 +12,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
-#define VerifyDbScale false
+#define VerifyDbScale true
  
 template<typename T>
 struct Fifo
@@ -107,6 +107,7 @@ private:
     
 #if VerifyDbScale
     dsp::Oscillator<float> oscl { [] (float x) { return std::sin (x); }};
+
 #endif
     
     //==============================================================================
