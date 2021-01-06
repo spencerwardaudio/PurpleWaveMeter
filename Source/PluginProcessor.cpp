@@ -155,13 +155,11 @@ void Pfmcpp_project10AudioProcessor::processBlock (AudioBuffer<float>& buffer, M
  
 #if VerifyDbScale
 
-    dsp::AudioBlock<float> audioBlock { buffer };
-    oscl.process(juce::dsp::ProcessContextReplacing<float> (audioBlock));
-    auto sample = oscl.processSample(0) * gainLvl;
-    
-    for(int channel = 0; channel < totalNumInputChannels; ++ channel)
+    for(int i = 0; i < buffer.getNumSamples(); ++i)
     {
-        for(int i = 0; i < buffer.getNumSamples(); ++i)
+        auto sample = oscl.processSample(0) * gainLvl;
+        
+        for(int channel = 0; channel < totalNumInputChannels; ++channel)
         {
             buffer.setSample(channel, i, sample);
         }
