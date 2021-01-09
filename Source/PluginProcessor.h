@@ -107,7 +107,6 @@ private:
     
 #if VerifyDbScale
     dsp::Oscillator<float> oscl { [] (float x) { return std::sin (x); }};
-
 #endif
     
     //==============================================================================

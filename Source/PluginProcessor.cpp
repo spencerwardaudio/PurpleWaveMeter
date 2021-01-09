@@ -103,8 +103,9 @@ void Pfmcpp_project10AudioProcessor::prepareToPlay (double sampleRate, int sampl
     spec.sampleRate = sampleRate;
     spec.numChannels = getTotalNumOutputChannels();
     
-    oscl.prepare(spec);
+    oscl.initialise ([] (float x) { return std::sin (x); }, 128); 
     oscl.setFrequency(440.f);
+    oscl.prepare(spec);
 
 #endif
     
@@ -145,15 +146,13 @@ void Pfmcpp_project10AudioProcessor::processBlock (AudioBuffer<float>& buffer, M
     ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
-    
-#if VerifyDbScale
-    auto gainLvl = Decibels::decibelsToGain(-3.f);
-#endif
 
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
  
 #if VerifyDbScale
+    
+    auto gainLvl = Decibels::decibelsToGain(-3.f);
 
     for(int i = 0; i < buffer.getNumSamples(); ++i)
     {
