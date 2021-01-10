@@ -158,7 +158,7 @@ void Pfmcpp_project10AudioProcessor::processBlock (AudioBuffer<float>& buffer, M
     {
         auto sample = oscl.processSample(0) * gainLvl;
         
-        for(int channel = 0; channel < totalNumInputChannels; ++channel)
+        for(int channel = 0; channel < buffer.getNumChannels(); ++channel)
         {
             buffer.setSample(channel, i, sample);
         }
