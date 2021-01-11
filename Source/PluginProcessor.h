@@ -12,7 +12,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
-#define VerifyDbScale false
+#define VerifyDbScale   false
  
 template<typename T>
 struct Fifo
