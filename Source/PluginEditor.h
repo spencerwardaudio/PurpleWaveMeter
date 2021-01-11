@@ -73,6 +73,8 @@ struct Meter : Component
     {
         g.fillAll(Colours::white);
         
+        auto bounds = getLocalBounds();
+        
         auto h = bounds.getHeight();
         auto level = jmap((double)audioPassingVal, NegativeInfinity, MaxDecibels, 0.0, 1.0);
         
@@ -104,7 +106,6 @@ struct Meter : Component
     std::vector<Tick> ticks;
     
     float audioPassingVal {};
-    Rectangle<int> bounds {};
 };
 
 

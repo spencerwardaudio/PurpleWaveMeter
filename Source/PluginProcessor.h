@@ -11,6 +11,8 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
+
+#define VerifyDbScale   false
  
 template<typename T>
 struct Fifo
@@ -103,6 +105,9 @@ public:
     
 private:
     
+#if VerifyDbScale
+    dsp::Oscillator<float> oscl { [] (float x) { return std::sin (x); }};
+#endif
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Pfmcpp_project10AudioProcessor)
