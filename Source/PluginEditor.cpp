@@ -61,7 +61,7 @@ void Pfmcpp_project10AudioProcessorEditor::timerCallback()
 {
     if( processor.fifo.pull(editorBuffer) )
     {
-        auto bufferLRMS = editorBuffer.getRMSLevel(0, 0, editorBuffer.getNumSamples());
+        auto bufferLRMS = editorBuffer.getMagnitude(0, 0, editorBuffer.getNumSamples());
         meter.update(bufferLRMS);
     }
 }
