@@ -152,7 +152,7 @@ void Pfmcpp_project10AudioProcessor::processBlock (AudioBuffer<float>& buffer, M
  
 #if VerifyDbScale
     
-    auto gainLvl = Decibels::decibelsToGain(-3.f);
+    auto gainLvl = Decibels::decibelsToGain(-6.f);
 
     for(int i = 0; i < buffer.getNumSamples(); ++i)
     {
