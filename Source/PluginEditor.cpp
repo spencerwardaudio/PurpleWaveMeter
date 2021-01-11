@@ -48,8 +48,6 @@ void Pfmcpp_project10AudioProcessorEditor::resized()
                     50,
                     JUCE_LIVE_CONSTANT(200));
     
-    meter.bounds.setSize(getWidth(), getHeight());
-    
     dBScale.ticks = meter.ticks;
     dBScale.yOffset = meter.getY();
     
@@ -63,5 +61,6 @@ void Pfmcpp_project10AudioProcessorEditor::timerCallback()
     {
         auto bufferLRMS = editorBuffer.getMagnitude(0, 0, editorBuffer.getNumSamples());
         meter.update(bufferLRMS);
+        DBG( "mag: " << Decibels::gainToDecibels(bufferLRMS)); 
     }
 }
