@@ -24,12 +24,28 @@
 //Meter showing the Left Instant,
 //with ticks drawn behind the translucent gradient
 //Meter showing the Left average,
-//drawn with a solid color and orang hold tick
+//drawn with a solid color and orange hold tick
 //Meter showing the Right AverageMeter showing the Right instant
 //Label at the bottom showing the name of the meter
 
 #define MaxDecibels  12.0
 #define NegativeInfinity -66.0
+
+struct ValueHolder
+{
+    void setThreshold(float threshold);
+    void updateHeldValue(float input);
+    void setHoldTime(int ms);
+    float getCurrentValue() const;
+    bool isOverThreshold() const;
+    
+private:
+    void resetCurrentValue() { currentValue = threshold; }
+    
+    float currentValue;
+    float threshold;
+};
+
 
 struct Tick
 {
