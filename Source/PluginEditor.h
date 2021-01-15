@@ -31,19 +31,77 @@
 #define MaxDecibels  12.0
 #define NegativeInfinity -66.0
 
-struct ValueHolder
+struct ValueHolder : Timer
 {
-    void setThreshold(float threshold);
-    void updateHeldValue(float input);
-    void setHoldTime(int ms);
-    float getCurrentValue() const;
-    bool isOverThreshold() const;
+    ValueHolder()
+    {
+        startTimerHz(30);
+    }
+    
+    ~ValueHolder()
+    {
+        stopTimer();
+    }
+    
+    void timerCallback() override
+    {
+        auto currentTime = now.getCurrentTime();
+        
+        auto pkDiff = currentTime - peakTime;
+        
+        if (pkDiff.inMilliseconds() > holdTime)
+            resetCurrentValue();
+    }
+    
+    void setThreshold(float _threshold)
+    {
+        threshold = _threshold;
+    }
+    
+    void updateHeldValue(float input)
+    {
+        if (input > threshold)
+        {
+            if(input > currentValue)
+                currentValue = input;
+                
+            DBG( "peakValue Held: " << currentValue);
+            peakTime = now.getCurrentTime();
+        }
+    }
+    
+    void setHoldTime(int ms)
+    {
+        holdTime = ms;
+    }
+    
+    float getCurrentValue(float value)
+    {
+        if(value > threshold)
+        {
+            currentValue = value;
+            DBG( "value > threshold: " << currentValue);
+            
+            updateHeldValue(value);
+            return holdTime = value;
+        }
+        
+        DBG( "value < threshold: " << value);
+        return currentValue = threshold;
+    }
     
 private:
+    
     void resetCurrentValue() { currentValue = threshold; }
     
-    float currentValue;
-    float threshold;
+    float currentValue {};
+
+    float threshold {};
+    
+    int holdTime {};
+    
+    Time now;
+    Time peakTime;
 };
 
 
@@ -139,6 +197,7 @@ public:
 
 private:
     
+    ValueHolder valueHolder;
     Meter meter;
     DBScale dBScale;
     
