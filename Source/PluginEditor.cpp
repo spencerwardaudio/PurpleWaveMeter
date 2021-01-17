@@ -25,7 +25,7 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
     
     startTimerHz(30);
     
-    valueHolder.setThreshold(1.0f);
+    valueHolder.setThreshold(0.0f);
     valueHolder.setHoldTime(100);
 }
 
@@ -66,6 +66,6 @@ void Pfmcpp_project10AudioProcessorEditor::timerCallback()
         meter.update(bufferLRPeak);
 //        DBG( "mag: " << Decibels::gainToDecibels(bufferLRPeak));
         
-        valueHolder.getCurrentValue(bufferLRPeak);
+        valueHolder.updateHeldValue(bufferLRPeak);
     }
 }

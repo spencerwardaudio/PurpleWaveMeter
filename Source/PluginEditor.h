@@ -45,11 +45,11 @@ struct ValueHolder : Timer
     
     void timerCallback() override
     {
-        auto currentTime = now.getCurrentTime();
+        auto currentTime = Time::currentTimeMillis();
         
         auto pkDiff = currentTime - peakTime;
         
-        if (pkDiff.inMilliseconds() > holdTime)
+        if (pkDiff > holdTime)
             resetCurrentValue();
     }
     
@@ -60,14 +60,20 @@ struct ValueHolder : Timer
     
     void updateHeldValue(float input)
     {
-        if (input > threshold)
+        if (isOverThreshold())
         {
-            if(input > currentValue)
+            DBG( "input > threshold: " << input);
+            holdTime = getCurrentValue();
+            
+            if(input > threshold)
+            {
                 currentValue = input;
-                
-            DBG( "peakValue Held: " << currentValue);
-            peakTime = now.getCurrentTime();
+                DBG( "peakValue Held: " << currentValue);
+                peakTime = Time::currentTimeMillis();
+            }
         }
+        
+        DBG( "currentValue < threshold: " << input);
     }
     
     void setHoldTime(int ms)
@@ -75,33 +81,24 @@ struct ValueHolder : Timer
         holdTime = ms;
     }
     
-    float getCurrentValue(float value)
+    float getCurrentValue() const { return currentValue; }
+    
+    bool isOverThreshold() const
     {
-        if(value > threshold)
-        {
-            currentValue = value;
-            DBG( "value > threshold: " << currentValue);
-            
-            updateHeldValue(value);
-            return holdTime = value;
-        }
-        
-        DBG( "value < threshold: " << value);
-        return currentValue = threshold;
+        return currentValue > threshold;
     }
     
 private:
     
     void resetCurrentValue() { currentValue = threshold; }
     
-    float currentValue {};
+    float currentValue { (float)NegativeInfinity };
 
-    float threshold {};
+    float threshold { 0 };
     
-    int holdTime {};
+    int holdTime { 1 };
     
-    Time now;
-    Time peakTime;
+    int64 peakTime { 0 };
 };
 
 
