@@ -60,20 +60,18 @@ struct ValueHolder : Timer
     
     void updateHeldValue(float input)
     {
+        if(input > threshold && currentValue < input)
+            
+            currentValue = input;
+        
         if (isOverThreshold())
         {
-            DBG( "input > threshold: " << input);
+            DBG( "currentValue > threshold: " << currentValue << "\n");
+            
             holdTime = getCurrentValue();
             
-            if(input > threshold)
-            {
-                currentValue = input;
-                DBG( "peakValue Held: " << currentValue);
-                peakTime = Time::currentTimeMillis();
-            }
+            peakTime = Time::currentTimeMillis();
         }
-        
-        DBG( "currentValue < threshold: " << input);
     }
     
     void setHoldTime(int ms)
@@ -151,9 +149,6 @@ struct Meter : Component
         
         g.setColour(Colours::blue);
         g.fillRect(bounds.withHeight(h * level).withY(h * (1.0 - level)));
-
-        std::cout << level << std::endl;
-        std::cout << h << std::endl;
     }
     
     void resized() override
