@@ -60,17 +60,20 @@ struct ValueHolder : Timer
     
     void updateHeldValue(float input)
     {
-        if(input > threshold && currentValue < input)
-            
-            currentValue = input;
-        
-        if (isOverThreshold())
+        if(input > threshold)
         {
             DBG( "currentValue > threshold: " << currentValue << "\n");
             
-            holdTime = getCurrentValue();
-            
             peakTime = Time::currentTimeMillis();
+
+            if (currentValue < input)
+            {
+                currentValue = input;
+            }
+        }
+        else
+        {
+            DBG( "currentValue < threshold: " << currentValue << "\n");
         }
     }
     
@@ -94,7 +97,7 @@ private:
 
     float threshold { 0 };
     
-    int holdTime { 1 };
+    int64 holdTime { 1 };
     
     int64 peakTime { 0 };
 };
