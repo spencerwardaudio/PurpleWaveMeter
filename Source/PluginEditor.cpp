@@ -42,6 +42,8 @@ void Pfmcpp_project10AudioProcessorEditor::paint (Graphics& g)
 
     g.setColour (Colours::white);
     g.setFont (15.0f);
+    
+    
 }
 
 void Pfmcpp_project10AudioProcessorEditor::resized()

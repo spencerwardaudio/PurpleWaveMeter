@@ -31,6 +31,14 @@
 #define MaxDecibels  12.0
 #define NegativeInfinity -66.0
 
+struct TextMeter : Component
+{
+    void paint() override
+    {
+        
+    }
+}
+
 struct ValueHolder : Timer
 {
     ValueHolder()
@@ -62,18 +70,12 @@ struct ValueHolder : Timer
     {
         if(input > threshold)
         {
-            DBG( "currentValue > threshold: " << currentValue << "\n");
-            
             peakTime = Time::currentTimeMillis();
 
             if (currentValue < input)
             {
                 currentValue = input;
             }
-        }
-        else
-        {
-            DBG( "currentValue < threshold: " << currentValue << "\n");
         }
     }
     
