@@ -24,6 +24,9 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
     setSize (300, 400);
     
     startTimerHz(30);
+    
+    valueHolder.setThreshold(0.005f);
+    valueHolder.setHoldTime(100);
 }
 
 Pfmcpp_project10AudioProcessorEditor::~Pfmcpp_project10AudioProcessorEditor()
@@ -59,8 +62,10 @@ void Pfmcpp_project10AudioProcessorEditor::timerCallback()
 {
     if( processor.fifo.pull(editorBuffer) )
     {
-        auto bufferLRMS = editorBuffer.getMagnitude(0, 0, editorBuffer.getNumSamples());
-        meter.update(bufferLRMS);
-        DBG( "mag: " << Decibels::gainToDecibels(bufferLRMS)); 
+        auto bufferLRPeak = editorBuffer.getMagnitude(0, 0, editorBuffer.getNumSamples());
+        meter.update(bufferLRPeak);
+//        DBG( "mag: " << Decibels::gainToDecibels(bufferLRPeak));
+        
+        valueHolder.updateHeldValue(bufferLRPeak);
     }
 }

@@ -24,12 +24,84 @@
 //Meter showing the Left Instant,
 //with ticks drawn behind the translucent gradient
 //Meter showing the Left average,
-//drawn with a solid color and orang hold tick
+//drawn with a solid color and orange hold tick
 //Meter showing the Right AverageMeter showing the Right instant
 //Label at the bottom showing the name of the meter
 
 #define MaxDecibels  12.0
 #define NegativeInfinity -66.0
+
+struct ValueHolder : Timer
+{
+    ValueHolder()
+    {
+        startTimerHz(30);
+    }
+    
+    ~ValueHolder()
+    {
+        stopTimer();
+    }
+    
+    void timerCallback() override
+    {
+        auto currentTime = Time::currentTimeMillis();
+        
+        auto pkDiff = currentTime - peakTime;
+        
+        if (pkDiff > holdTime)
+            resetCurrentValue();
+    }
+    
+    void setThreshold(float _threshold)
+    {
+        threshold = _threshold;
+    }
+    
+    void updateHeldValue(float input)
+    {
+        if(input > threshold)
+        {
+            DBG( "currentValue > threshold: " << currentValue << "\n");
+            
+            peakTime = Time::currentTimeMillis();
+
+            if (currentValue < input)
+            {
+                currentValue = input;
+            }
+        }
+        else
+        {
+            DBG( "currentValue < threshold: " << currentValue << "\n");
+        }
+    }
+    
+    void setHoldTime(int ms)
+    {
+        holdTime = ms;
+    }
+    
+    float getCurrentValue() const { return currentValue; }
+    
+    bool isOverThreshold() const
+    {
+        return currentValue > threshold;
+    }
+    
+private:
+    
+    void resetCurrentValue() { currentValue = threshold; }
+    
+    float currentValue { (float)NegativeInfinity };
+
+    float threshold { 0 };
+    
+    int64 holdTime { 1 };
+    
+    int64 peakTime { 0 };
+};
+
 
 struct Tick
 {
@@ -80,9 +152,6 @@ struct Meter : Component
         
         g.setColour(Colours::blue);
         g.fillRect(bounds.withHeight(h * level).withY(h * (1.0 - level)));
-
-        std::cout << level << std::endl;
-        std::cout << h << std::endl;
     }
     
     void resized() override
@@ -123,6 +192,7 @@ public:
 
 private:
     
+    ValueHolder valueHolder;
     Meter meter;
     DBScale dBScale;
     
