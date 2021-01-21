@@ -31,14 +31,6 @@
 #define MaxDecibels  12.0
 #define NegativeInfinity -66.0
 
-struct TextMeter : Component
-{
-    void paint() override
-    {
-        
-    }
-}
-
 struct ValueHolder : Timer
 {
     ValueHolder()
@@ -102,6 +94,53 @@ private:
     int64 holdTime { 1 };
     
     int64 peakTime { 0 };
+    
+    friend struct TextMeter;
+};
+
+struct TextMeter : Component
+{
+    void textMDisplayValue(ValueHolder& valueHolder)
+    {
+        auto level = Decibels::gainToDecibels(valueHolder.getCurrentValue());
+//        auto level = Meter::audioPassingVal;
+        
+        if( valueHolder.isOverThreshold() )
+        {
+            str = String(level, 2);
+            peak = true;
+        }
+        else if ( level > (float)NegativeInfinity )
+        {
+            str = String(level, 2);
+            DBG("str" << str);
+        }
+        else
+        {
+            str = "-inf";
+        }
+        
+        repaint();
+    }
+
+    void paint(Graphics& g) override
+    {
+        if( peak )
+        {
+            g.fillAll(Colours::red);
+            g.setColour(Colours::white);
+            g.drawSingleLineText(str, 5, Justification::centred);
+            peak = false;
+        }
+        else
+        {
+            g.setColour(Colours::dimgrey);
+            g.drawSingleLineText(str, 5, Justification::centred);
+        }
+    }
+
+    String str;
+    bool peak = false;
 };
 
 
@@ -152,7 +191,7 @@ struct Meter : Component
         auto h = bounds.getHeight();
         auto level = jmap((double)audioPassingVal, NegativeInfinity, MaxDecibels, 0.0, 1.0);
         
-        g.setColour(Colours::blue);
+        g.setColour(Colours::greenyellow);
         g.fillRect(bounds.withHeight(h * level).withY(h * (1.0 - level)));
     }
     
@@ -194,6 +233,7 @@ public:
 
 private:
     
+    TextMeter textMeter;
     ValueHolder valueHolder;
     Meter meter;
     DBScale dBScale;
