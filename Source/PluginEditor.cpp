@@ -71,6 +71,6 @@ void Pfmcpp_project10AudioProcessorEditor::timerCallback()
         meter.update(bufferLRPeak);
         
         valueHolder.updateHeldValue(bufferLRPeak);
-        textMeter.textMDisplayValue(valueHolder);
+        textMeter.update(bufferLRPeak);
     }
 }

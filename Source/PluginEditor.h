@@ -100,10 +100,15 @@ private:
 
 struct TextMeter : Component
 {
-    void textMDisplayValue(ValueHolder& valueHolder)
+    void update(float audioValue)
     {
-        auto level = Decibels::gainToDecibels(valueHolder.getCurrentValue());
-//        auto level = Meter::audioPassingVal;
+        level = Decibels::gainToDecibels(audioValue);
+        textMDisplayValue(level);
+    }
+    
+    void textMDisplayValue(float audioValue)
+    {
+        valueHolder.currentValue = audioValue;
         
         if( valueHolder.isOverThreshold() )
         {
@@ -141,6 +146,9 @@ struct TextMeter : Component
 
     String str;
     bool peak = false;
+    float level {};
+    
+    ValueHolder valueHolder;
 };
 
 
