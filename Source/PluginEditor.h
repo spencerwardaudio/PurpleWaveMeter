@@ -94,42 +94,30 @@ private:
     int64 holdTime { 1 };
     
     int64 peakTime { 0 };
-    
-    friend struct TextMeter;
 };
+
 
 struct TextMeter : Component
 {
     void update(float audioValue)
     {
         level = Decibels::gainToDecibels(audioValue);
-        textMDisplayValue(level);
-    }
-    
-    void textMDisplayValue(float audioValue)
-    {
-        valueHolder.currentValue = audioValue;
-        
-        if( valueHolder.isOverThreshold() )
-        {
-            str = String(level, 2);
-            peak = true;
-        }
-        else if ( level > (float)NegativeInfinity )
-        {
-            str = String(level, 2);
-            DBG("str" << str);
-        }
-        else
-        {
-            str = "-inf";
-        }
-        
+        valueHolder.updateHeldValue(level);
         repaint();
     }
 
     void paint(Graphics& g) override
     {
+        String str;
+        bool peak = false;
+        
+        if ( level <= NegativeInfinity )
+            str = "-inf";
+        else
+            str = String(level, 2);
+        
+        peak = valueHolder.isOverThreshold();
+        
         if( peak )
         {
             g.fillAll(Colours::red);
@@ -144,8 +132,6 @@ struct TextMeter : Component
         }
     }
 
-    String str;
-    bool peak = false;
     float level {};
     
     ValueHolder valueHolder;
