@@ -99,6 +99,7 @@ private:
 
 struct TextMeter : Component
 {
+    
     void update(float audioValue)
     {
         level = Decibels::gainToDecibels(audioValue);
@@ -115,8 +116,7 @@ struct TextMeter : Component
             str = "-inf";
         else
             str = String(level, 2);
-        
-        peak = valueHolder.isOverThreshold();
+            peak = valueHolder.isOverThreshold();
         
         if( peak )
         {
@@ -156,7 +156,7 @@ struct DBScale : Component
         r.setHeight(14);
         r.setX(0);
         r.setY(0);
-    
+
         for(auto t : ticks)
         {
             g.drawSingleLineText(juce::String(t.dB), 0, t.y + yOffset);
@@ -181,6 +181,16 @@ struct Meter : Component
         g.fillAll(Colours::white);
         
         auto bounds = getLocalBounds();
+
+        for( auto i : ticks )
+        {
+            g.setColour (juce::Colours::black);
+            
+            juce::Line<float> line (juce::Point<float> (2,30),
+                                    juce::Point<float> (37,30));
+
+            g.drawLine (line, 2.0f);
+        }
         
         auto h = bounds.getHeight();
         auto level = jmap((double)audioPassingVal, NegativeInfinity, MaxDecibels, 0.0, 1.0);
@@ -198,7 +208,7 @@ struct Meter : Component
         
         for(int i = (int)NegativeInfinity; i <= (int)MaxDecibels; i += 6)
         {
-            tck.y = jmap(i, (int)NegativeInfinity, (int)MaxDecibels, h, 0);
+            tck.y = jmap(i, (int)NegativeInfinity, (int)MaxDecibels, h, 0) + 4;
             std::cout << tck.y << " : y " << std::endl;
             tck.dB = i;
             std::cout << tck.dB << " : dB " << std::endl;
@@ -228,7 +238,6 @@ public:
 private:
     
     TextMeter textMeter;
-    ValueHolder valueHolder;
     Meter meter;
     DBScale dBScale;
     

@@ -26,8 +26,8 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
     
     startTimerHz(30);
     
-    valueHolder.setThreshold(0.f);
-    valueHolder.setHoldTime(100);
+    textMeter.valueHolder.setThreshold(0.f);
+    textMeter.valueHolder.setHoldTime(100);
 }
 
 Pfmcpp_project10AudioProcessorEditor::~Pfmcpp_project10AudioProcessorEditor()
@@ -69,8 +69,6 @@ void Pfmcpp_project10AudioProcessorEditor::timerCallback()
     {
         auto bufferLRPeak = editorBuffer.getMagnitude(0, 0, editorBuffer.getNumSamples());
         meter.update(bufferLRPeak);
-        
-        valueHolder.updateHeldValue(bufferLRPeak);
         textMeter.update(bufferLRPeak);
     }
 }
