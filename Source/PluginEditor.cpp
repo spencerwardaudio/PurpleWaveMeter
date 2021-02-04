@@ -27,7 +27,7 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
     startTimerHz(30);
     
     textMeter.valueHolder.setThreshold(0.f);
-    textMeter.valueHolder.setHoldTime(100);
+    textMeter.valueHolder.setHoldTime(300);
 }
 
 Pfmcpp_project10AudioProcessorEditor::~Pfmcpp_project10AudioProcessorEditor()
