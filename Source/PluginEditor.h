@@ -83,11 +83,11 @@ struct ValueHolder : Timer
         return currentValue > threshold;
     }
     
+    float currentValue { (float)NegativeInfinity };
+    
 private:
     
     void resetCurrentValue() { currentValue = threshold; }
-    
-    float currentValue { (float)NegativeInfinity };
 
     float threshold { 0 };
     
@@ -122,7 +122,7 @@ struct TextMeter : Component
         {
             g.fillAll(Colours::red);
             g.setColour(Colours::white);
-            g.drawSingleLineText(str, 5, Justification::centred);
+            g.drawSingleLineText(juce::String(valueHolder.currentValue), 5, Justification::centred);
             peak = false;
         }
         else
