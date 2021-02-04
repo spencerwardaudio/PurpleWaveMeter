@@ -182,14 +182,14 @@ struct Meter : Component
         
         auto bounds = getLocalBounds();
 
-        for( auto i : ticks )
+        for(auto& tck : ticks )
         {
             g.setColour (juce::Colours::black);
             
-            juce::Line<float> line (juce::Point<float> (2,30),
-                                    juce::Point<float> (37,30));
+            juce::Line<float> line (juce::Point<float> (2, tck.y - 3),
+                                    juce::Point<float> (37, tck.y - 3));
 
-            g.drawLine (line, 2.0f);
+            g.drawLine (line, 0.8f);
         }
         
         auto h = bounds.getHeight();
