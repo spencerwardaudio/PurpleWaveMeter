@@ -12,21 +12,22 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-    
+
 
 //==============================================================================
 Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmcpp_project10AudioProcessor& p)
     : AudioProcessorEditor (&p), processor (p)
 {
     addAndMakeVisible(meter);
+    addAndMakeVisible(textMeter);
     addAndMakeVisible(dBScale);
     
     setSize (300, 400);
     
     startTimerHz(30);
     
-    valueHolder.setThreshold(0.005f);
-    valueHolder.setHoldTime(100);
+    textMeter.valueHolder.setThreshold(0.f);
+    textMeter.valueHolder.setHoldTime(300);
 }
 
 Pfmcpp_project10AudioProcessorEditor::~Pfmcpp_project10AudioProcessorEditor()
@@ -47,15 +48,19 @@ void Pfmcpp_project10AudioProcessorEditor::paint (Graphics& g)
 void Pfmcpp_project10AudioProcessorEditor::resized()
 {
     meter.setBounds(0,
-                    JUCE_LIVE_CONSTANT(10),
-                    50,
-                    JUCE_LIVE_CONSTANT(200));
+                    10,
+                    40,
+                    200);
+    
+    textMeter.setBounds(0,
+                        -27,
+                        40,
+                        41);
     
     dBScale.ticks = meter.ticks;
     dBScale.yOffset = meter.getY();
     
     dBScale.setBounds(meter.getRight(), 0, 50, getHeight());
-    
 }
 
 void Pfmcpp_project10AudioProcessorEditor::timerCallback()
@@ -64,8 +69,6 @@ void Pfmcpp_project10AudioProcessorEditor::timerCallback()
     {
         auto bufferLRPeak = editorBuffer.getMagnitude(0, 0, editorBuffer.getNumSamples());
         meter.update(bufferLRPeak);
-//        DBG( "mag: " << Decibels::gainToDecibels(bufferLRPeak));
-        
-        valueHolder.updateHeldValue(bufferLRPeak);
+        textMeter.update(bufferLRPeak);
     }
 }

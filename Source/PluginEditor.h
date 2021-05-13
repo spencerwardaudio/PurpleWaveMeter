@@ -62,18 +62,12 @@ struct ValueHolder : Timer
     {
         if(input > threshold)
         {
-            DBG( "currentValue > threshold: " << currentValue << "\n");
-            
             peakTime = Time::currentTimeMillis();
 
             if (currentValue < input)
             {
                 currentValue = input;
             }
-        }
-        else
-        {
-            DBG( "currentValue < threshold: " << currentValue << "\n");
         }
     }
     
@@ -91,15 +85,50 @@ struct ValueHolder : Timer
     
 private:
     
-    void resetCurrentValue() { currentValue = threshold; }
-    
     float currentValue { (float)NegativeInfinity };
+    
+    void resetCurrentValue() { currentValue = threshold; }
 
     float threshold { 0 };
     
     int64 holdTime { 1 };
     
     int64 peakTime { 0 };
+};
+
+
+struct TextMeter : Component
+{
+    
+    void update(float audioValue)
+    {
+        level = Decibels::gainToDecibels(audioValue);
+        valueHolder.updateHeldValue(level);
+        repaint();
+    }
+
+    void paint(Graphics& g) override
+    {
+        String str;
+        
+        auto over = valueHolder.isOverThreshold();
+        if( over )
+        {
+            str = juce::String( valueHolder.getCurrentValue(), 1 );
+        }
+        else
+        {
+            str = ( level <= NegativeInfinity ) ? "-inf" : juce::String( level, 1 );
+        }
+        
+        g.fillAll ( over ? Colours::red : Colours::black );
+        g.setColour ( Colours::white );
+        g.drawSingleLineText(str, 5, Justification::centred);
+    }
+
+    float level {};
+    
+    ValueHolder valueHolder;
 };
 
 
@@ -121,7 +150,7 @@ struct DBScale : Component
         r.setHeight(14);
         r.setX(0);
         r.setY(0);
-    
+
         for(auto t : ticks)
         {
             g.drawSingleLineText(juce::String(t.dB), 0, t.y + yOffset);
@@ -146,11 +175,21 @@ struct Meter : Component
         g.fillAll(Colours::white);
         
         auto bounds = getLocalBounds();
+
+        for(auto& tck : ticks )
+        {
+            g.setColour (juce::Colours::black);
+            
+            juce::Line<float> line (juce::Point<float> (2, tck.y - 3),
+                                    juce::Point<float> (37, tck.y - 3));
+
+            g.drawLine (line, 0.8f);
+        }
         
         auto h = bounds.getHeight();
         auto level = jmap((double)audioPassingVal, NegativeInfinity, MaxDecibels, 0.0, 1.0);
         
-        g.setColour(Colours::blue);
+        g.setColour(Colours::greenyellow);
         g.fillRect(bounds.withHeight(h * level).withY(h * (1.0 - level)));
     }
     
@@ -163,7 +202,7 @@ struct Meter : Component
         
         for(int i = (int)NegativeInfinity; i <= (int)MaxDecibels; i += 6)
         {
-            tck.y = jmap(i, (int)NegativeInfinity, (int)MaxDecibels, h, 0);
+            tck.y = jmap(i, (int)NegativeInfinity, (int)MaxDecibels, h, 0) + 4;
             std::cout << tck.y << " : y " << std::endl;
             tck.dB = i;
             std::cout << tck.dB << " : dB " << std::endl;
@@ -192,7 +231,7 @@ public:
 
 private:
     
-    ValueHolder valueHolder;
+    TextMeter textMeter;
     Meter meter;
     DBScale dBScale;
     
