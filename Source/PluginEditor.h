@@ -83,9 +83,9 @@ struct ValueHolder : Timer
         return currentValue > threshold;
     }
     
-    float currentValue { (float)NegativeInfinity };
-    
 private:
+    
+    float currentValue { (float)NegativeInfinity };
     
     void resetCurrentValue() { currentValue = threshold; }
 
@@ -110,26 +110,20 @@ struct TextMeter : Component
     void paint(Graphics& g) override
     {
         String str;
-        bool peak = false;
         
-        if ( level <= NegativeInfinity )
-            str = "-inf";
-        else
-            str = String(level, 2);
-            peak = valueHolder.isOverThreshold();
-        
-        if( peak )
+        auto over = valueHolder.isOverThreshold();
+        if( over )
         {
-            g.fillAll(Colours::red);
-            g.setColour(Colours::white);
-            g.drawSingleLineText(juce::String(valueHolder.currentValue), 5, Justification::centred);
-            peak = false;
+            str = juce::String( valueHolder.getCurrentValue(), 1 );
         }
         else
         {
-            g.setColour(Colours::dimgrey);
-            g.drawSingleLineText(str, 5, Justification::centred);
+            str = ( level <= NegativeInfinity ) ? "-inf" : juce::String( level, 1 );
         }
+        
+        g.fillAll ( over ? Colours::red : Colours::black );
+        g.setColour ( Colours::white );
+        g.drawSingleLineText(str, 5, Justification::centred);
     }
 
     float level {};
