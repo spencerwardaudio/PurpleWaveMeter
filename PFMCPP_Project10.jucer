@@ -3,6 +3,10 @@
 <JUCERPROJECT id="xLbyvx" name="PFMCPP_Project10" projectType="audioplug" cppLanguageStandard="17"
               companyName="Spencer Ward" jucerFormatVersion="1" useAppConfig="0">
   <MAINGROUP id="ORymcZ" name="PFMCPP_Project10">
+    <GROUP id="{23EF9225-D7C3-8021-20C8-2FF2033B6179}" name="Components">
+      <FILE id="MuANe7" name="Meter.cpp" compile="1" resource="0" file="Source/Meter.cpp"/>
+      <FILE id="KDb5RM" name="Meter.h" compile="0" resource="0" file="Source/Meter.h"/>
+    </GROUP>
     <GROUP id="{A92DB368-5243-6129-F1D5-73D06AFB4761}" name="Source">
       <FILE id="GoZaVW" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
