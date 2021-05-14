@@ -14,13 +14,14 @@
 
 #define MaxDecibels  12.0
 #define NegativeInfinity -66.0
-#define TimerFrequency 30
 
 struct ValueHolderBase : Timer
 {
-    ValueHolderBase() { startTimerHz(TimerFrequency); }
+    ValueHolderBase() { startTimerHz(30); }
     
     ~ValueHolderBase() { stopTimer(); }
+    
+    void setHoldTime(int ms) { holdTime = ms; }
     
     float getCurrentValue() const { return currentValue; }
     
@@ -29,6 +30,8 @@ protected:
     float currentValue { (float)NegativeInfinity };
     
     int64 peakTime { 0 };
+    
+    int64 holdTime { 100 };
 };
 
 
@@ -47,8 +50,6 @@ struct ValueHolder : ValueHolderBase
     }
     
     void setThreshold(float _threshold) { threshold = _threshold; }
-    
-    void setHoldTime(int ms) { holdTime = ms; }
     
     void updateHeldValue(float input)
     {
@@ -70,9 +71,6 @@ private:
     void resetCurrentValue() { currentValue = threshold; }
 
     float threshold { 0 };
-    
-    int64 holdTime { 1 };
-    
 };
 
 
@@ -86,8 +84,8 @@ void timerCallback() override
     
     if(elapsedTime >= holdTime)
     {
-        currentValue -= decayRate;
         DBG(currentValue << "dB");
+        currentValue -= decayRate;
     }
 }
 
@@ -105,10 +103,8 @@ private:
     int64 currentTime = { 0 };
     int64 elapsedTime { 0 };
     
-    //db per TimerFrequency interval
+    //db per Second
     int64 decayRate { 3 };
-    
-    int64 holdTime { TimerFrequency * 2 };
 };
 
 
