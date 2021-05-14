@@ -20,7 +20,6 @@ struct Fifo
     void prepare(int numSamples, int numChannels)
     {
         //initialize all Fifo buffers with Max size of sample block
-        DBG("numSamples: " << numSamples);
 
         for( auto& buf : buffer )
         {
