@@ -21,7 +21,6 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
     addAndMakeVisible(meter);
     addAndMakeVisible(textMeter);
     addAndMakeVisible(dBScale);
-    addAndMakeVisible(tickMark);
     
     setSize (300, 400);
     
@@ -29,7 +28,7 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
     
     textMeter.valueHolder.setThreshold(0.f);
     textMeter.valueHolder.setHoldTime(300);
-    tickMark.decayingValueHolder.setHoldTime(300);
+    meter.decayingValueHolder.setHoldTime(1000);
 }
 
 Pfmcpp_project10AudioProcessorEditor::~Pfmcpp_project10AudioProcessorEditor()
@@ -59,11 +58,6 @@ void Pfmcpp_project10AudioProcessorEditor::resized()
                         40,
                         41);
     
-    tickMark.setBounds(0,
-                       10,
-                       40,
-                       200);
-    
     dBScale.ticks = meter.ticks;
     dBScale.yOffset = meter.getY();
     
@@ -78,6 +72,5 @@ void Pfmcpp_project10AudioProcessorEditor::timerCallback()
         
         meter.update(bufferLRPeak);
         textMeter.update(bufferLRPeak);
-        tickMark.update(bufferLRPeak);
     }
 }

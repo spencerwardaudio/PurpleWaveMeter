@@ -39,32 +39,6 @@ void TextMeter::paint(Graphics& g)
     g.drawSingleLineText(str, 5, Justification::centred);
 }
 
-void TickMark::update(float audioValue)
-{
-    level = Decibels::gainToDecibels(audioValue);
-
-    decayingValueHolder.updateHeldValue(level);
-
-    repaint();
-}
-
-void TickMark::paint(Graphics& g)
-{
-    g.setColour( Colours::lightblue );
-    
-    auto bounds = getLocalBounds();
-    auto h = bounds.getHeight();
-    
-    level = decayingValueHolder.getCurrentValue();
-    
-    auto tickLine = jmap((double)level, NegativeInfinity, MaxDecibels, 0.0, 1.0);
-
-    juce::Line<float> line (juce::Point<float> (2, (h * (1 -  (float)tickLine))),
-                            juce::Point<float> (37, (h * (1 -  (float)tickLine))));
-
-    g.drawLine (line, 2.0f);
-}
-
 
 void DBScale::paint(Graphics& g)
 {
@@ -86,6 +60,9 @@ void DBScale::paint(Graphics& g)
 void Meter::update(float audioValue)
 {
     audioPassingVal = Decibels::gainToDecibels(audioValue);
+    
+    decayingValueHolder.updateHeldValue(audioPassingVal);
+    
     repaint();
 }
 
@@ -109,7 +86,17 @@ void Meter::paint(Graphics& g)
     auto level = jmap((double)audioPassingVal, NegativeInfinity, MaxDecibels, 0.0, 1.0);
     
     g.setColour(Colours::greenyellow);
+    
     g.fillRect(bounds.withHeight(h * level).withY(h * (1.0 - level)));
+    
+    //tick meter
+    g.setColour( Colours::lightblue );
+    
+    level = decayingValueHolder.getCurrentValue();
+    
+    auto tickLine = jmap((double)level, NegativeInfinity, MaxDecibels, 0.0, 1.0);
+
+    g.fillRect(bounds.withY(h * (1 -  (float)tickLine)).withHeight(2));
 }
 
 void Meter::resized()

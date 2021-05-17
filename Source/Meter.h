@@ -140,17 +140,9 @@ struct Meter : Component
     
     std::vector<Tick> ticks;
     float audioPassingVal {};
-};
-
-
-struct TickMark : Component
-{
-    void update(float audioValue);
-
-    void paint(Graphics& g) override;
     
     float level {};
     float previousVal {};
-
+    
     DecayingValueHolder decayingValueHolder;
 };

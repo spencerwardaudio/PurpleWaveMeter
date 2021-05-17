@@ -33,7 +33,6 @@ public:
 
 private:
     
-    TickMark tickMark;
     TextMeter textMeter;
     Meter meter;
     DBScale dBScale;
