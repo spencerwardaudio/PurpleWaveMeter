@@ -30,15 +30,12 @@ protected:
     float currentValue { (float)NegativeInfinity };
     
     int64 peakTime { 0 };
-    
     int64 holdTime { 100 };
 };
 
 
-
 struct ValueHolder : ValueHolderBase
 {
-    
     void timerCallback() override
     {
         auto currentTime = Time::currentTimeMillis();
@@ -84,7 +81,6 @@ void timerCallback() override
     
     if(elapsedTime >= holdTime)
     {
-        DBG(currentValue << "dB");
         currentValue -= decayRate;
     }
 }
@@ -104,7 +100,7 @@ private:
     int64 elapsedTime { 0 };
     
     //db per Second
-    int64 decayRate { 3 };
+    int64 decayRate { 20 };
 };
 
 
@@ -115,8 +111,8 @@ struct TextMeter : Component
     void paint(Graphics& g) override;
     
     float level {};
+    
     ValueHolder valueHolder;
-    DecayingValueHolder decayingValueHolder;
 };
 
 
@@ -144,4 +140,17 @@ struct Meter : Component
     
     std::vector<Tick> ticks;
     float audioPassingVal {};
+};
+
+
+struct TickMark : Component
+{
+    void update(float audioValue);
+
+    void paint(Graphics& g) override;
+    
+    float level {};
+    float previousVal {};
+
+    DecayingValueHolder decayingValueHolder;
 };

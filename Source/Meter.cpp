@@ -16,7 +16,6 @@ void TextMeter::update(float audioValue)
     level = Decibels::gainToDecibels(audioValue);
     
     valueHolder.updateHeldValue(level);
-    decayingValueHolder.updateHeldValue(level);
     
     repaint();
 }
@@ -39,6 +38,33 @@ void TextMeter::paint(Graphics& g)
     g.setColour ( Colours::white );
     g.drawSingleLineText(str, 5, Justification::centred);
 }
+
+void TickMark::update(float audioValue)
+{
+    level = Decibels::gainToDecibels(audioValue);
+
+    decayingValueHolder.updateHeldValue(level);
+
+    repaint();
+}
+
+void TickMark::paint(Graphics& g)
+{
+    g.setColour( Colours::lightblue );
+    
+    auto bounds = getLocalBounds();
+    auto h = bounds.getHeight();
+    
+    level = decayingValueHolder.getCurrentValue();
+    
+    auto tickLine = jmap((double)level, NegativeInfinity, MaxDecibels, 0.0, 1.0);
+
+    juce::Line<float> line (juce::Point<float> (2, (h * (1 -  (float)tickLine))),
+                            juce::Point<float> (37, (h * (1 -  (float)tickLine))));
+
+    g.drawLine (line, 2.0f);
+}
+
 
 void DBScale::paint(Graphics& g)
 {

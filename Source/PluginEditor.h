@@ -20,19 +20,6 @@
 /**
 */
 
-//TODO
-//TextMeter at the top
-//DbScale in the middle
-//Meter showing the Left Instant,
-//with ticks drawn behind the translucent gradient
-//Meter showing the Left average,
-//drawn with a solid color and orange hold tick
-//Meter showing the Right AverageMeter showing the Right instant
-//Label at the bottom showing the name of the meter
-
-
-
-
 class Pfmcpp_project10AudioProcessorEditor  : public AudioProcessorEditor, public Timer
 {
 public:
@@ -46,6 +33,7 @@ public:
 
 private:
     
+    TickMark tickMark;
     TextMeter textMeter;
     Meter meter;
     DBScale dBScale;
