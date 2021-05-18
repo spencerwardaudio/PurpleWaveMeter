@@ -15,11 +15,17 @@
 #define MaxDecibels  12.0
 #define NegativeInfinity -66.0
 
-
-
 struct ValueHolderBase : Timer
 {
-    ValueHolderBase() { startTimerHz(60); }
+    // 60 times per second in milliseconds
+    // 16.6f milliseconds per iteration = (1000 / 60)
+    // if I want 3db per second
+    // desiredRate = 3dB
+    // decayRate = desiredRate / (16.6f / 1000)
+    
+    const float RefreshRate = 16.f;
+    
+    ValueHolderBase() { startTimer(RefreshRate); }
     
     ~ValueHolderBase() { stopTimer(); }
     
@@ -96,11 +102,16 @@ void updateHeldValue(float input)
     }
 }
     
+void setDecayRate(float decayRateSeconds)
+{
+    decayRate = decayRateSeconds / (RefreshRate / 1000);
+}
+    
 private:
     
     int64 currentTime = { 0 };
     int64 elapsedTime { 0 };
-    double decayRate { 0.05 };
+    double decayRate { 0 };
 };
 
 
