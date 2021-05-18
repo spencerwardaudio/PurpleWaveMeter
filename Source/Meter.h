@@ -100,7 +100,7 @@ private:
     int64 elapsedTime { 0 };
     
     //db per Second
-    int64 decayRate { 3 };
+    double decayRate { 0.1 };
 };
 
 
