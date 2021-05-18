@@ -10,8 +10,6 @@
 
 #include "Meter.h"
 
-DecayingValueHolder::DecayingValueHolder() : decayRate( DBDecayTime ) {}
-
 
 void TextMeter::update(float audioValue)
 {

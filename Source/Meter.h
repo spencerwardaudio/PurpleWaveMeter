@@ -15,7 +15,6 @@
 #define MaxDecibels  12.0
 #define NegativeInfinity -66.0
 #define REFRESH_RATE 60.f
-#define DBDecayTime 3.0
 
 struct ValueHolderBase : Timer
 {
@@ -75,7 +74,10 @@ private:
 
 struct DecayingValueHolder : ValueHolderBase
 {
-    DecayingValueHolder();
+    DecayingValueHolder()
+    {
+        setDecayRate(3);
+    }
     
     void timerCallback() override
     {
@@ -107,7 +109,7 @@ private:
     
     int64 currentTime { 0 };
     int64 elapsedTime { 0 };
-    double decayRate { DBDecayTime };
+    double decayRate { 3.0 };
 };
 
 
