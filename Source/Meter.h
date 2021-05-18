@@ -15,6 +15,7 @@
 #define MaxDecibels  12.0
 #define NegativeInfinity -66.0
 #define REFRESH_RATE 60.f
+#define DBDecayTime 3.0
 
 struct ValueHolderBase : Timer
 {
@@ -74,38 +75,39 @@ private:
 
 struct DecayingValueHolder : ValueHolderBase
 {
+    DecayingValueHolder();
     
-void timerCallback() override
-{
-    currentTime = Time::currentTimeMillis();
-    elapsedTime = currentTime - peakTime;
-    
-    if(elapsedTime >= holdTime)
+    void timerCallback() override
     {
-        currentValue -= decayRate;
+        currentTime = Time::currentTimeMillis();
+        elapsedTime = currentTime - peakTime;
+        
+        if(elapsedTime >= holdTime)
+        {
+            currentValue -= decayRate;
+            DBG( "decayRate: " << decayRate );
+        }
     }
-}
 
-void updateHeldValue(float input)
-{
-    if(input > currentValue)
+    void updateHeldValue(float input)
     {
-        currentValue = input;
-        peakTime = Time::currentTimeMillis();
+        if(input > currentValue)
+        {
+            currentValue = input;
+            peakTime = Time::currentTimeMillis();
+        }
     }
-}
-    
-void setDecayRate(float decayRateSeconds)
-{
-    decayRate = decayRateSeconds / REFRESH_RATE;
-    DBG(decayRate << ": decayRate");
-}
+        
+    void setDecayRate(float decayRateSeconds)
+    {
+        decayRate = decayRateSeconds / REFRESH_RATE;
+    }
     
 private:
     
-    int64 currentTime = { 0 };
+    int64 currentTime { 0 };
     int64 elapsedTime { 0 };
-    double decayRate { 0 };
+    double decayRate { DBDecayTime };
 };
 
 
