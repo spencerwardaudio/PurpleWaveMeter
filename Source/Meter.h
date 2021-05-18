@@ -14,10 +14,11 @@
 
 #define MaxDecibels  12.0
 #define NegativeInfinity -66.0
+#define REFRESH_RATE 60.f
 
 struct ValueHolderBase : Timer
 {
-    ValueHolderBase() { startTimerHz(30); }
+    ValueHolderBase() { startTimerHz(REFRESH_RATE); }
     
     ~ValueHolderBase() { stopTimer(); }
     
@@ -30,15 +31,12 @@ protected:
     float currentValue { (float)NegativeInfinity };
     
     int64 peakTime { 0 };
-    
     int64 holdTime { 100 };
 };
 
 
-
 struct ValueHolder : ValueHolderBase
 {
-    
     void timerCallback() override
     {
         auto currentTime = Time::currentTimeMillis();
@@ -76,35 +74,42 @@ private:
 
 struct DecayingValueHolder : ValueHolderBase
 {
-    
-void timerCallback() override
-{
-    currentTime = Time::currentTimeMillis();
-    elapsedTime = currentTime - peakTime;
-    
-    if(elapsedTime >= holdTime)
+    DecayingValueHolder()
     {
-        DBG(currentValue << "dB");
-        currentValue -= decayRate;
+        setDecayRate(3);
     }
-}
+    
+    void timerCallback() override
+    {
+        currentTime = Time::currentTimeMillis();
+        elapsedTime = currentTime - peakTime;
+        
+        if(elapsedTime >= holdTime)
+        {
+            currentValue -= decayRate;
+            DBG( "decayRate: " << decayRate );
+        }
+    }
 
-void updateHeldValue(float input)
-{
-    if(input > currentValue)
+    void updateHeldValue(float input)
     {
-        currentValue = input;
-        peakTime = Time::currentTimeMillis();
+        if(input > currentValue)
+        {
+            currentValue = input;
+            peakTime = Time::currentTimeMillis();
+        }
     }
-}
+        
+    void setDecayRate(float decayRateSeconds)
+    {
+        decayRate = decayRateSeconds / REFRESH_RATE;
+    }
     
 private:
     
-    int64 currentTime = { 0 };
+    int64 currentTime { 0 };
     int64 elapsedTime { 0 };
-    
-    //db per Second
-    int64 decayRate { 3 };
+    double decayRate { 0 };
 };
 
 
@@ -115,8 +120,8 @@ struct TextMeter : Component
     void paint(Graphics& g) override;
     
     float level {};
+    
     ValueHolder valueHolder;
-    DecayingValueHolder decayingValueHolder;
 };
 
 
@@ -144,4 +149,9 @@ struct Meter : Component
     
     std::vector<Tick> ticks;
     float audioPassingVal {};
+    
+    float level {};
+    float previousVal {};
+    
+    DecayingValueHolder decayingValueHolder;
 };
