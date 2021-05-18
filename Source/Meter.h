@@ -109,7 +109,7 @@ private:
     
     int64 currentTime { 0 };
     int64 elapsedTime { 0 };
-    double decayRate { 3.0 };
+    double decayRate { 0 };
 };
 
 
