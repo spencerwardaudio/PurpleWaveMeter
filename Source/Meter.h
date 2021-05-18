@@ -17,15 +17,9 @@
 
 struct ValueHolderBase : Timer
 {
-    // 60 times per second in milliseconds
-    // 16.6f milliseconds per iteration = (1000 / 60)
-    // if I want 3db per second
-    // desiredRate = 3dB
-    // decayRate = desiredRate / (16.6f / 1000)
+    const int RefreshRate = 60;
     
-    const float RefreshRate = 16.f;
-    
-    ValueHolderBase() { startTimer(RefreshRate); }
+    ValueHolderBase() { startTimerHz(RefreshRate); }
     
     ~ValueHolderBase() { stopTimer(); }
     
@@ -104,7 +98,7 @@ void updateHeldValue(float input)
     
 void setDecayRate(float decayRateSeconds)
 {
-    decayRate = decayRateSeconds / (RefreshRate / 1000);
+    decayRate = decayRateSeconds / RefreshRate;
 }
     
 private:
