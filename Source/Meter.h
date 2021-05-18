@@ -15,9 +15,11 @@
 #define MaxDecibels  12.0
 #define NegativeInfinity -66.0
 
+
+
 struct ValueHolderBase : Timer
 {
-    ValueHolderBase() { startTimerHz(30); }
+    ValueHolderBase() { startTimerHz(60); }
     
     ~ValueHolderBase() { stopTimer(); }
     
@@ -98,9 +100,7 @@ private:
     
     int64 currentTime = { 0 };
     int64 elapsedTime { 0 };
-    
-    //db per Second
-    double decayRate { 0.1 };
+    double decayRate { 0.05 };
 };
 
 
