@@ -14,12 +14,11 @@
 
 #define MaxDecibels  12.0
 #define NegativeInfinity -66.0
+#define REFRESH_RATE 60.f
 
 struct ValueHolderBase : Timer
 {
-    const int RefreshRate = 60;
-    
-    ValueHolderBase() { startTimerHz(RefreshRate); }
+    ValueHolderBase() { startTimerHz(REFRESH_RATE); }
     
     ~ValueHolderBase() { stopTimer(); }
     
@@ -98,7 +97,8 @@ void updateHeldValue(float input)
     
 void setDecayRate(float decayRateSeconds)
 {
-    decayRate = decayRateSeconds / RefreshRate;
+    decayRate = decayRateSeconds / REFRESH_RATE;
+    DBG(decayRate << ": decayRate");
 }
     
 private:
