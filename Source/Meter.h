@@ -33,19 +33,16 @@ struct Averager
     void clear(T initialValue)
     {
         std::fill(avgElements.begin(), avgElements.end(), initialValue);
+        
+        average = initialValue;
     }
     
     //reset the vector, fill with the INITIAL VALUE, & call getAverage
     void resize(size_t s, T initialValue)
     {
-        avgElements.clear();
+        avgElements.resize(s);
         
-        for(int i = 0; i < s; ++i)
-        {
-            avgElements.push_back(initialValue);
-        }
-        
-        getAverage();
+        clear(initialValue);
     }
 
     //add an element to the vector & call getAverage
@@ -77,8 +74,11 @@ struct Averager
         return avgElements.size();
     }
     
+private:
+    
     std::atomic<float> average { 0 };
     std::atomic<int> writePointer { 0 };
+    
     std::vector<float> avgElements { 0 };
 };
 
