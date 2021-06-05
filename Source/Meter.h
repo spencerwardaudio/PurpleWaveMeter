@@ -48,11 +48,10 @@ struct Averager
     //add an element to the vector & call getAverage
     void add(T t)
     {
-        avgElements.at(writePointer) = t;
+        runningSum += t - avgElements[writePointer];
+        avgElements[writePointer] = t;
         
         average = getAverage();
-        
-        DBG("avg" << average);
         
         ++writePointer;
         
@@ -63,7 +62,7 @@ struct Averager
     //get average out of the vector
     float getAverage() const
     {
-        auto tempAvg = std::accumulate( avgElements.begin(), avgElements.end(), 0.0f ) / avgElements.size();
+        auto tempAvg = runningSum / avgElements.size();
         
         return tempAvg;
     }
@@ -75,6 +74,8 @@ struct Averager
     }
     
 private:
+    
+    float runningSum { 0.f };
     
     std::atomic<float> average { 0 };
     std::atomic<int> writePointer { 0 };
