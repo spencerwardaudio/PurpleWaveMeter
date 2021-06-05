@@ -16,6 +16,73 @@
 #define NegativeInfinity -66.0
 #define REFRESH_RATE 60.f
 
+/*
+ Averages a fixed number of elements
+ allows you to change the number of elements
+ */
+
+template<typename T>
+struct Averager
+{
+    Averager(size_t numElements, T initialValue)
+    {
+        resize(numElements, initialValue);
+    }
+
+    //reset elements in the vector to initial Value
+    void clear(T initialValue)
+    {
+        std::fill(avgElements.begin(), avgElements.end(), initialValue);
+    }
+    
+    //reset the vector, fill with the INITIAL VALUE, & call getAverage
+    void resize(size_t s, T initialValue)
+    {
+        avgElements.clear();
+        
+        for(int i = 0; i < s; ++i)
+        {
+            avgElements.push_back(initialValue);
+        }
+        
+        getAverage();
+    }
+
+    //add an element to the vector & call getAverage
+    void add(T t)
+    {
+        avgElements.at(writePointer) = t;
+        
+        average = getAverage();
+        
+        DBG("avg" << average);
+        
+        ++writePointer;
+        
+        if( writePointer > getSize())
+            writePointer = 0;
+    }
+    
+    //get average out of the vector
+    float getAverage() const
+    {
+        auto tempAvg = std::accumulate( avgElements.begin(), avgElements.end(), 0.0f ) / avgElements.size();
+        
+        return tempAvg;
+    }
+    
+    //query the size of the vector
+    size_t getSize() const
+    {
+        return avgElements.size();
+    }
+    
+    std::atomic<float> average { 0 };
+    std::atomic<int> writePointer { 0 };
+    std::vector<float> avgElements { 0 };
+};
+
+
 struct ValueHolderBase : Timer
 {
     ValueHolderBase() { startTimerHz(REFRESH_RATE); }
