@@ -51,7 +51,11 @@ struct Averager
         runningSum += t - avgElements[writePointer];
         avgElements[writePointer] = t;
         
-        average = getAverage();
+        auto local = this->average.load();
+        
+        local = getAverage();
+        
+        average = local;
         
         ++writePointer;
         
