@@ -34,7 +34,7 @@ public:
 private:
     
     
-    Averager<float> averageValue{ 5, 0.f };
+    Averager<float> averageValue { 5, 0.f };
     
     TextMeter textMeter;
     Meter meter;

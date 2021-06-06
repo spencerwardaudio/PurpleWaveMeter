@@ -85,7 +85,7 @@ private:
     float runningSum { 0.f };
     
     std::atomic<float> avg { 0 };
-    std::atomic<int> writeIndex { 0 };
+    std::atomic<size_t> writeIndex { 0 };
     
     std::vector<float> avgElements { 0 };
 };
