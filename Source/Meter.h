@@ -68,12 +68,10 @@ struct Averager
         writeIndex.store(index);
     }
     
-    //get average out of the vector
+
     float getAverage() const
     {
-        auto tempAvg = runningSum / avgElements.size();
-        
-        return tempAvg;
+        return avg;
     }
     
     //query the size of the vector
