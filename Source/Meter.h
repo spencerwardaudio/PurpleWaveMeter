@@ -32,7 +32,7 @@ struct Averager
     //reset elements in the vector to initial Value
     void clear(T initialValue)
     {
-        std::fill(avgElements.begin(), avgElements.end(), initialValue);
+        std::fill(elements.begin(), elements.end(), initialValue);
         
         avg = initialValue;
     }
@@ -40,7 +40,7 @@ struct Averager
     //reset the vector, fill with the INITIAL VALUE, & call getAverage
     void resize(size_t s, T initialValue)
     {
-        avgElements.resize(s);
+        elements.resize(s);
         
         clear(initialValue);
     }
@@ -51,7 +51,7 @@ struct Averager
         // cache the write index
         auto index = writeIndex.load();
         //update the running sum
-        runningSum += t - avgElements[index];
+        runningSum += t - elements[index];
         
         // cache the size locally, so getSize() isn't called more than once
         auto size = getSize();
@@ -77,17 +77,16 @@ struct Averager
     //query the size of the vector
     size_t getSize() const
     {
-        return avgElements.size();
+        return elements.size();
     }
     
 private:
     
-    float runningSum { 0.f };
+    std::vector<T> elements { };
     
-    std::atomic<float> avg { 0 };
+    T runningSum { };
     std::atomic<size_t> writeIndex { 0 };
-    
-    std::vector<float> avgElements { 0 };
+    std::atomic<float> avg { 0 };
 };
 
 
