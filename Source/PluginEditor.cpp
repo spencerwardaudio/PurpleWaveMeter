@@ -74,5 +74,7 @@ void Pfmcpp_project10AudioProcessorEditor::timerCallback()
         
         meter.update(bufferLRPeak);
         textMeter.update(bufferLRPeak);
+        
+        averageValue.add(bufferLRPeak);
     }
 }
