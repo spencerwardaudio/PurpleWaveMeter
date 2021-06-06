@@ -34,7 +34,7 @@ struct Averager
     {
         std::fill(avgElements.begin(), avgElements.end(), initialValue);
         
-        average = initialValue;
+        avg = initialValue;
     }
     
     //reset the vector, fill with the INITIAL VALUE, & call getAverage
@@ -48,19 +48,24 @@ struct Averager
     //add an element to the vector & call getAverage
     void add(T t)
     {
-        runningSum += t - avgElements[writePointer];
-        avgElements[writePointer] = t;
+        // cache the write index
+        auto index = writeIndex.load();
+        //update the running sum
+        runningSum += t - avgElements[index];
         
-        auto local = this->average.load();
+        // cache the size locally, so getSize() isn't called more than once
+        auto size = getSize();
+        //update the average
+        avg.store( runningSum / (float)size );
         
-        local = getAverage();
+        //update the local write index
+        ++index;
+        //wrap the local write index if needed
+        if( index > size - 1 )
+            index = 0;
         
-        average = local;
-        
-        ++writePointer;
-        
-        if( writePointer > getSize())
-            writePointer = 0;
+        // update the write index
+        writeIndex.store(index);
     }
     
     //get average out of the vector
@@ -81,8 +86,8 @@ private:
     
     float runningSum { 0.f };
     
-    std::atomic<float> average { 0 };
-    std::atomic<int> writePointer { 0 };
+    std::atomic<float> avg { 0 };
+    std::atomic<int> writeIndex { 0 };
     
     std::vector<float> avgElements { 0 };
 };
