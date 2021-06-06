@@ -35,6 +35,8 @@ struct Averager
         std::fill(elements.begin(), elements.end(), initialValue);
         
         avg = initialValue;
+        
+        runningSum = initialValue;
     }
     
     //reset the vector, fill with the INITIAL VALUE, & call getAverage
