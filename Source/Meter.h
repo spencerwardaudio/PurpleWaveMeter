@@ -36,7 +36,7 @@ struct Averager
         
         avg = initialValue;
         
-        runningSum = initialValue;
+        runningSum = initialValue * elements.size();
     }
     
     //reset the vector, fill with the INITIAL VALUE, & call getAverage
