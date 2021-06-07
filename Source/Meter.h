@@ -55,6 +55,8 @@ struct Averager
         //update the running sum
         runningSum += t - elements[index];
         
+        elements[index] = t;
+        
         // cache the size locally, so getSize() isn't called more than once
         auto size = getSize();
         //update the average
