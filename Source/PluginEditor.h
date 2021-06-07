@@ -34,13 +34,12 @@ public:
 private:
     
     
-    Averager<float> averageValue { 5, 0.f };
+    Averager<float> averageValue { 10, 0.f };
     
     //MacroMeter
     TextMeter textMeter;
     Meter meterInstant;
     Meter meterAverage;
-    
     DBScale dBScale;
     
     Pfmcpp_project10AudioProcessor& processor;
