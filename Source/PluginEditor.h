@@ -36,8 +36,11 @@ private:
     
     Averager<float> averageValue { 5, 0.f };
     
+    //MacroMeter
     TextMeter textMeter;
-    Meter meter;
+    Meter meterInstant;
+    Meter meterAverage;
+    
     DBScale dBScale;
     
     Pfmcpp_project10AudioProcessor& processor;

@@ -68,13 +68,13 @@ void Meter::update(float audioValue)
 
 void Meter::paint(Graphics& g)
 {
-    g.fillAll(Colours::white);
+    g.fillAll(Colours::black);
     
     auto bounds = getLocalBounds();
 
     for(auto& tck : ticks )
     {
-        g.setColour (juce::Colours::black);
+        g.setColour (juce::Colours::whitesmoke);
         
         juce::Line<float> line (juce::Point<float> (2, tck.y - 3),
                                 juce::Point<float> (37, tck.y - 3));

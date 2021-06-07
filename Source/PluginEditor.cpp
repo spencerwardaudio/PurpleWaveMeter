@@ -18,7 +18,9 @@
 Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmcpp_project10AudioProcessor& p)
     : AudioProcessorEditor (&p), processor (p)
 {
-    addAndMakeVisible(meter);
+    addAndMakeVisible(meterInstant);
+    addAndMakeVisible(meterAverage);
+    
     addAndMakeVisible(textMeter);
     addAndMakeVisible(dBScale);
     
@@ -29,8 +31,8 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
     textMeter.valueHolder.setThreshold(0.f);
     textMeter.valueHolder.setHoldTime(300);
     
-    meter.decayingValueHolder.setHoldTime(1000);
-    meter.decayingValueHolder.setDecayRate(3.f);
+    meterInstant.decayingValueHolder.setHoldTime(1000);
+    meterInstant.decayingValueHolder.setDecayRate(3.f);
 }
 
 Pfmcpp_project10AudioProcessorEditor::~Pfmcpp_project10AudioProcessorEditor()
@@ -44,26 +46,31 @@ void Pfmcpp_project10AudioProcessorEditor::paint (Graphics& g)
     // (Our component is opaque, so we must completely fill the background with a solid colour)
     g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
 
-    g.setColour (Colours::white);
+    g.setColour (Colours::black);
     g.setFont (15.0f);
 }
 
 void Pfmcpp_project10AudioProcessorEditor::resized()
 {
-    meter.setBounds(0,
+    meterInstant.setBounds(0,
                     10,
-                    40,
+                    30,
                     200);
+    
+    meterAverage.setBounds(30,
+                           10,
+                           10,
+                           200);
     
     textMeter.setBounds(0,
                         -27,
                         40,
                         41);
     
-    dBScale.ticks = meter.ticks;
-    dBScale.yOffset = meter.getY();
+    dBScale.ticks = meterInstant.ticks;
+    dBScale.yOffset = meterInstant.getY();
     
-    dBScale.setBounds(meter.getRight(), 0, 50, getHeight());
+    dBScale.setBounds(meterAverage.getRight(), 0, 50, getHeight());
 }
 
 void Pfmcpp_project10AudioProcessorEditor::timerCallback()
@@ -72,9 +79,13 @@ void Pfmcpp_project10AudioProcessorEditor::timerCallback()
     {
         auto bufferLRPeak = editorBuffer.getMagnitude(0, 0, editorBuffer.getNumSamples());
         
-        meter.update(bufferLRPeak);
+        meterInstant.update(bufferLRPeak);
         textMeter.update(bufferLRPeak);
         
         averageValue.add(bufferLRPeak);
+        
+        auto avg = averageValue.getAverage();
+        
+        meterAverage.update(avg);
     }
 }
