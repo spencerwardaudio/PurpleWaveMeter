@@ -71,21 +71,19 @@ void Meter::paint(Graphics& g)
     g.fillAll(Colours::black);
     
     auto bounds = getLocalBounds();
+    
+    auto tickXLeft = 2;
+    auto tickXRight = 30;
+
 
     auto numTicks = ticks.size();
     for( int i = 0; i < numTicks; ++i )
     {
         g.setColour (juce::Colours::whitesmoke);
         
-        auto tickX = 37;
-        
-        if(i % 2 == 0 ? tickX = 37 : tickX = 15 )
+        if(i % 2 == 0 ? (tickXLeft = 2, tickXRight = 30) : (tickXLeft = 7, tickXRight = 20))
         {
-            juce::Line<float> line (juce::Point<float> (2, ticks[i].y - 3),
-                                    juce::Point<float> (tickX, ticks[i].y - 3));
-        
-
-            g.drawLine (line, 0.8f);
+            g.drawHorizontalLine(ticks[i].y - 3, tickXLeft, tickXRight);
         }
     }
     

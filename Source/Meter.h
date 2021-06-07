@@ -64,10 +64,7 @@ struct Averager
         ++index;
         //wrap the local write index if needed
         if( index > size - 1 )
-        {
             index = 0;
-            runningSum = elements[index];
-        }
         
         // update the write index
         writeIndex.store(index);

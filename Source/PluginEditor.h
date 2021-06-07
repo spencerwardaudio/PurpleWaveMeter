@@ -33,7 +33,6 @@ public:
 
 private:
     
-    
     Averager<float> averageValue { 10, 0.f };
     
     //MacroMeter
