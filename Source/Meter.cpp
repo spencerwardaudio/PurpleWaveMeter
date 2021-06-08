@@ -68,18 +68,23 @@ void Meter::update(float audioValue)
 
 void Meter::paint(Graphics& g)
 {
-    g.fillAll(Colours::white);
+    g.fillAll(Colours::black);
     
     auto bounds = getLocalBounds();
+    
+    auto tickXLeft = 2;
+    auto tickXRight = 30;
 
-    for(auto& tck : ticks )
+
+    auto numTicks = ticks.size();
+    for( int i = 0; i < numTicks; ++i )
     {
-        g.setColour (juce::Colours::black);
+        g.setColour (juce::Colours::whitesmoke);
         
-        juce::Line<float> line (juce::Point<float> (2, tck.y - 3),
-                                juce::Point<float> (37, tck.y - 3));
-
-        g.drawLine (line, 0.8f);
+        if(i % 2 == 0 ? (tickXLeft = 2, tickXRight = 30) : (tickXLeft = 7, tickXRight = 20))
+        {
+            g.drawHorizontalLine(ticks[i].y, tickXLeft, tickXRight);
+        }
     }
     
     auto h = bounds.getHeight();

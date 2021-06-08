@@ -16,10 +16,6 @@
 #define NegativeInfinity -66.0
 #define REFRESH_RATE 60.f
 
-/*
- Averages a fixed number of elements
- allows you to change the number of elements
- */
 
 template<typename T>
 struct Averager
@@ -54,6 +50,8 @@ struct Averager
         auto index = writeIndex.load();
         //update the running sum
         runningSum += t - elements[index];
+        
+        elements[index] = t;
         
         // cache the size locally, so getSize() isn't called more than once
         auto size = getSize();
