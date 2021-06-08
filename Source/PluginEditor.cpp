@@ -18,24 +18,10 @@
 Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmcpp_project10AudioProcessor& p)
     : AudioProcessorEditor (&p), processor (p)
 {
-    addAndMakeVisible(meterInstant);
-    addAndMakeVisible(meterAverage);
-    
-    addAndMakeVisible(textMeter);
-    addAndMakeVisible(dBScale);
+    addAndMakeVisible(macroMeter);
     
     setSize (300, 400);
-    
     startTimerHz(30);
-    
-    textMeter.valueHolder.setThreshold(0.f);
-    textMeter.valueHolder.setHoldTime(300);
-    
-    meterInstant.decayingValueHolder.setHoldTime(1000);
-    meterInstant.decayingValueHolder.setDecayRate(3.f);
-    
-    meterAverage.decayingValueHolder.setHoldTime(1000);
-    meterAverage.decayingValueHolder.setDecayRate(3.f);
 }
 
 Pfmcpp_project10AudioProcessorEditor::~Pfmcpp_project10AudioProcessorEditor()
@@ -55,25 +41,9 @@ void Pfmcpp_project10AudioProcessorEditor::paint (Graphics& g)
 
 void Pfmcpp_project10AudioProcessorEditor::resized()
 {
-    meterInstant.setBounds(0,
-                    10,
-                    30,
-                    200);
+    auto bounds = getLocalBounds();
     
-    meterAverage.setBounds(30,
-                           10,
-                           10,
-                           200);
-    
-    textMeter.setBounds(0,
-                        -27,
-                        40,
-                        41);
-    
-    dBScale.ticks = meterInstant.ticks;
-    dBScale.yOffset = meterInstant.getY();
-    
-    dBScale.setBounds(meterAverage.getRight(), 0, 50, getHeight());
+    macroMeter.setBounds(bounds);
 }
 
 void Pfmcpp_project10AudioProcessorEditor::timerCallback()
@@ -82,13 +52,13 @@ void Pfmcpp_project10AudioProcessorEditor::timerCallback()
     {
         auto bufferLRPeak = editorBuffer.getMagnitude(0, 0, editorBuffer.getNumSamples());
         
-        meterInstant.update(bufferLRPeak);
-        textMeter.update(bufferLRPeak);
+        macroMeter.meterInstant.update(bufferLRPeak);
+        macroMeter.textMeter.update(bufferLRPeak);
         
-        averageValue.add(bufferLRPeak);
+        macroMeter.averageValue.add(bufferLRPeak);
         
-        auto avg = averageValue.getAverage();
+        auto avg = macroMeter.averageValue.getAverage();
         
-        meterAverage.update(avg);
+        macroMeter.meterAverage.update(avg);
     }
 }

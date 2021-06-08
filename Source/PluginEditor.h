@@ -14,6 +14,7 @@
 #include "PluginProcessor.h"
 
 #include "Meter.h"
+#include "MacroMeter.h"
 
 
 //==============================================================================
@@ -33,13 +34,7 @@ public:
 
 private:
     
-    Averager<float> averageValue { 10, 0.f };
-    
-    //MacroMeter
-    TextMeter textMeter;
-    Meter meterInstant;
-    Meter meterAverage;
-    DBScale dBScale;
+    MacroMeter macroMeter;
     
     Pfmcpp_project10AudioProcessor& processor;
     AudioBuffer<float> editorBuffer;

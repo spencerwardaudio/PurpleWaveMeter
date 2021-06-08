@@ -16,10 +16,6 @@
 #define NegativeInfinity -66.0
 #define REFRESH_RATE 60.f
 
-/*
- Averages a fixed number of elements
- allows you to change the number of elements
- */
 
 template<typename T>
 struct Averager
