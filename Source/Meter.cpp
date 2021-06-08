@@ -83,7 +83,7 @@ void Meter::paint(Graphics& g)
         
         if(i % 2 == 0 ? (tickXLeft = 2, tickXRight = 30) : (tickXLeft = 7, tickXRight = 20))
         {
-            g.drawHorizontalLine(ticks[i].y - 3, tickXLeft, tickXRight);
+            g.drawHorizontalLine(ticks[i].y, tickXLeft, tickXRight);
         }
     }
     
