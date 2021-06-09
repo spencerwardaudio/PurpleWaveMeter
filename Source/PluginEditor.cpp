@@ -18,7 +18,7 @@
 Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmcpp_project10AudioProcessor& p)
     : AudioProcessorEditor (&p), processor (p)
 {
-    addAndMakeVisible(macroMeter);
+    addAndMakeVisible(stereoMeter);
     
     setSize (300, 400);
     startTimerHz(30);
@@ -43,7 +43,7 @@ void Pfmcpp_project10AudioProcessorEditor::resized()
 {
     auto bounds = getLocalBounds();
     
-    macroMeter.setBounds(bounds);
+    stereoMeter.setBounds(bounds);
 }
 
 void Pfmcpp_project10AudioProcessorEditor::timerCallback()
@@ -52,13 +52,8 @@ void Pfmcpp_project10AudioProcessorEditor::timerCallback()
     {
         auto bufferLRPeak = editorBuffer.getMagnitude(0, 0, editorBuffer.getNumSamples());
         
-        macroMeter.meterInstant.update(bufferLRPeak);
-        macroMeter.textMeter.update(bufferLRPeak);
+        stereoMeter.macroMeterLeft.update(bufferLRPeak);
+        stereoMeter.macroMeterRight.update(bufferLRPeak);
         
-        macroMeter.averageValue.add(bufferLRPeak);
-        
-        auto avg = macroMeter.averageValue.getAverage();
-        
-        macroMeter.meterAverage.update(avg);
     }
 }

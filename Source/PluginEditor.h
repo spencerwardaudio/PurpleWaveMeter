@@ -13,8 +13,7 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PluginProcessor.h"
 
-#include "Meter.h"
-#include "MacroMeter.h"
+#include "StereoMeter.h"
 
 
 //==============================================================================
@@ -34,7 +33,7 @@ public:
 
 private:
     
-    MacroMeter macroMeter;
+    StereoMeter stereoMeter;
     
     Pfmcpp_project10AudioProcessor& processor;
     AudioBuffer<float> editorBuffer;

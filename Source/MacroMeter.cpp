@@ -17,7 +17,6 @@ MacroMeter::MacroMeter()
     addAndMakeVisible(meterAverage);
     
     addAndMakeVisible(textMeter);
-    addAndMakeVisible(dBScale);
     
     textMeter.valueHolder.setThreshold(0.f);
     textMeter.valueHolder.setHoldTime(300);
@@ -52,9 +51,16 @@ void MacroMeter::resized()
                         -27,
                         40,
                         41);
+}
+
+void MacroMeter::update(float levelInDB)
+{
+    meterInstant.update(levelInDB);
+    textMeter.update(levelInDB);
     
-    dBScale.ticks = meterInstant.ticks;
-    dBScale.yOffset = meterInstant.getY();
+    averageValue.add(levelInDB);
     
-    dBScale.setBounds(meterAverage.getRight(), 0, 50, getHeight());
+    auto avg = averageValue.getAverage();
+    
+    meterAverage.update(avg);
 }

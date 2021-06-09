@@ -1,8 +1,8 @@
 /*
   ==============================================================================
 
-    MacroMeter.h
-    Created: 8 Jun 2021 9:41:03am
+    StereoMeter.h
+    Created: 9 Jun 2021 2:35:27am
     Author:  Spencer Ward
 
   ==============================================================================
@@ -10,21 +10,16 @@
 
 #pragma once
 
-#include "Meter.h"
+#include "MacroMeter.h"
 
-struct MacroMeter : Component
+struct StereoMeter : Component
 {
-    MacroMeter();
+    StereoMeter();
     
     void paint (Graphics& g) override;
     void resized() override;
     
-    void update(float levelInDB);
-    
-private:
-    TextMeter textMeter;
-    Meter meterInstant;
-    Meter meterAverage;
-    
-    Averager<float> averageValue { 10, 0.f };
+    MacroMeter macroMeterLeft, macroMeterRight;
+    DBScale dBScale;
+    Label labelLR;
 };
