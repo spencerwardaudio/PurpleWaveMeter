@@ -72,18 +72,17 @@ void Meter::paint(Graphics& g)
     
     auto bounds = getLocalBounds();
     
-    auto tickXLeft = 2;
-    auto tickXRight = 30;
-
+    auto offset = 2;
+    auto center = bounds.getCentreX();
 
     auto numTicks = ticks.size();
     for( int i = 0; i < numTicks; ++i )
     {
         g.setColour (juce::Colours::whitesmoke);
         
-        if(i % 2 == 0 ? (tickXLeft = 2, tickXRight = 30) : (tickXLeft = 7, tickXRight = 20))
+        if(i % 2 == 0 ? offset = 5 : offset = 11)
         {
-            g.drawHorizontalLine(ticks[i].y, tickXLeft, tickXRight);
+            g.drawHorizontalLine(ticks[i].y, center - offset, center + offset);
         }
     }
     

@@ -12,14 +12,25 @@
 
 #include "MacroMeter.h"
 
+#define DBScaleWidth 25
+#define MacroMeterWidth 40
+#define StereoMeterWidth 105
+
+
 struct StereoMeter : Component
 {
-    StereoMeter();
+    StereoMeter(const String MeterName);
     
     void paint (Graphics& g) override;
     void resized() override;
     
-    MacroMeter macroMeterLeft, macroMeterRight;
+    String name;
+    
+    Rectangle<float> r;
+    Path p;
+    
+    MacroMeter macroMeterLeft = MacroMeter(0, 30);
+    MacroMeter macroMeterRight = MacroMeter(10, 0);
     DBScale dBScale;
     Label labelLR;
 };

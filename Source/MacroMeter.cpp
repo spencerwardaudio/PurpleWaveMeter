@@ -11,15 +11,15 @@
 #include "MacroMeter.h"
 
 
-MacroMeter::MacroMeter()
+MacroMeter::MacroMeter(int insMtrX, int avgMtrX)
 {
+    meterIPos = insMtrX;
+    meterAVGPos = avgMtrX;
+    
     addAndMakeVisible(meterInstant);
     addAndMakeVisible(meterAverage);
     
     addAndMakeVisible(textMeter);
-    
-    textMeter.valueHolder.setThreshold(0.f);
-    textMeter.valueHolder.setHoldTime(300);
     
     meterInstant.decayingValueHolder.setHoldTime(1000);
     meterInstant.decayingValueHolder.setDecayRate(3.f);
@@ -37,25 +37,27 @@ void MacroMeter::paint (Graphics& g)
 
 void MacroMeter::resized()
 {
-    meterInstant.setBounds(0,
-                    10,
-                    30,
-                    200);
-    
-    meterAverage.setBounds(30,
+    meterInstant.setBounds(meterIPos,
                            10,
+                           meterWidth,
+                           meterHeight);
+
+    meterAverage.setBounds(meterAVGPos,
                            10,
-                           200);
-    
+                           meterWidth / 3,
+                           meterHeight);
+
     textMeter.setBounds(0,
                         -27,
                         40,
                         41);
+    
 }
 
 void MacroMeter::update(float levelInDB)
 {
     meterInstant.update(levelInDB);
+    
     textMeter.update(levelInDB);
     
     averageValue.add(levelInDB);
@@ -63,4 +65,14 @@ void MacroMeter::update(float levelInDB)
     auto avg = averageValue.getAverage();
     
     meterAverage.update(avg);
+}
+
+std::vector<Tick> MacroMeter::getDBTick()
+{
+    return meterInstant.ticks;
+}
+
+int MacroMeter::getDBBounds()
+{
+    return meterInstant.getY();
 }

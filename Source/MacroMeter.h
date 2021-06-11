@@ -12,16 +12,26 @@
 
 #include "Meter.h"
 
+#define meterHeight 200
+#define meterWidth  30
+
 struct MacroMeter : Component
 {
-    MacroMeter();
+    MacroMeter(int insMtrX, int avgMtrX);
     
     void paint (Graphics& g) override;
     void resized() override;
     
     void update(float levelInDB);
-    
+
+    std::vector<Tick> getDBTick();
+    int getDBBounds();
+
 private:
+
+    int meterAVGPos { 30 };
+    int meterIPos {0};
+    
     TextMeter textMeter;
     Meter meterInstant;
     Meter meterAverage;

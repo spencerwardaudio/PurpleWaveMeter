@@ -161,7 +161,6 @@ struct DecayingValueHolder : ValueHolderBase
         if(elapsedTime >= holdTime)
         {
             currentValue -= decayRate;
-            DBG( "decayRate: " << decayRate );
         }
     }
 
@@ -208,6 +207,8 @@ struct Tick
 struct DBScale : Component
 {
     void paint(Graphics& g) override;
+    
+    void getDB();
 
     std::vector<Tick> ticks;
     int yOffset = 0;

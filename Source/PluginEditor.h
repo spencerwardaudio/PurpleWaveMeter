@@ -33,7 +33,11 @@ public:
 
 private:
     
-    StereoMeter stereoMeter;
+    const String strPk = "L  Peak  R";
+    const String strRMS = "L  RMS  R";
+    
+    StereoMeter stereoMeterPk = StereoMeter(strPk);
+    StereoMeter stereoMeterRMS = StereoMeter(strRMS);
     
     Pfmcpp_project10AudioProcessor& processor;
     AudioBuffer<float> editorBuffer;
