@@ -89,12 +89,16 @@ void Meter::paint(Graphics& g)
     auto h = bounds.getHeight();
     auto level = jmap((double)audioPassingVal, NegativeInfinity, MaxDecibels, 0.0, 1.0);
     
-    g.setColour(Colours::greenyellow);
+    g.setColour(Colours::steelblue);
     
+    g.setOpacity(0.28);
+    
+    g.setGradientFill (ColourGradient (Colours::lightblue, 0,  level,
+                                        Colours::blueviolet, 0, h, false));
+
     g.fillRect(bounds.withHeight(h * level).withY(h * (1.0 - level)));
     
     //tick meter
-    g.setColour( Colours::lightblue );
     
     level = decayingValueHolder.getCurrentValue();
     
