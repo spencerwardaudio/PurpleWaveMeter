@@ -12,20 +12,21 @@
 
 #include "MacroMeter.h"
 
-#define DBScaleWidth 25
-#define MacroMeterWidth 40
-#define StereoMeterWidth 105
-
+#define DB_SCALE_WIDTH 25
+#define MACRO_METER_WIDTH 40
+#define STEREO_METER_WIDTH 105
 
 struct StereoMeter : Component
 {
     StereoMeter(const String MeterName);
     
+    //provide setters for updating
+    void update(float levelInDB);
+    
     void paint (Graphics& g) override;
     void resized() override;
     
-    String name;
-    
+private:
     Rectangle<float> r;
     Path p;
     

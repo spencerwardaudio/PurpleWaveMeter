@@ -32,13 +32,10 @@ public:
     void timerCallback() override;
 
 private:
-    
-    const String strPk = "L  Peak  R";
-    const String strRMS = "L  RMS  R";
-    
-    StereoMeter stereoMeterPk = StereoMeter(strPk);
-    StereoMeter stereoMeterRMS = StereoMeter(strRMS);
-    
+
+    StereoMeter stereoMeterRMS { "L  RMS  R" };
+    StereoMeter stereoMeterPk { "L  Peak  R" };
+
     Pfmcpp_project10AudioProcessor& processor;
     AudioBuffer<float> editorBuffer;
     

@@ -21,7 +21,7 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
     addAndMakeVisible(stereoMeterPk);
     addAndMakeVisible(stereoMeterRMS);
     
-    setSize (600, 400);
+    setSize (400, 300);
     startTimerHz(30);
 }
 
@@ -42,24 +42,21 @@ void Pfmcpp_project10AudioProcessorEditor::paint (Graphics& g)
 
 void Pfmcpp_project10AudioProcessorEditor::resized()
 {
-    auto boundsRMS = getLocalBounds();
-    auto boundsPk = getLocalBounds().removeFromRight(100);
+    auto bounds = getLocalBounds();
     
-    stereoMeterRMS.setBounds(boundsRMS);
-    stereoMeterPk.setBounds(boundsPk);
+    stereoMeterRMS.setBounds(bounds.removeFromLeft(100).removeFromTop(METER_HEIGHT + 40));
+    stereoMeterPk.setBounds(bounds.removeFromRight(100).removeFromTop(METER_HEIGHT + 40));
 }
 
 void Pfmcpp_project10AudioProcessorEditor::timerCallback()
 {
     if( processor.fifo.pull(editorBuffer) )
     {
-        auto bufferLRPeak = editorBuffer.getMagnitude(0, 0, editorBuffer.getNumSamples());
-        
         //MAKE DRY
-        stereoMeterPk.macroMeterLeft.update(bufferLRPeak);
-        stereoMeterPk.macroMeterRight.update(bufferLRPeak);
-        
-        stereoMeterRMS.macroMeterLeft.update(bufferLRPeak);
-        stereoMeterRMS.macroMeterRight.update(bufferLRPeak);
+        stereoMeterPk.update(editorBuffer.getMagnitude(0, 0, editorBuffer.getNumSamples()));
+        stereoMeterPk.update(editorBuffer.getMagnitude(1, 0, editorBuffer.getNumSamples()));
+
+        stereoMeterRMS.update(editorBuffer.getRMSLevel(0, 0, editorBuffer.getNumSamples()));
+        stereoMeterRMS.update(editorBuffer.getRMSLevel(1, 0, editorBuffer.getNumSamples()));
     }
 }

@@ -31,7 +31,7 @@ void TextMeter::paint(Graphics& g)
     }
     else
     {
-        str = ( level <= NegativeInfinity ) ? "-inf" : juce::String( level, 1 );
+        str = ( level <= NEGATIVE_INFINITY ) ? "-inf" : juce::String( level, 1 );
     }
     
     g.fillAll ( over ? Colours::red : Colours::black );
@@ -87,7 +87,7 @@ void Meter::paint(Graphics& g)
     }
     
     auto h = bounds.getHeight();
-    auto level = jmap((double)audioPassingVal, NegativeInfinity, MaxDecibels, 0.0, 1.0);
+    auto level = jmap((double)audioPassingVal, NEGATIVE_INFINITY, MAX_DECIBELS, 0.0, 1.0);
     
     g.setColour(Colours::steelblue);
     
@@ -102,7 +102,7 @@ void Meter::paint(Graphics& g)
     
     level = decayingValueHolder.getCurrentValue();
     
-    auto tickLine = jmap((double)level, NegativeInfinity, MaxDecibels, 0.0, 1.0);
+    auto tickLine = jmap((double)level, NEGATIVE_INFINITY, MAX_DECIBELS, 0.0, 1.0);
 
     g.fillRect(bounds.withY(h * (1 -  (float)tickLine)).withHeight(2));
 }
@@ -114,9 +114,9 @@ void Meter::resized()
     ticks.clear();
     Tick tck;
     
-    for(int i = (int)NegativeInfinity; i <= (int)MaxDecibels; i += 6)
+    for(int i = (int)NEGATIVE_INFINITY; i <= (int)MAX_DECIBELS; i += 6)
     {
-        tck.y = jmap(i, (int)NegativeInfinity, (int)MaxDecibels, h, 0) + 4;
+        tck.y = jmap(i, (int)NEGATIVE_INFINITY, (int)MAX_DECIBELS, h, 0) + 4;
         std::cout << tck.y << " : y " << std::endl;
         tck.dB = i;
         std::cout << tck.dB << " : dB " << std::endl;

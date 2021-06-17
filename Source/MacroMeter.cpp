@@ -39,13 +39,13 @@ void MacroMeter::resized()
 {
     meterInstant.setBounds(meterIPos,
                            10,
-                           meterWidth,
-                           meterHeight);
+                           METER_WIDTH,
+                           METER_HEIGHT);
 
     meterAverage.setBounds(meterAVGPos,
                            10,
-                           meterWidth / 3,
-                           meterHeight);
+                           METER_WIDTH / 3,
+                           METER_HEIGHT);
 
     textMeter.setBounds(0,
                         -27,

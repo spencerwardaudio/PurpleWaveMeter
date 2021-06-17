@@ -12,8 +12,8 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
-#define MaxDecibels  12.0
-#define NegativeInfinity -66.0
+#define MAX_DECIBELS  12.0
+#define NEGATIVE_INFINITY -66.0
 #define REFRESH_RATE 60.f
 
 
@@ -102,7 +102,7 @@ struct ValueHolderBase : Timer
     
 protected:
     
-    float currentValue { (float)NegativeInfinity };
+    float currentValue { (float)NEGATIVE_INFINITY };
     
     int64 peakTime { 0 };
     int64 holdTime { 100 };
@@ -207,8 +207,6 @@ struct Tick
 struct DBScale : Component
 {
     void paint(Graphics& g) override;
-    
-    void getDB();
 
     std::vector<Tick> ticks;
     int yOffset = 0;

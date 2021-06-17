@@ -12,8 +12,8 @@
 
 #include "Meter.h"
 
-#define meterHeight 200
-#define meterWidth  30
+#define METER_HEIGHT 200
+#define METER_WIDTH  30
 
 struct MacroMeter : Component
 {

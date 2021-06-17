@@ -10,11 +10,8 @@
 
 #include "StereoMeter.h"
 
-StereoMeter::StereoMeter(const String MeterName)
+StereoMeter::StereoMeter(const String MeterName) : labelLR( MeterName, MeterName )
 {
-    name = MeterName;
-    
-    labelLR.setText(MeterName, dontSendNotification);
     labelLR.setFont(20.0);
     
     labelLR.setColour (juce::Label::textColourId, juce::Colours::orange);
@@ -28,46 +25,60 @@ StereoMeter::StereoMeter(const String MeterName)
     addAndMakeVisible(labelLR);
 }
 
+void StereoMeter::update(float levelInDB)
+{
+    macroMeterLeft.update(levelInDB);
+    macroMeterRight.update(levelInDB);
+}
+
 void StereoMeter::paint (Graphics& g)
 {
     g.setColour(Colours::black);
     g.fillRoundedRectangle(r, 10.f);
+    
+//    auto bounds = getLocalBounds();
+//    g.setColour(Colours::red);
+//    g.drawRect(bounds);
 }
 
 
 void StereoMeter::resized()
 {
-    auto bounds = getLocalBounds();
-    
-    auto labelBoxWidth = (2 * MacroMeterWidth) + DBScaleWidth;
-    
-    r.setBounds(0, 0, labelBoxWidth, meterHeight + 40);
 
-    macroMeterLeft.setBounds(bounds.getX(),
+    auto labelBoxWidth = (2 * MACRO_METER_WIDTH) + DB_SCALE_WIDTH;
+
+    r.setBounds(0,
+                0,
+                labelBoxWidth,
+                METER_HEIGHT + 40);
+
+    macroMeterLeft.setBounds(0,
                              0,
-                             MacroMeterWidth,
-                             meterHeight);
+                             MACRO_METER_WIDTH,
+                             METER_HEIGHT);
 
     dBScale.ticks = macroMeterLeft.getDBTick();
     dBScale.yOffset = macroMeterLeft.getDBBounds();
 
     dBScale.setBounds(macroMeterLeft.getRight(),
                       0,
-                      DBScaleWidth,
+                      DB_SCALE_WIDTH,
                       220);
                       //JUCE_LIVE_CONSTANT (250)
 
-    macroMeterRight.setBounds(MacroMeterWidth + DBScaleWidth,
+    macroMeterRight.setBounds(MACRO_METER_WIDTH + DB_SCALE_WIDTH,
                               0,
-                              MacroMeterWidth,
-                              meterHeight);
-    
+                              MACRO_METER_WIDTH,
+                              METER_HEIGHT);
+
     //reference size for positioning (not visible)
     Rectangle<int> labelRect;
-    labelRect.setSize(StereoMeterWidth, 40);
-    labelRect.setPosition(0, meterHeight + 5);
-    
+    labelRect.setSize(STEREO_METER_WIDTH, 40);
+    labelRect.setPosition(0, METER_HEIGHT + 5);
+
     labelLR.setJustificationType(Justification::centred);
 
     labelLR.setBounds(labelRect);
 }
+
+
