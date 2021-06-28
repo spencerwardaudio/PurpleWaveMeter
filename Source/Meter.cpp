@@ -90,7 +90,7 @@ void Meter::paint(Graphics& g)
     }
     
     auto h = bounds.getHeight();
-    auto level = jmap((double)audioPassingVal, NEGATIVE_INFINITY, MAX_DECIBELS, 0.0, 1.0);
+    auto level = jmap(audioPassingVal, NEGATIVE_INFINITY, MAX_DECIBELS, 0.0f, 1.0f);
     
     g.setColour(Colours::steelblue);
     
@@ -105,7 +105,7 @@ void Meter::paint(Graphics& g)
     
     level = decayingValueHolder.getCurrentValue();
     
-    auto tickLine = jmap((double)level, NEGATIVE_INFINITY, MAX_DECIBELS, 0.0, 1.0);
+    auto tickLine = jmap(level, NEGATIVE_INFINITY, MAX_DECIBELS, 0.0f, 1.0f);
 
     g.fillRect(bounds.withY(h * (1 -  (float)tickLine)).withHeight(2));
 }

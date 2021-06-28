@@ -12,8 +12,8 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
-#define MAX_DECIBELS  12.0
-#define NEGATIVE_INFINITY -66.0
+#define MAX_DECIBELS  12.0f
+#define NEGATIVE_INFINITY -66.0f
 #define REFRESH_RATE 60.f
 
 
@@ -102,7 +102,7 @@ struct ValueHolderBase : Timer
     
 protected:
     
-    float currentValue { (float)NEGATIVE_INFINITY };
+    float currentValue { NEGATIVE_INFINITY };
     
     int64 peakTime { 0 };
     int64 holdTime { 100 };
