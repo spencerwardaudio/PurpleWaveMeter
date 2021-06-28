@@ -26,6 +26,7 @@ struct Fifo
             buf.setSize(numChannels, numSamples);
             buf.clear();
         }
+
     }
     
     bool push( const T& t)

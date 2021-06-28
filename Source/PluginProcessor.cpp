@@ -95,7 +95,7 @@ void Pfmcpp_project10AudioProcessor::changeProgramName (int index, const String&
 //==============================================================================
 void Pfmcpp_project10AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    fifo.prepare(getTotalNumInputChannels(), samplesPerBlock);
+    fifo.prepare(2, samplesPerBlock);
     
     maxBufferSize = samplesPerBlock;
     
