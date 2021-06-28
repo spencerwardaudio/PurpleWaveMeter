@@ -13,8 +13,7 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PluginProcessor.h"
 
-#include "Meter.h"
-#include "MacroMeter.h"
+#include "StereoMeter.h"
 
 
 //==============================================================================
@@ -33,11 +32,12 @@ public:
     void timerCallback() override;
 
 private:
-    
-    MacroMeter macroMeter;
-    
+
+    StereoMeter stereoMeterRMS { "L  RMS  R" };
+    StereoMeter stereoMeterPk { "L  Peak  R" };
+
     Pfmcpp_project10AudioProcessor& processor;
     AudioBuffer<float> editorBuffer;
-    
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Pfmcpp_project10AudioProcessorEditor)
 };

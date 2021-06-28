@@ -17,7 +17,7 @@
 template<typename T>
 struct Fifo
 {
-    void prepare(int numSamples, int numChannels)
+    void prepare(int numChannels, int numSamples)
     {
         //initialize all Fifo buffers with Max size of sample block
 
@@ -26,6 +26,7 @@ struct Fifo
             buf.setSize(numChannels, numSamples);
             buf.clear();
         }
+
     }
     
     bool push( const T& t)
@@ -101,6 +102,7 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
     
     Fifo<AudioBuffer<float>> fifo;
+    int maxBufferSize {};
     
 private:
     

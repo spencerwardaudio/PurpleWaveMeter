@@ -12,8 +12,8 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
-#define MaxDecibels  12.0
-#define NegativeInfinity -66.0
+#define MAX_DECIBELS  12.0f
+#define NEGATIVE_INFINITY -66.0f
 #define REFRESH_RATE 60.f
 
 
@@ -102,7 +102,7 @@ struct ValueHolderBase : Timer
     
 protected:
     
-    float currentValue { (float)NegativeInfinity };
+    float currentValue { NEGATIVE_INFINITY };
     
     int64 peakTime { 0 };
     int64 holdTime { 100 };
@@ -161,7 +161,6 @@ struct DecayingValueHolder : ValueHolderBase
         if(elapsedTime >= holdTime)
         {
             currentValue -= decayRate;
-            DBG( "decayRate: " << decayRate );
         }
     }
 
@@ -193,7 +192,7 @@ struct TextMeter : Component
 
     void paint(Graphics& g) override;
     
-    float level {};
+    float level { NEGATIVE_INFINITY };
     
     ValueHolder valueHolder;
 };
@@ -222,10 +221,9 @@ struct Meter : Component
     void resized() override;
     
     std::vector<Tick> ticks;
-    float audioPassingVal {};
     
-    float level {};
-    float previousVal {};
+    float audioPassingVal { NEGATIVE_INFINITY };
+    float level { NEGATIVE_INFINITY };
     
     DecayingValueHolder decayingValueHolder;
 };

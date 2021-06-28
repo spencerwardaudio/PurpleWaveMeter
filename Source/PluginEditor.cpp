@@ -18,9 +18,14 @@
 Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmcpp_project10AudioProcessor& p)
     : AudioProcessorEditor (&p), processor (p)
 {
-    addAndMakeVisible(macroMeter);
+    editorBuffer.setSize(2, processor.maxBufferSize);
     
-    setSize (300, 400);
+    editorBuffer.clear();
+    
+    addAndMakeVisible(stereoMeterPk);
+    addAndMakeVisible(stereoMeterRMS);
+    
+    setSize (400, 300);
     startTimerHz(30);
 }
 
@@ -43,22 +48,32 @@ void Pfmcpp_project10AudioProcessorEditor::resized()
 {
     auto bounds = getLocalBounds();
     
-    macroMeter.setBounds(bounds);
+    stereoMeterRMS.setBounds(bounds.removeFromLeft(100).removeFromTop(METER_HEIGHT + 40));
+    stereoMeterPk.setBounds(bounds.removeFromRight(100).removeFromTop(METER_HEIGHT + 40));
 }
 
 void Pfmcpp_project10AudioProcessorEditor::timerCallback()
 {
     if( processor.fifo.pull(editorBuffer) )
     {
-        auto bufferLRPeak = editorBuffer.getMagnitude(0, 0, editorBuffer.getNumSamples());
+        auto levelGL = editorBuffer.getMagnitude(0, 0, editorBuffer.getNumSamples());
+        auto levelGR = editorBuffer.getMagnitude(1, 0, editorBuffer.getNumSamples());
         
-        macroMeter.meterInstant.update(bufferLRPeak);
-        macroMeter.textMeter.update(bufferLRPeak);
+        //convert from gain to decibels
+        auto levelDBL = Decibels::gainToDecibels(levelGL);
+        auto levelDBR = Decibels::gainToDecibels(levelGR);
         
-        macroMeter.averageValue.add(bufferLRPeak);
+        auto levelGRMSL = editorBuffer.getRMSLevel(0, 0, editorBuffer.getNumSamples());
+        auto levelGRMSR = editorBuffer.getRMSLevel(1, 0, editorBuffer.getNumSamples());
         
-        auto avg = macroMeter.averageValue.getAverage();
+        auto levelDBRMSL = Decibels::gainToDecibels(levelGRMSL);
+        auto levelDBRMSR = Decibels::gainToDecibels(levelGRMSR);
         
-        macroMeter.meterAverage.update(avg);
+        stereoMeterPk.update(0, levelDBL);
+        stereoMeterPk.update(1, levelDBR);
+        
+        stereoMeterRMS.update(0, levelDBRMSL);
+        stereoMeterRMS.update(1, levelDBRMSR);
     }
+
 }

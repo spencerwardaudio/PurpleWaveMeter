@@ -13,9 +13,9 @@
 
 void TextMeter::update(float audioValue)
 {
-    level = Decibels::gainToDecibels(audioValue);
+    valueHolder.updateHeldValue(audioValue);
     
-    valueHolder.updateHeldValue(level);
+    level = audioValue;
     
     repaint();
 }
@@ -31,7 +31,7 @@ void TextMeter::paint(Graphics& g)
     }
     else
     {
-        str = ( level <= NegativeInfinity ) ? "-inf" : juce::String( level, 1 );
+        str = ( level <= NEGATIVE_INFINITY ) ? "-inf" : juce::String( level, 1 );
     }
     
     g.fillAll ( over ? Colours::red : Colours::black );
@@ -59,9 +59,9 @@ void DBScale::paint(Graphics& g)
 
 void Meter::update(float audioValue)
 {
-    audioPassingVal = Decibels::gainToDecibels(audioValue);
+    decayingValueHolder.updateHeldValue(audioValue);
     
-    decayingValueHolder.updateHeldValue(audioPassingVal);
+    audioPassingVal = audioValue;
     
     repaint();
 }
@@ -72,34 +72,40 @@ void Meter::paint(Graphics& g)
     
     auto bounds = getLocalBounds();
     
-    auto tickXLeft = 2;
-    auto tickXRight = 30;
-
+    auto xOffset = 2;
+    
+    auto yOffset = -4;
+    
+    auto center = bounds.getCentreX();
 
     auto numTicks = ticks.size();
     for( int i = 0; i < numTicks; ++i )
     {
         g.setColour (juce::Colours::whitesmoke);
         
-        if(i % 2 == 0 ? (tickXLeft = 2, tickXRight = 30) : (tickXLeft = 7, tickXRight = 20))
+        if(i % 2 == 0 ? xOffset = 5 : xOffset = 11)
         {
-            g.drawHorizontalLine(ticks[i].y, tickXLeft, tickXRight);
+            g.drawHorizontalLine(ticks[i].y + yOffset, center - xOffset, center + xOffset);
         }
     }
     
     auto h = bounds.getHeight();
-    auto level = jmap((double)audioPassingVal, NegativeInfinity, MaxDecibels, 0.0, 1.0);
+    auto level = jmap(audioPassingVal, NEGATIVE_INFINITY, MAX_DECIBELS, 0.0f, 1.0f);
     
-    g.setColour(Colours::greenyellow);
+    g.setColour(Colours::steelblue);
     
+    g.setOpacity(0.28);
+    
+    g.setGradientFill (ColourGradient (Colours::lightblue, 0,  level,
+                                        Colours::blueviolet, 0, h, false));
+
     g.fillRect(bounds.withHeight(h * level).withY(h * (1.0 - level)));
     
     //tick meter
-    g.setColour( Colours::lightblue );
     
     level = decayingValueHolder.getCurrentValue();
     
-    auto tickLine = jmap((double)level, NegativeInfinity, MaxDecibels, 0.0, 1.0);
+    auto tickLine = jmap(level, NEGATIVE_INFINITY, MAX_DECIBELS, 0.0f, 1.0f);
 
     g.fillRect(bounds.withY(h * (1 -  (float)tickLine)).withHeight(2));
 }
@@ -111,9 +117,9 @@ void Meter::resized()
     ticks.clear();
     Tick tck;
     
-    for(int i = (int)NegativeInfinity; i <= (int)MaxDecibels; i += 6)
+    for(int i = (int)NEGATIVE_INFINITY; i <= (int)MAX_DECIBELS; i += 6)
     {
-        tck.y = jmap(i, (int)NegativeInfinity, (int)MaxDecibels, h, 0) + 4;
+        tck.y = jmap(i, (int)NEGATIVE_INFINITY, (int)MAX_DECIBELS, h, 0) + 4;
         std::cout << tck.y << " : y " << std::endl;
         tck.dB = i;
         std::cout << tck.dB << " : dB " << std::endl;
