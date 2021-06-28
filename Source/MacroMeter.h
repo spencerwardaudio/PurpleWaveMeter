@@ -36,5 +36,5 @@ private:
     Meter meterInstant;
     Meter meterAverage;
     
-    Averager<float> averageValue { 10, 0.f };
+    Averager<float> averageValue { 10, NEGATIVE_INFINITY };
 };

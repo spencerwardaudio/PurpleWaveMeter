@@ -21,7 +21,7 @@ struct StereoMeter : Component
     StereoMeter(const String MeterName);
     
     //provide setters for updating
-    void update(float levelInDB);
+    void update(int channel, float levelInDB);
     
     void paint (Graphics& g) override;
     void resized() override;

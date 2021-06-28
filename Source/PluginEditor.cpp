@@ -18,6 +18,20 @@
 Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmcpp_project10AudioProcessor& p)
     : AudioProcessorEditor (&p), processor (p)
 {
+    editorBuffer.setSize(processor.maxBufferSize, 2);
+    
+//    for(int i = 0; i < processor.maxBufferSize; ++i)
+//    {
+//        editorBuffer.setSample(0, i, NEGATIVE_INFINITY);
+//        editorBuffer.setSample(1, i, NEGATIVE_INFINITY);
+//    }
+    
+    editorBuffer.clear();
+    
+    DBG ("first sample" << editorBuffer.getSample(0, 0));
+    
+    
+    
     addAndMakeVisible(stereoMeterPk);
     addAndMakeVisible(stereoMeterRMS);
     
@@ -44,7 +58,7 @@ void Pfmcpp_project10AudioProcessorEditor::resized()
 {
     auto bounds = getLocalBounds();
     
-    stereoMeterRMS.setBounds(bounds.removeFromLeft(100).removeFromTop(METER_HEIGHT + 40));
+//    stereoMeterRMS.setBounds(bounds.removeFromLeft(100).removeFromTop(METER_HEIGHT + 40));
     stereoMeterPk.setBounds(bounds.removeFromRight(100).removeFromTop(METER_HEIGHT + 40));
 }
 
@@ -52,11 +66,15 @@ void Pfmcpp_project10AudioProcessorEditor::timerCallback()
 {
     if( processor.fifo.pull(editorBuffer) )
     {
-        //MAKE DRY
-        stereoMeterPk.update(editorBuffer.getMagnitude(0, 0, editorBuffer.getNumSamples()));
-        stereoMeterPk.update(editorBuffer.getMagnitude(1, 0, editorBuffer.getNumSamples()));
-
-        stereoMeterRMS.update(editorBuffer.getRMSLevel(0, 0, editorBuffer.getNumSamples()));
-        stereoMeterRMS.update(editorBuffer.getRMSLevel(1, 0, editorBuffer.getNumSamples()));
+        
+         auto levelG = editorBuffer.getMagnitude(0, 0, editorBuffer.getNumSamples());
+        
+        //convert from gain to decibels
+        auto levelDBL = Decibels::gainToDecibels(levelG);
+        
+        stereoMeterPk.update(0, levelDBL);
+        stereoMeterPk.update(1, levelDBL);
+    
     }
+
 }

@@ -23,6 +23,7 @@ Pfmcpp_project10AudioProcessor::Pfmcpp_project10AudioProcessor()
                        )
 #endif
 {
+
 }
 
 Pfmcpp_project10AudioProcessor::~Pfmcpp_project10AudioProcessor()
@@ -94,7 +95,9 @@ void Pfmcpp_project10AudioProcessor::changeProgramName (int index, const String&
 //==============================================================================
 void Pfmcpp_project10AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    fifo.prepare(samplesPerBlock, getTotalNumInputChannels());
+    fifo.prepare(getTotalNumInputChannels(), samplesPerBlock);
+    
+    maxBufferSize = samplesPerBlock;
     
 #if VerifyDbScale
     
@@ -165,7 +168,7 @@ void Pfmcpp_project10AudioProcessor::processBlock (AudioBuffer<float>& buffer, M
     }
 
 #endif
-
+    
     fifo.push(buffer);
 
 }

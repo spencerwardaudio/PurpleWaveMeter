@@ -13,9 +13,9 @@
 
 void TextMeter::update(float audioValue)
 {
-    level = Decibels::gainToDecibels(audioValue);
+    valueHolder.updateHeldValue(audioValue);
     
-    valueHolder.updateHeldValue(level);
+    level = audioValue;
     
     repaint();
 }
@@ -59,9 +59,9 @@ void DBScale::paint(Graphics& g)
 
 void Meter::update(float audioValue)
 {
-    audioPassingVal = Decibels::gainToDecibels(audioValue);
+    decayingValueHolder.updateHeldValue(audioValue);
     
-    decayingValueHolder.updateHeldValue(audioPassingVal);
+    audioPassingVal = audioValue;
     
     repaint();
 }

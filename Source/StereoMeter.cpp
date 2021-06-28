@@ -25,10 +25,13 @@ StereoMeter::StereoMeter(const String MeterName) : labelLR( MeterName, MeterName
     addAndMakeVisible(labelLR);
 }
 
-void StereoMeter::update(float levelInDB)
+void StereoMeter::update(int channel, float levelInDB)
 {
-    macroMeterLeft.update(levelInDB);
-    macroMeterRight.update(levelInDB);
+    if(channel == 0)
+        macroMeterLeft.update(levelInDB);
+    
+    else if(channel == 1)
+        macroMeterRight.update(levelInDB);
 }
 
 void StereoMeter::paint (Graphics& g)

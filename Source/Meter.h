@@ -192,7 +192,7 @@ struct TextMeter : Component
 
     void paint(Graphics& g) override;
     
-    float level {};
+    float level { NEGATIVE_INFINITY };
     
     ValueHolder valueHolder;
 };
@@ -221,10 +221,9 @@ struct Meter : Component
     void resized() override;
     
     std::vector<Tick> ticks;
-    float audioPassingVal {};
     
-    float level {};
-    float previousVal {};
+    float audioPassingVal { NEGATIVE_INFINITY };
+    float level { NEGATIVE_INFINITY };
     
     DecayingValueHolder decayingValueHolder;
 };
