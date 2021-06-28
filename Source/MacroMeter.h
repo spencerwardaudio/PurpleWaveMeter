@@ -30,7 +30,7 @@ struct MacroMeter : Component
 private:
 
     int meterAVGPos { 30 };
-    int meterIPos {0};
+    int meterIPos { 0 };
     
     TextMeter textMeter;
     Meter meterInstant;
