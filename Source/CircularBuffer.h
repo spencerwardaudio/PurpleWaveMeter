@@ -13,7 +13,7 @@
 template<typename T>
 struct CircularBuffer
 {
-    using DataType = std::vector<T>; //some container holding T's
+    using DataType = std::vector<T>;
     
     void resize(std::size_t s, T fillValue)
     {
@@ -31,7 +31,7 @@ struct CircularBuffer
     void write(T t)
     {
         //write a value to write pointer index
-        elements[writeIndex]->t;
+        elements[writeIndex] = t;
         
         writeIndex++;
         
@@ -46,11 +46,11 @@ struct CircularBuffer
         return elements;
     }
     
-    size_t getReadIndex() const
+    const size_t getReadIndex()
     {
         readIndex = writeIndex + 1;
         
-        if(readIndex == getSize())
+        if(readIndex >= getSize())
         {
             readIndex = 0;
         }
@@ -58,7 +58,7 @@ struct CircularBuffer
         return readIndex;
     }
     
-    size_t getSize() const
+    const size_t getSize()
     {
         return elements.size();
     }
@@ -67,6 +67,6 @@ private:
     
     std::vector<T> elements { };
     
-    size_t writeIndex {};
-    size_t readIndex {};
+    int writeIndex {0};
+    int readIndex {0};
 };

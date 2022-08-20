@@ -22,6 +22,10 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
     
     editorBuffer.clear();
     
+    circularBuffer.resize(10, 0);
+    
+    circularBuffer.clear(0);
+    
     addAndMakeVisible(stereoMeterPk);
     addAndMakeVisible(stereoMeterRMS);
     
@@ -74,6 +78,9 @@ void Pfmcpp_project10AudioProcessorEditor::timerCallback()
         
         stereoMeterRMS.update(0, levelDBRMSL);
         stereoMeterRMS.update(1, levelDBRMSR);
+        
+        circularBuffer.write(levelDBRMSL);
+        DBG(circularBuffer.getReadIndex());
     }
 
 }

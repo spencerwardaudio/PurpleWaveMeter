@@ -14,7 +14,7 @@
 #include "PluginProcessor.h"
 
 #include "StereoMeter.h"
-
+#include "CircularBuffer.h"
 
 //==============================================================================
 /**
@@ -38,6 +38,8 @@ private:
 
     Pfmcpp_project10AudioProcessor& processor;
     AudioBuffer<float> editorBuffer;
+    
+    CircularBuffer<float> circularBuffer;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Pfmcpp_project10AudioProcessorEditor)
 };
