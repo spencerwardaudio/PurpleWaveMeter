@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include "../JuceLibraryCode/JuceHeader.h"
+
 template<typename T>
 struct CircularBuffer
 {
@@ -30,15 +32,17 @@ struct CircularBuffer
     
     void write(T t)
     {
+        writeIndex = readIndex++;
         //write a value to write pointer index
         elements[writeIndex] = t;
-        
-        writeIndex++;
-        
-        if(writeIndex == getSize())
+
+        if(readIndex >= getSize())
         {
-            writeIndex = 0;
+            readIndex = 0;
         }
+        
+        DBG("readIndex: " << readIndex);
+        DBG("writeIndex: "<< writeIndex);
     }
     
     DataType& getData()
@@ -48,13 +52,6 @@ struct CircularBuffer
     
     const size_t getReadIndex()
     {
-        readIndex = writeIndex + 1;
-        
-        if(readIndex >= getSize())
-        {
-            readIndex = 0;
-        }
-        
         return readIndex;
     }
     
@@ -70,3 +67,4 @@ private:
     int writeIndex {0};
     int readIndex {0};
 };
+

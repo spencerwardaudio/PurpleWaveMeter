@@ -80,7 +80,5 @@ void Pfmcpp_project10AudioProcessorEditor::timerCallback()
         stereoMeterRMS.update(1, levelDBRMSR);
         
         circularBuffer.write(levelDBRMSL);
-        DBG(circularBuffer.getReadIndex());
     }
-
 }
