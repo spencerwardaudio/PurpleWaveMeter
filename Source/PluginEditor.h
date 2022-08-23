@@ -14,7 +14,7 @@
 #include "PluginProcessor.h"
 
 #include "StereoMeter.h"
-#include "ReadAllAfterWriteCircularBuffer.h"
+#include "Histogram.h"
 
 //==============================================================================
 /**
@@ -35,11 +35,12 @@ private:
 
     StereoMeter stereoMeterRMS { "L  RMS  R" };
     StereoMeter stereoMeterPk { "L  Peak  R" };
+    
+    Histogram histogramRMS { "RMS Histogram" };
+//    Histogram histogramPeak { "Peak Histogram" };
 
     Pfmcpp_project10AudioProcessor& processor;
     AudioBuffer<float> editorBuffer;
-    
-    ReadAllAfterWriteCircularBuffer<float> circularBuffer { 0 };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Pfmcpp_project10AudioProcessorEditor)
 };

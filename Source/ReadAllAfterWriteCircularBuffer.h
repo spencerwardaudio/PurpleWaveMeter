@@ -16,7 +16,11 @@ template<typename T>
 struct ReadAllAfterWriteCircularBuffer
 {
     using DataType = std::vector<T>;
-    ReadAllAfterWriteCircularBuffer(T fillValue);
+    
+    ReadAllAfterWriteCircularBuffer(T fillValue)
+    {
+        resize(1, fillValue);
+    }
     
     void resize(std::size_t s, T fillValue)
     {
@@ -55,7 +59,7 @@ struct ReadAllAfterWriteCircularBuffer
     
     size_t getReadIndex() const
     {
-        return ++writeIndex;
+        return writeIndex.load() - 1;
     }
     
     size_t getSize() const
