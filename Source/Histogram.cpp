@@ -22,10 +22,9 @@ void Histogram::paint(Graphics& g)
     g.fillRect(getLocalBounds());
     
     g.setColour(Colours::mintcream);
-    g.drawText(title, getLocalBounds().removeFromTop(40).removeFromLeft(100), Justification::centredBottom);
     
+    g.drawText(title, getLocalBounds().removeFromBottom(40), Justification::centredBottom);
     displayPath(g, getBounds().toFloat());
-    
 }
 
 void Histogram::resized()
@@ -48,10 +47,27 @@ void Histogram::update(float value)
 void Histogram::displayPath(Graphics& g, Rectangle<float> bounds)
 {
     auto fill = buildPath(path, buffer, getBounds().toFloat());
+    
+    auto colors = std::vector<Colour>
+    {
+        Colours::violet.withAlpha(0.8f),
+        Colours::blue.withAlpha(0.8f),
+        Colours::whitesmoke.withAlpha(0.8f),
+    };
+    
+    ColourGradient cg;
+    
+    for(int i = 0; i < colors.size(); ++i)
+    {
+        cg.addColour((double(i) / double(colors.size() - 1)), colors[i]);
+    }
 
+    
     if(!fill.isEmpty())
     {
-        g.fillAll(Colours::purple.withAlpha(0.5f));
+        cg.point1 = {0, (float)getHeight()};
+        cg.point2 = {0, 0};
+        g.setGradientFill(cg);
         g.strokePath(fill, PathStrokeType(1));
     }
 }
@@ -69,10 +85,10 @@ Path Histogram::buildPath(Path& p,
 
     auto map = [&b] (float db)
     {
-        return juce::jmap(db, NEG_INF, MAX_DB, b.getBottom(), 0.f);
+        return juce::jmap(db, NEG_INF, MAX_DB, (float)HISTOGRAM_HEIGHT, 0.f);
     };
 
-    auto increment = [&readIndex, &size] (size_t index)
+    auto increment = [&] (size_t index)
     {
         readIndex++;
 
@@ -90,27 +106,29 @@ Path Histogram::buildPath(Path& p,
     {
         p.lineTo(x, map(data[readIndex]));
         
-        jassert(map(data[readIndex]) > 0);
+        //colour in gradient
+//        p.lineTo(x, b.getBottom());
 
         increment(readIndex);
     }
 
-//    p.closeSubPath();
+    if( p.getBounds().getHeight() > 0 )
+    {
+        auto pathDuplicate = p;
 
-    //????  if the bounds of the path has a height greater than 0
-//    if(map(data[readIndex]) > 0)
-//    {
-//        auto fillCopy = fill;
+        pathDuplicate.lineTo(b.getBottomRight());
+        pathDuplicate.lineTo(b.getBottomLeft());
+        
+        pathDuplicate.closeSubPath();
+        
+        return pathDuplicate;
+    }
+    else if ( p.getBounds().getHeight() < 0 )
+    {
+        p.clear();
 
-//        fill.drawLine(bounds.removeFromRight(1), 1);
-//        g.drawLine(bounds.removeFromLeft(1), 1);
-
-//        fill.closeSubPath();
-
-//        return map(data[readIndex]);
-//    }
-//    Path newPath;
-//    newPath.clear();
+        return p;
+    }
 
     return p;
 }

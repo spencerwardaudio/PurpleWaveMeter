@@ -26,9 +26,9 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
     addAndMakeVisible(stereoMeterRMS);
     
     addAndMakeVisible(histogramRMS);
-//    addAndMakeVisible(histogramPeak);
+    addAndMakeVisible(histogramPeak);
     
-    setSize (400, 400);
+    setSize (450, 450);
     startTimerHz(30);
 }
 
@@ -54,8 +54,8 @@ void Pfmcpp_project10AudioProcessorEditor::resized()
     stereoMeterRMS.setBounds(bounds.removeFromLeft(100).removeFromTop(METER_HEIGHT + 40));
     stereoMeterPk.setBounds(bounds.removeFromRight(100).removeFromTop(METER_HEIGHT + 40));
     
-    histogramRMS.setBounds(0, (METER_HEIGHT + 40), getWidth(), HISTOGRAM_HEIGHT);
-//    histogramPeak.setBounds(0, (METER_HEIGHT + 40 + HISTOGRAM_HEIGHT), getWidth(), HISTOGRAM_HEIGHT);
+    histogramRMS.setBounds(0, stereoMeterRMS.getBottom(), getWidth(), HISTOGRAM_HEIGHT);
+    histogramPeak.setBounds(0, histogramRMS.getBottom(), getWidth(), HISTOGRAM_HEIGHT);
     
 }
 
@@ -86,6 +86,6 @@ void Pfmcpp_project10AudioProcessorEditor::timerCallback()
         auto avgPeak = (levelDBL + levelDBR) / 2;
 
         histogramRMS.update(avgRMS);
-//        histogramPeak.update(avgPeak);
+        histogramPeak.update(avgPeak);
     }
 }

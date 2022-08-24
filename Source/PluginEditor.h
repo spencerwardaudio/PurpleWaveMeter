@@ -37,7 +37,7 @@ private:
     StereoMeter stereoMeterPk { "L  Peak  R" };
     
     Histogram histogramRMS { "RMS Histogram" };
-//    Histogram histogramPeak { "Peak Histogram" };
+    Histogram histogramPeak { "Peak Histogram" };
 
     Pfmcpp_project10AudioProcessor& processor;
     AudioBuffer<float> editorBuffer;
