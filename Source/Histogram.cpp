@@ -88,19 +88,19 @@ Path Histogram::buildPath(Path& p,
         return juce::jmap(db, NEG_INF, MAX_DB, (float)HISTOGRAM_HEIGHT, 0.f);
     };
 
-    auto increment = [&] (size_t index)
+    auto increment = [] (size_t &index, size_t &bufferSize)
     {
-        readIndex++;
+        index++;
 
-        if(readIndex > size - 1)
+        if(index > bufferSize - 1)
         {
-            readIndex = 0;
+            index = 0;
         }
     };
 
     p.startNewSubPath(0, map(data[readIndex]));
 
-    increment(readIndex);
+    increment(readIndex, size);
 
     for(int x = 1; x < b.getWidth(); x++)
     {
@@ -109,7 +109,7 @@ Path Histogram::buildPath(Path& p,
         //colour in gradient
 //        p.lineTo(x, b.getBottom());
 
-        increment(readIndex);
+        increment(readIndex, size);
     }
 
     if( p.getBounds().getHeight() > 0 )
@@ -123,11 +123,9 @@ Path Histogram::buildPath(Path& p,
         
         return pathDuplicate;
     }
-    else if ( p.getBounds().getHeight() < 0 )
+    else
     {
-        p.clear();
-
-        return p;
+        return {};
     }
 
     return p;

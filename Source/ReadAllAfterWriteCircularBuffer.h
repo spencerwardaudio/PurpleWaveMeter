@@ -59,7 +59,7 @@ struct ReadAllAfterWriteCircularBuffer
     
     size_t getReadIndex() const
     {
-        return writeIndex.load() - 1;
+        return writeIndex + 1;
     }
     
     size_t getSize() const
@@ -73,7 +73,6 @@ private:
     {
         writeIndex = 0;
     }
-    
     
     std::atomic<std::size_t> writeIndex {0};
     DataType data;
