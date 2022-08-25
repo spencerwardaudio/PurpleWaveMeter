@@ -123,10 +123,6 @@ Path Histogram::buildPath(Path& p,
         
         return pathDuplicate;
     }
-    else
-    {
-        return {};
-    }
 
     return p;
 }
