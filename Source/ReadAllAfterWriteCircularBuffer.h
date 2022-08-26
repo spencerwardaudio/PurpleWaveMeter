@@ -59,7 +59,7 @@ struct ReadAllAfterWriteCircularBuffer
     
     size_t getReadIndex() const
     {
-        return writeIndex;
+        return writeIndex + 2;
     }
     
     size_t getSize() const
