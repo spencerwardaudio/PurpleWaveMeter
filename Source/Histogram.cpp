@@ -107,7 +107,7 @@ Path Histogram::buildPath(Path& p,
         p.lineTo(x, map(data[readIndex]));
         
         //colour in gradient
-//        p.lineTo(x, b.getBottom());
+        p.lineTo(x, b.getBottom());
 
         increment(readIndex, size);
     }

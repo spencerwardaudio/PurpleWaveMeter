@@ -15,6 +15,7 @@
 
 #include "StereoMeter.h"
 #include "Histogram.h"
+#include "Goniometer.h"
 
 //==============================================================================
 /**
@@ -38,6 +39,8 @@ private:
     
     Histogram histogramRMS { "RMS Histogram" };
     Histogram histogramPeak { "Peak Histogram" };
+    
+    Goniometer goniometer;
 
     Pfmcpp_project10AudioProcessor& processor;
     AudioBuffer<float> editorBuffer;
