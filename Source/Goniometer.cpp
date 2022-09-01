@@ -18,6 +18,27 @@ Goniometer::Goniometer(AudioBuffer<float>& buffer) : buffer(internalBuffer)
 
 void Goniometer::paint(Graphics& g)
 {
+    drawBackground(g.drawImage(image, getLocalBounds()));
+    
+    p.clear();
+    
+    auto s = buffer.getNumSamples();
+    
+    //TODO copy samples into the buffer
+}
+
+void Goniometer::resized()
+{
+    w = getLocalBounds().getWidth();
+    h = getLocalBounds().getHeight();
+    center = Point<int>(w/2, h/2);
+    
+    image = juce::Image(Image::RGB, w, h, true);
+
+}
+
+void Goniometer::drawBackground(Graphics& g)
+{
     g.setColour(Colours::black);
     g.fillRect(getLocalBounds());
     
@@ -27,18 +48,7 @@ void Goniometer::paint(Graphics& g)
 //    g.drawRect(bounds);
     
     g.setColour(Colours::whitesmoke.withAlpha(0.7f));
-    drawBackground(g);
-}
-
-void Goniometer::resized()
-{
-    w = getLocalBounds().getWidth();
-    h = getLocalBounds().getHeight();
-    center = Point<int>(w/2, h/2);
-}
-
-void Goniometer::drawBackground(Graphics& g)
-{
+    
     auto scale = 1.3;
     auto scaledWidth = w/scale;
     auto e = (w - scaledWidth)/2;
