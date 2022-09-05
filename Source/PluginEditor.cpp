@@ -24,7 +24,7 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
     
     //==============
     //TODO IS THIS CORRECT?
-    goniometer.fifoGonio.prepare(2, processor.maxBufferSize);
+    goniometer.fifoGonio.prepare(2, 256);
     
     goniometer.maxBufferSize = processor.maxBufferSize;
     //===============

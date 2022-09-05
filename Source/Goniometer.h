@@ -13,6 +13,8 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "Fifo.h"
 
+enum { defaultMinusInfinitydB = -100 };
+
 struct Goniometer : Component
 {
     Goniometer(AudioBuffer<float>& buffer);
@@ -36,3 +38,19 @@ private:
     Graphics backgroundGraphic;
 
 };
+
+template <typename Type>
+static Type decibelsToGain (Type decibels,
+                            Type minusInfinityDb = Type (defaultMinusInfinitydB))
+{
+    return decibels > minusInfinityDb ? std::pow (Type (10.0), decibels * Type (0.05))
+                                      : Type();
+}
+
+template <typename Type>
+static Type gainToDecibels (Type gain,
+                            Type minusInfinityDb = Type (defaultMinusInfinitydB))
+{
+    return gain > Type() ? jmax (minusInfinityDb, static_cast<Type> (std::log10 (gain)) * Type (20.0))
+                         : minusInfinityDb;
+}
