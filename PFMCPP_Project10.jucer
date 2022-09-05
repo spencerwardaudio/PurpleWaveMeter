@@ -22,6 +22,7 @@
             file="Source/PluginProcessor.cpp"/>
       <FILE id="m8T8iH" name="PluginProcessor.h" compile="0" resource="0"
             file="Source/PluginProcessor.h"/>
+      <FILE id="BDcuEE" name="Fifo.h" compile="0" resource="0" file="Source/Fifo.h"/>
       <FILE id="wyE4QJ" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
       <FILE id="t40WPD" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>

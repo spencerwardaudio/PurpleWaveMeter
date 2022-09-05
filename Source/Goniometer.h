@@ -11,14 +11,20 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "Fifo.h"
 
 struct Goniometer : Component
 {
     Goniometer(AudioBuffer<float>& buffer);
     void paint(Graphics& g) override;
     void resized() override;
+    
+    Fifo<AudioBuffer<float>> fifoGonio;
+    int maxBufferSize {};
+    
 private:
-    AudioBuffer<float>& buffer;
+    
+    AudioBuffer<float>& _buffer;
     AudioBuffer<float> internalBuffer;
     Path p;
     int w, h;
@@ -27,4 +33,6 @@ private:
     void drawBackground(Graphics& g);
     
     juce::Image image;
+    Graphics backgroundGraphic;
+
 };

@@ -10,7 +10,7 @@
 
 #include "Goniometer.h"
 
-Goniometer::Goniometer(AudioBuffer<float>& buffer) : buffer(internalBuffer)
+Goniometer::Goniometer(AudioBuffer<float>& buffer) : _buffer(buffer), image(Image::RGB, 100, 100, true), backgroundGraphic(image)
 {
     internalBuffer.clear();
     internalBuffer.setSize(2, 256);
@@ -18,13 +18,72 @@ Goniometer::Goniometer(AudioBuffer<float>& buffer) : buffer(internalBuffer)
 
 void Goniometer::paint(Graphics& g)
 {
-    drawBackground(g.drawImage(image, getLocalBounds()));
+    drawBackground(backgroundGraphic);
     
     p.clear();
     
-    auto s = buffer.getNumSamples();
+    internalBuffer.copyFrom(0, 0, _buffer, 0, 0, internalBuffer.getNumSamples());
+    internalBuffer.copyFrom(1, 0, _buffer, 1, 0, internalBuffer.getNumSamples());
     
-    //TODO copy samples into the buffer
+//    get the left channel sample and right channel sample.
+    for (int i = 0; i < 256; i++)
+    {
+        auto sampleDBL = Decibels::gainToDecibels(internalBuffer.getSample(0, i));
+        auto sampleDBR = Decibels::gainToDecibels(internalBuffer.getSample(1, i));
+//
+        float S = (sampleDBL-sampleDBR) - 3;
+        float M = (sampleDBL+sampleDBR) - 3;
+        
+        Point<float> point(center.toFloat().x, center.toFloat().y);
+        
+        auto rangedS = jmap(S, -10.f, 0.f, 0.f, (float)w/4.f) + center.x;
+        auto rangedM = jmap(M, -100.f, 0.f, 0.f, (float)h/4.f) + center.y;
+        
+        Point<float> p1(rangedS, rangedM);
+        
+        if(M <= -100.f)
+        {
+            return;
+        }
+        
+        if(i == 0)
+        {
+            p.startNewSubPath(p1);
+        }
+        else if(p1.isFinite())
+        {
+            p.lineTo(p1);
+        }
+        
+        if(!p.isEmpty())
+        {
+            p.applyTransform(AffineTransform::verticalFlip(h));
+        }
+        
+        auto colors = std::vector<Colour>
+        {
+            Colours::green,
+            Colours::blue
+        };
+        
+        ColourGradient gFill;
+        
+        gFill.isRadial = true;
+        
+        gFill.point1 = {(float)center.x, (float)center.y };
+        gFill.point2 = { (float)(w/4), (float)center.y };
+        
+        for(int i = 0; i < colors.size(); ++i)
+        {
+            gFill.addColour((double(i) / double(colors.size() - 1)), colors[i]);
+        }
+
+        g.setGradientFill(gFill);
+        g.strokePath(p, PathStrokeType(3));
+        
+        i = i+3;
+
+    }
 }
 
 void Goniometer::resized()
@@ -33,19 +92,14 @@ void Goniometer::resized()
     h = getLocalBounds().getHeight();
     center = Point<int>(w/2, h/2);
     
-    image = juce::Image(Image::RGB, w, h, true);
-
+    image.rescaled(w, h);
 }
 
 void Goniometer::drawBackground(Graphics& g)
 {
+//    Graphics background (image);
     g.setColour(Colours::black);
     g.fillRect(getLocalBounds());
-    
-//    //reference outline
-//    auto bounds = getLocalBounds();
-//    g.setColour(Colours::red);
-//    g.drawRect(bounds);
     
     g.setColour(Colours::whitesmoke.withAlpha(0.7f));
     
@@ -76,4 +130,5 @@ void Goniometer::drawBackground(Graphics& g)
             g.drawText(labels[4], x, y, 15, 15, Justification::centred);
         }
     }
+    g.drawImage(image, getLocalBounds().toFloat());
 }

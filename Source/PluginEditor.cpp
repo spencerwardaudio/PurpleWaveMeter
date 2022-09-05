@@ -22,6 +22,14 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
     
     editorBuffer.clear();
     
+    //==============
+    //TODO IS THIS CORRECT?
+    goniometer.fifoGonio.prepare(2, processor.maxBufferSize);
+    
+    goniometer.maxBufferSize = processor.maxBufferSize;
+    //===============
+    
+    
     addAndMakeVisible(stereoMeterPk);
     addAndMakeVisible(stereoMeterRMS);
     
@@ -56,8 +64,9 @@ void Pfmcpp_project10AudioProcessorEditor::resized()
     stereoMeterRMS.setBounds(bounds.removeFromLeft(100).removeFromTop(METER_HEIGHT + 40));
     stereoMeterPk.setBounds(bounds.removeFromRight(100).removeFromTop(METER_HEIGHT + 40));
     
-    histogramRMS.setBounds(0, stereoMeterRMS.getBottom(), getWidth(), HISTOGRAM_HEIGHT);
-    histogramPeak.setBounds(0, histogramRMS.getBottom(), getWidth(), HISTOGRAM_HEIGHT);
+    //from the bottom of the stereo meter to the bottom of the application height / 2
+    histogramRMS.setBounds(0, stereoMeterRMS.getBottom(), getWidth(), (bounds.getHeight() - stereoMeterPk.getBottom()) / 2);
+    histogramPeak.setBounds(0, histogramRMS.getBottom(), getWidth(), (bounds.getHeight() - stereoMeterPk.getBottom()) / 2);
     
     goniometer.setBounds(stereoMeterRMS.getWidth(), 0, bounds.getWidth(), stereoMeterRMS.getHeight());
     
@@ -92,4 +101,8 @@ void Pfmcpp_project10AudioProcessorEditor::timerCallback()
         histogramRMS.update(avgRMS);
         histogramPeak.update(avgPeak);
     }
+    
+    goniometer.fifoGonio.push(editorBuffer);
+    
+    goniometer.repaint();
 }

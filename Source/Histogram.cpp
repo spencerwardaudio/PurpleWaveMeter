@@ -30,6 +30,7 @@ void Histogram::paint(Graphics& g)
 void Histogram::resized()
 {
     buffer.resize(getWidth(), NEG_INF);
+    buffer.clear(NEG_INF);
 }
 
 void Histogram::mouseDown(const MouseEvent& e)
@@ -46,6 +47,7 @@ void Histogram::update(float value)
 
 void Histogram::displayPath(Graphics& g, Rectangle<float> bounds)
 {
+    
     auto fill = buildPath(path, buffer, getBounds().toFloat());
     
     auto colors = std::vector<Colour>
@@ -61,7 +63,6 @@ void Histogram::displayPath(Graphics& g, Rectangle<float> bounds)
     {
         cg.addColour((double(i) / double(colors.size() - 1)), colors[i]);
     }
-
     
     if(!fill.isEmpty())
     {
@@ -85,7 +86,7 @@ Path Histogram::buildPath(Path& p,
 
     auto map = [&b] (float db)
     {
-        return juce::jmap(db, NEG_INF, MAX_DB, (float)HISTOGRAM_HEIGHT, 0.f);
+        return juce::jmap(db, NEG_INF, MAX_DB, b.getHeight(), 0.f);
     };
 
     auto increment = [] (size_t &index, size_t &bufferSize)
