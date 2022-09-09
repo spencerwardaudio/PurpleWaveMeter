@@ -128,7 +128,5 @@ void Goniometer::drawBackground(Graphics& g)
         
         if(i < 5)
             g.drawText(labels[i], radiusPointOffset.x - 7, radiusPointOffset.y - 5, 15, 15, Justification::centredTop);
-        
-        //test
     }
 }

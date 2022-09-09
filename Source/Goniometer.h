@@ -11,7 +11,6 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "Fifo.h"
 
 enum { defaultMinusInfinitydB = -100 };
 
