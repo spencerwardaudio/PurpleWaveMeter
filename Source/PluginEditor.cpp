@@ -22,12 +22,12 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
     
     editorBuffer.clear();
     
-    //==============
-    //TODO IS THIS CORRECT?
-    goniometer.fifoGonio.prepare(2, 256);
-    
-    goniometer.maxBufferSize = processor.maxBufferSize;
-    //===============
+//    //==============
+//    //TODO IS THIS CORRECT?
+//    goniometer.fifoGonio.prepare(2, 256);
+//    
+//    goniometer.maxBufferSize = processor.maxBufferSize;
+//    //===============
     
     
     addAndMakeVisible(stereoMeterPk);
@@ -101,8 +101,11 @@ void Pfmcpp_project10AudioProcessorEditor::timerCallback()
         histogramRMS.update(avgRMS);
         histogramPeak.update(avgPeak);
     }
-    
-    goniometer.fifoGonio.push(editorBuffer);
+    else
+    {
+        //Fade
+        editorBuffer.applyGain( Decibels::decibelsToGain(-3.f) );
+    }
     
     goniometer.repaint();
 }

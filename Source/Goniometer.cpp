@@ -12,8 +12,8 @@
 
 Goniometer::Goniometer(AudioBuffer<float>& buffer) : _buffer(buffer), image(Image::RGB, 240, 240, true), backgroundGraphic(image)
 {
+    internalBuffer.setSize(2, 1024);
     internalBuffer.clear();
-    internalBuffer.setSize(2, 256);
 }
 
 void Goniometer::paint(Graphics& g)
@@ -22,24 +22,21 @@ void Goniometer::paint(Graphics& g)
     
     p.clear();
     
-    if(fifoGonio.pull(_buffer))
+    auto numChannels = _buffer.getNumChannels();
+    auto numSamples = _buffer.getNumSamples();
+    
+    for (int i  = 0; i < numChannels; ++i)
     {
-        internalBuffer.copyFrom(0, 0, _buffer, 0, 0, internalBuffer.getNumSamples());
-        internalBuffer.copyFrom(1, 0, _buffer, 1, 0, internalBuffer.getNumSamples());
-    }
-    else
-    {
-        //Fade
-        _buffer.applyGain( Decibels::decibelsToGain(-3.f) );
-        
-        internalBuffer.copyFrom(0, 0, _buffer, 0, 0, internalBuffer.getNumSamples());
-        internalBuffer.copyFrom(1, 0, _buffer, 1, 0, internalBuffer.getNumSamples());
+        auto* readPointer_BBuffer = _buffer.getReadPointer(i);
+    
+        //shift & append elements from the editor buffer to the end of the internal buffer
+        std::copy(readPointer_BBuffer, readPointer_BBuffer + numSamples, internalBuffer.getWritePointer(i));
     }
     
 //    get the left channel sample and right channel sample.
     for (int i = 0; i < 256;)
     {
-        auto sub3 = decibelsToGain(-3.f);
+        auto sub3 = Decibels::decibelsToGain(-3.f);
 
         auto sampleL = internalBuffer.getSample(0, i);
         auto sampleR = internalBuffer.getSample(1, i);

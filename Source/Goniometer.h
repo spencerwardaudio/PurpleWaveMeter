@@ -21,9 +21,6 @@ struct Goniometer : Component
     void paint(Graphics& g) override;
     void resized() override;
     
-    Fifo<AudioBuffer<float>> fifoGonio;
-    int maxBufferSize {};
-    
 private:
     
     AudioBuffer<float>& _buffer;
@@ -36,21 +33,4 @@ private:
     
     juce::Image image;
     Graphics backgroundGraphic;
-
 };
-
-template <typename Type>
-static Type decibelsToGain (Type decibels,
-                            Type minusInfinityDb = Type (defaultMinusInfinitydB))
-{
-    return decibels > minusInfinityDb ? std::pow (Type (10.0), decibels * Type (0.05))
-                                      : Type();
-}
-
-template <typename Type>
-static Type gainToDecibels (Type gain,
-                            Type minusInfinityDb = Type (defaultMinusInfinitydB))
-{
-    return gain > Type() ? jmax (minusInfinityDb, static_cast<Type> (std::log10 (gain)) * Type (20.0))
-                         : minusInfinityDb;
-}

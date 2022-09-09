@@ -13,7 +13,7 @@
 
 Histogram::Histogram(const String& title_) : title( title_ )
 {
-    
+    addAndMakeVisible(dBScale);
 }
     
 void Histogram::paint(Graphics& g)
@@ -21,16 +21,53 @@ void Histogram::paint(Graphics& g)
     g.setColour(Colours::black);
     g.fillRect(getLocalBounds());
     
-    g.setColour(Colours::mintcream);
-    
+    g.setColour(Colours::orange);
     g.drawText(title, getLocalBounds().removeFromBottom(40), Justification::centredBottom);
     displayPath(g, getBounds().toFloat());
+    
+    auto xOffset = 30;
+    auto yOffset = 5;
+    
+    auto numTicks = dBScale.ticks.size();
+    
+    g.setColour (juce::Colours::dimgrey);
+    
+    for( int i = 0; i < numTicks; ++i )
+    {
+        if( i % 3 == 0 )
+        {
+            g.drawSingleLineText(juce::String(dBScale.ticks[i].dB), 0, dBScale.ticks[i].y + yOffset);
+            g.drawHorizontalLine(dBScale.ticks[i].y, getX() + xOffset, getWidth());
+        }
+    }
 }
 
 void Histogram::resized()
 {
     buffer.resize(getWidth(), NEG_INF);
     buffer.clear(NEG_INF);
+    
+    auto h = getHeight();
+    
+    dBScale.yOffset = h;
+
+    dBScale.setBounds(getX(),
+                      getY(),
+                      getHeight(),
+                      getWidth());
+    
+    dBScale.ticks.clear();
+    Tick tck;
+    
+    for(int i = (int)NEGATIVE_INFINITY; i <= (int)MAX_DECIBELS; i += 6)
+    {
+        tck.y = jmap(i, (int)NEGATIVE_INFINITY, (int)MAX_DECIBELS, h, 0) + 4;
+        std::cout << tck.y << " : y " << std::endl;
+        tck.dB = i;
+        std::cout << tck.dB << " : dB " << std::endl;
+        
+        dBScale.ticks.push_back(tck);
+    }
 }
 
 void Histogram::mouseDown(const MouseEvent& e)
@@ -127,3 +164,4 @@ Path Histogram::buildPath(Path& p,
 
     return p;
 }
+

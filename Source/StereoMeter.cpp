@@ -47,7 +47,6 @@ void StereoMeter::paint (Graphics& g)
 
 void StereoMeter::resized()
 {
-
     auto labelBoxWidth = (2 * MACRO_METER_WIDTH) + DB_SCALE_WIDTH;
 
     r.setBounds(0,

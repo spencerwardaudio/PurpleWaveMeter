@@ -12,6 +12,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "ReadAllAfterWriteCircularBuffer.h"
+#include "Meter.h"
 
 #define HISTOGRAM_HEIGHT 100
 #define MAX_DB  12.0f
@@ -38,4 +39,6 @@ private:
                           Rectangle<float> bounds);
     
     const String title;
+    
+    DBScale dBScale;
 };
