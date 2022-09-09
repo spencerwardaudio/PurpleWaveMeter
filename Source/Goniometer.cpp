@@ -124,7 +124,9 @@ void Goniometer::drawBackground(Graphics& g)
         
         g.drawLine(center.x, center.y, radiusPoint.getX(), radiusPoint.getY());
         
+        Point<float> radiusPointOffset = center.getPointOnCircumference(w/2.3, degreesToRadians((i*45.f) - 90.f)); 
+        
         if(i < 5)
-            g.drawText(labels[i], radiusPoint.x, radiusPoint.y, 15, 15, Justification::centred);
+            g.drawText(labels[i], radiusPointOffset.x - 7, radiusPointOffset.y - 5, 15, 15, Justification::centredTop);
     }
 }
