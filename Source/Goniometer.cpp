@@ -10,7 +10,7 @@
 
 #include "Goniometer.h"
 
-Goniometer::Goniometer(AudioBuffer<float>& buffer) : _buffer(buffer), image(Image::RGB, 240, 240, true), backgroundGraphic(image)
+Goniometer::Goniometer(AudioBuffer<float>& buffer) : _buffer(buffer), image(Image::RGB, 250, 240, true), backgroundGraphic(image)
 {
     internalBuffer.setSize(2, 1024);
     internalBuffer.clear();
