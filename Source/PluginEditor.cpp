@@ -16,7 +16,7 @@
 
 //==============================================================================
 Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmcpp_project10AudioProcessor& p)
-    : AudioProcessorEditor (&p), processor (p), goniometer(editorBuffer)
+    : AudioProcessorEditor (&p), processor (p), goniometer(editorBuffer), correlationMeter(editorBuffer, p.getSampleRate())
 {
     editorBuffer.setSize(2, processor.maxBufferSize);
     
@@ -29,6 +29,7 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
     addAndMakeVisible(histogramPeak);
     
     addAndMakeVisible(goniometer);
+    addAndMakeVisible(correlationMeter);
     
     setSize (450, 450);
     startTimerHz(30);
