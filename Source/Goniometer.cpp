@@ -49,7 +49,7 @@ void Goniometer::paint(Graphics& g)
     
     const auto sub3 = Decibels::decibelsToGain(-3.f);
 
-//  get the left channel sample and right channel sample.
+//    get the left channel sample and right channel sample.
     for (int i = 0; i < iBufNumSamples;)
     {
         auto sampleL = internalBuffer.getSample(0, i);
