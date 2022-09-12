@@ -12,7 +12,7 @@
 
 Goniometer::Goniometer(AudioBuffer<float>& buffer) : _buffer(buffer), image(Image::RGB, 250, 240, true), backgroundGraphic(image)
 {
-    internalBuffer.setSize(2, 1024);
+    internalBuffer.setSize(2, 1024); 
     internalBuffer.clear();
 }
 
@@ -46,12 +46,12 @@ void Goniometer::paint(Graphics& g)
     {
         internalBuffer = _buffer;
     }
+    
+    const auto sub3 = Decibels::decibelsToGain(-3.f);
 
 //    get the left channel sample and right channel sample.
-    for (int i = 0; i < 256;)
+    for (int i = 0; i < iBufNumSamples;)
     {
-        auto sub3 = Decibels::decibelsToGain(-3.f);
-
         auto sampleL = internalBuffer.getSample(0, i);
         auto sampleR = internalBuffer.getSample(1, i);
 
@@ -80,6 +80,7 @@ void Goniometer::paint(Graphics& g)
         {
             p.lineTo(p1);
         }
+        
         i = i+3;
     }
     

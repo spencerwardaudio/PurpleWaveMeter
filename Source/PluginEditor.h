@@ -42,8 +42,6 @@ private:
     Histogram histogramPeak { "Peak Histogram" };
     
     Goniometer goniometer;
-//    CorrelationMeter correlationMeter;
-
 
     Pfmcpp_project10AudioProcessor& processor;
     AudioBuffer<float> editorBuffer;
