@@ -55,7 +55,7 @@ void Goniometer::paint(Graphics& g)
         auto sampleL = internalBuffer.getSample(0, i);
         auto sampleR = internalBuffer.getSample(1, i);
 
-        float S = (sampleL-sampleR) * sub3;
+        float S = (sampleR - sampleL) * sub3;
         float M = (sampleL+sampleR) * sub3;
         
         Point<float> point(center.toFloat().x, center.toFloat().y);
