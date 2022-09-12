@@ -80,7 +80,6 @@ void Goniometer::paint(Graphics& g)
         {
             p.lineTo(p1);
         }
-
         i = i+3;
     }
     
