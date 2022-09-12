@@ -16,19 +16,11 @@
 
 //==============================================================================
 Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmcpp_project10AudioProcessor& p)
-    : AudioProcessorEditor (&p), processor (p), goniometer(editorBuffer)
+    : AudioProcessorEditor (&p), processor (p), goniometer(editorBuffer)//, correlationMeter(editorBuffer, p.getSampleRate())
 {
     editorBuffer.setSize(2, processor.maxBufferSize);
     
     editorBuffer.clear();
-    
-//    //==============
-//    //TODO IS THIS CORRECT?
-//    goniometer.fifoGonio.prepare(2, 256);
-//    
-//    goniometer.maxBufferSize = processor.maxBufferSize;
-//    //===============
-    
     
     addAndMakeVisible(stereoMeterPk);
     addAndMakeVisible(stereoMeterRMS);
@@ -37,6 +29,7 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
     addAndMakeVisible(histogramPeak);
     
     addAndMakeVisible(goniometer);
+//    addAndMakeVisible(correlationMeter);
     
     setSize (450, 450);
     startTimerHz(30);
@@ -69,6 +62,7 @@ void Pfmcpp_project10AudioProcessorEditor::resized()
     histogramPeak.setBounds(0, histogramRMS.getBottom(), getWidth(), (bounds.getHeight() - stereoMeterPk.getBottom()) / 2);
     
     goniometer.setBounds(stereoMeterRMS.getWidth(), 0, bounds.getWidth(), stereoMeterRMS.getHeight());
+//    correlationMeter.setBounds(goniometer.getX(), goniometer.getHeight() - 20, bounds.getWidth(), 20);
     
 }
 

@@ -23,15 +23,26 @@ void Goniometer::paint(Graphics& g)
     p.clear();
     
     auto numChannels = _buffer.getNumChannels();
-    auto numSamples = _buffer.getNumSamples();
+    auto eBufNumSamples = _buffer.getNumSamples();
+    auto iBufNumSamples = internalBuffer.getNumSamples();
     
-    for (int i  = 0; i < numChannels; ++i)
+    if(iBufNumSamples > eBufNumSamples)
     {
-        auto* readPointer_BBuffer = _buffer.getReadPointer(i);
-    
-        //shift & append elements from the editor buffer to the end of the internal buffer
-        std::copy(readPointer_BBuffer, readPointer_BBuffer + numSamples, internalBuffer.getWritePointer(i));
+        for (int i  = 0; i < numChannels; ++i)
+        {
+            auto* readPointer_BBuffer = _buffer.getReadPointer(i);
+            auto* readPointer_IBuffer = internalBuffer.getReadPointer(i);
+            auto* writePointer_IBuffer = internalBuffer.getWritePointer(i);
+            
+            //shift elements in the internal buffer based on the size of the editor buffer
+            std::copy(readPointer_IBuffer + eBufNumSamples, readPointer_IBuffer + iBufNumSamples, writePointer_IBuffer);
+            
+            //append elements to the internal buffer based on the size of the editor buffer
+            std::copy(readPointer_BBuffer, readPointer_BBuffer + eBufNumSamples, writePointer_IBuffer + eBufNumSamples);
+        }
     }
+    
+    internalBuffer = _buffer;
     
 //    get the left channel sample and right channel sample.
     for (int i = 0; i < 256;)

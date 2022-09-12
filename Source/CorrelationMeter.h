@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "../JuceLibraryCode/JuceHeader.h"
+#include "Meter.h"
 
 struct CorrelationMeter : Component
 {
@@ -19,8 +19,13 @@ struct CorrelationMeter : Component
     void update();
 private:
     AudioBuffer<float>& buffer;
-    using FilterType = juce::dsp::**::Filter<float>
+    using FilterType = juce::dsp::StateVariableTPTFilter<float>;
     std::array<FilterType, 3> filters;
+    
+    dsp::ProcessSpec spec;
+//    dsp::FilterDesign<FIRCoefficientsPtr> coefficients;
+//    dsp::FilterDesign<float> fd;
+//    dsp::
 
     Averager<float> slowAverager{1024*3, 0}, peakAverager{512, 0};
     
