@@ -16,7 +16,7 @@
 
 //==============================================================================
 Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmcpp_project10AudioProcessor& p)
-    : AudioProcessorEditor (&p), processor (p)
+    : AudioProcessorEditor (&p), processor (p), goniometer(editorBuffer)
 {
     editorBuffer.setSize(2, processor.maxBufferSize);
     
@@ -25,7 +25,12 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
     addAndMakeVisible(stereoMeterPk);
     addAndMakeVisible(stereoMeterRMS);
     
-    setSize (400, 300);
+    addAndMakeVisible(histogramRMS);
+    addAndMakeVisible(histogramPeak);
+    
+    addAndMakeVisible(goniometer);
+    
+    setSize (450, 450);
     startTimerHz(30);
 }
 
@@ -50,6 +55,12 @@ void Pfmcpp_project10AudioProcessorEditor::resized()
     
     stereoMeterRMS.setBounds(bounds.removeFromLeft(100).removeFromTop(METER_HEIGHT + 40));
     stereoMeterPk.setBounds(bounds.removeFromRight(100).removeFromTop(METER_HEIGHT + 40));
+    
+    //from the bottom of the stereo meter to the bottom of the application height / 2
+    histogramRMS.setBounds(0, stereoMeterRMS.getBottom(), getWidth(), (bounds.getHeight() - stereoMeterPk.getBottom()) / 2);
+    histogramPeak.setBounds(0, histogramRMS.getBottom(), getWidth(), (bounds.getHeight() - stereoMeterPk.getBottom()) / 2);
+    
+    goniometer.setBounds(stereoMeterRMS.getWidth(), 0, bounds.getWidth(), stereoMeterRMS.getHeight());
 }
 
 void Pfmcpp_project10AudioProcessorEditor::timerCallback()
@@ -74,6 +85,18 @@ void Pfmcpp_project10AudioProcessorEditor::timerCallback()
         
         stereoMeterRMS.update(0, levelDBRMSL);
         stereoMeterRMS.update(1, levelDBRMSR);
-    }
+        
+        auto avgRMS = (levelDBRMSL + levelDBRMSR) / 2;
+        auto avgPeak = (levelDBL + levelDBR) / 2;
 
+        histogramRMS.update(avgRMS);
+        histogramPeak.update(avgPeak);
+    }
+    else
+    {
+        //Fade
+        editorBuffer.applyGain( Decibels::decibelsToGain(-3.f) );
+    }
+    
+    goniometer.repaint();
 }

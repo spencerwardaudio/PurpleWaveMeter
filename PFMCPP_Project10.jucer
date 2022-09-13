@@ -10,12 +10,19 @@
       <FILE id="fc7XqS" name="MacroMeter.h" compile="0" resource="0" file="Source/MacroMeter.h"/>
       <FILE id="ALIkvG" name="StereoMeter.cpp" compile="1" resource="0" file="Source/StereoMeter.cpp"/>
       <FILE id="ebUpiT" name="StereoMeter.h" compile="0" resource="0" file="Source/StereoMeter.h"/>
+      <FILE id="bsKn7V" name="ReadAllAfterWriteCircularBuffer.h" compile="0"
+            resource="0" file="Source/ReadAllAfterWriteCircularBuffer.h"/>
+      <FILE id="mNSzr4" name="Histogram.cpp" compile="1" resource="0" file="Source/Histogram.cpp"/>
+      <FILE id="Gvrkd7" name="Histogram.h" compile="0" resource="0" file="Source/Histogram.h"/>
+      <FILE id="GLtPez" name="Goniometer.cpp" compile="1" resource="0" file="Source/Goniometer.cpp"/>
+      <FILE id="o1P2Xz" name="Goniometer.h" compile="0" resource="0" file="Source/Goniometer.h"/>
     </GROUP>
     <GROUP id="{A92DB368-5243-6129-F1D5-73D06AFB4761}" name="Source">
       <FILE id="GoZaVW" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="m8T8iH" name="PluginProcessor.h" compile="0" resource="0"
             file="Source/PluginProcessor.h"/>
+      <FILE id="BDcuEE" name="Fifo.h" compile="0" resource="0" file="Source/Fifo.h"/>
       <FILE id="wyE4QJ" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
       <FILE id="t40WPD" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>

@@ -14,7 +14,9 @@
 #include "PluginProcessor.h"
 
 #include "StereoMeter.h"
-
+#include "Histogram.h"
+#include "Goniometer.h"
+#include "CorrelationMeter.h"
 
 //==============================================================================
 /**
@@ -35,6 +37,11 @@ private:
 
     StereoMeter stereoMeterRMS { "L  RMS  R" };
     StereoMeter stereoMeterPk { "L  Peak  R" };
+    
+    Histogram histogramRMS { "RMS Histogram" };
+    Histogram histogramPeak { "Peak Histogram" };
+    
+    Goniometer goniometer;
 
     Pfmcpp_project10AudioProcessor& processor;
     AudioBuffer<float> editorBuffer;
