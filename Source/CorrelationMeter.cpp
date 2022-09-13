@@ -10,32 +10,18 @@
 
 #include "CorrelationMeter.h"
 
-CorrelationMeter::CorrelationMeter(AudioBuffer<float>& buf, double sampleRate) : buffer(buf)
+CorrelationMeter::CorrelationMeter(AudioBuffer<float>& buf, double sampleRate) : buffer(buf), lowpassFilter(dsp::FilterDesign<float>::designFIRLowpassWindowMethod(100, sampleRate, 2, juce::dsp::WindowingFunction<float>::blackmanHarris))
 {
     spec.sampleRate = sampleRate;
     spec.numChannels = 2;
     spec.maximumBlockSize = buffer.getNumSamples();
     
-    dsp::FIR::Coefficients<float>::Ptr firLowPassCoefficients = dsp::FilterDesign<float>::designFIRLowpassWindowMethod(100, sampleRate, 2, juce::dsp::WindowingFunction<float>::blackmanHarris);
-    
-    for (int i = 0; i < 3; i++)
-    {
-        filters[i] = new FilterType(firLowPassCoefficients);
-        i.prepare(spec);
-        i.reset();
-//        i.setCutoffFrequency(100);
-    }
-    
-//    for (int i = 0; i < 3; i++)
-//    {
-//        filters[i] = new FilterType(firLowPassCoefficients);
-//    }
+    lowpassFilter.prepare(spec);
+    lowpassFilter.reset();
 }
 
-// all of the time goes to actually building 
 void CorrelationMeter::paint(Graphics& g)
 {
-    //    drawAverage();
     //    drawAverage();
     Rectangle<float> r = Rectangle<float> (getLocalBounds().toFloat());
         g.setColour (Colours::red);
@@ -44,23 +30,16 @@ void CorrelationMeter::paint(Graphics& g)
 
 void CorrelationMeter::update()
 {
-//    dsp::AudioBlock<float> b = buffer;
-//    
-//    for (int i  = 0; i < buffer.getNumChannels(); ++i)
-//    {
-//        for(int i = 0; i < buffer.getNumSamples(); i++)
-//        {
-//            for (auto j : filters)
-//                j.process(dsp::ProcessContextReplacing<float>(b));
-//        }
-//    }
+    dsp::AudioBlock<float> b = buffer;
     
-//    auto LT = buffer.getReadPointer(0);
-//    auto LTSquared = LT * LT;
-//    auto RT = buffer.getReadPointer(1);
-//    auto RTSquared = RT * RT;
-//
-//    auto LTRT = LT * RT;
+    lowpassFilter.process(dsp::ProcessContextReplacing<float>(b));
+
+    auto LT = buffer.getReadPointer(0);
+    auto LTSquared = LT * LT;
+    auto RT = buffer.getReadPointer(1);
+    float RTSquared = RT * RT;
+
+    auto LTRT = LT * RT;
 
 //    repaint();
 }

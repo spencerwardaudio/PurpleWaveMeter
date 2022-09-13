@@ -44,7 +44,6 @@ private:
     Goniometer goniometer;
     CorrelationMeter correlationMeter;
 
-
     Pfmcpp_project10AudioProcessor& processor;
     AudioBuffer<float> editorBuffer;
 

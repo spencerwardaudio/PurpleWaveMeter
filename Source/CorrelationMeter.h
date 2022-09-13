@@ -20,11 +20,10 @@ struct CorrelationMeter : Component
 private:
     AudioBuffer<float>& buffer;
     using FilterType = juce::dsp::FIR::Filter<float>;
-    std::array<FilterType, 3> filters;
     
     dsp::ProcessSpec spec;
-    dsp::ProcessorDuplicator<filters, dsp::FIR::Coefficients>>
-
+    dsp::ProcessorDuplicator<FilterType, dsp::FIR::Coefficients<float>> lowpassFilter;
+    
     Averager<float> slowAverager{1024*3, 0}, peakAverager{512, 0};
     
     void drawAverage(Graphics& g,
