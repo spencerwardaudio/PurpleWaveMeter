@@ -16,21 +16,20 @@ CorrelationMeter::CorrelationMeter(AudioBuffer<float>& buf, double sampleRate) :
     spec.numChannels = 2;
     spec.maximumBlockSize = buffer.getNumSamples();
     
-    Array<dsp::FIR::Coefficients<float>> firLowPassCoefficients = dsp::FilterDesign<float>::designFIRLowpassWindowMethod(100, sampleRate, 2, Window);
-    
-//    for (auto i : filters)
-//    {
-//        i(firLowPassCoefficients);
-//        i.prepare(spec);
-//        i.
-//        i.reset();
-//        i.setCutoffFrequency(100);
-//    }
+    dsp::FIR::Coefficients<float>::Ptr firLowPassCoefficients = dsp::FilterDesign<float>::designFIRLowpassWindowMethod(100, sampleRate, 2, juce::dsp::WindowingFunction<float>::blackmanHarris);
     
     for (int i = 0; i < 3; i++)
     {
-        new FilterType(firLowPassCoefficients);
+        filters[i] = new FilterType(firLowPassCoefficients);
+        i.prepare(spec);
+        i.reset();
+//        i.setCutoffFrequency(100);
     }
+    
+//    for (int i = 0; i < 3; i++)
+//    {
+//        filters[i] = new FilterType(firLowPassCoefficients);
+//    }
 }
 
 // all of the time goes to actually building 
@@ -45,16 +44,16 @@ void CorrelationMeter::paint(Graphics& g)
 
 void CorrelationMeter::update()
 {
-    dsp::AudioBlock<float> b = buffer;
-    
-    for (int i  = 0; i < buffer.getNumChannels(); ++i)
-    {
-        for(int i = 0; i < buffer.getNumSamples(); i++)
-        {
-            for (auto j : filters)
-                j.process(dsp::ProcessContextReplacing<float>(b));
-        }
-    }
+//    dsp::AudioBlock<float> b = buffer;
+//    
+//    for (int i  = 0; i < buffer.getNumChannels(); ++i)
+//    {
+//        for(int i = 0; i < buffer.getNumSamples(); i++)
+//        {
+//            for (auto j : filters)
+//                j.process(dsp::ProcessContextReplacing<float>(b));
+//        }
+//    }
     
 //    auto LT = buffer.getReadPointer(0);
 //    auto LTSquared = LT * LT;

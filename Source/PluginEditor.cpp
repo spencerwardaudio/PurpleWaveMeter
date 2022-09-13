@@ -62,6 +62,8 @@ void Pfmcpp_project10AudioProcessorEditor::resized()
     histogramPeak.setBounds(0, histogramRMS.getBottom(), getWidth(), (bounds.getHeight() - stereoMeterPk.getBottom()) / 2);
     
     goniometer.setBounds(stereoMeterRMS.getWidth(), 0, bounds.getWidth(), stereoMeterRMS.getHeight());
+    correlationMeter.setBounds(goniometer.getX(), goniometer.getHeight() - 20, bounds.getWidth(), 20);
+    
 }
 
 void Pfmcpp_project10AudioProcessorEditor::timerCallback()
