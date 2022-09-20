@@ -78,10 +78,17 @@ void CorrelationMeter::drawAverage(Graphics& g,
     
     float mappedVal = jmap(avg, -1.f, 1.0f, (float)bounds.getX(), (float)bounds.getWidth());
     
-    g.fillRect(center, (float)bounds.getY(), mappedVal - center, (float)bounds.getHeight());
-    
-    g.setColour(Colours::greenyellow.withAlpha(0.8f));
-    
     if((mappedVal - center) > 0.0f)
+    {
+        g.fillRect(center, (float)bounds.getY(), mappedVal - center, (float)bounds.getHeight());
+        g.setColour(Colours::greenyellow.withAlpha(0.8f));
         g.drawRect(center, (float)bounds.getY(), mappedVal - center, (float)bounds.getHeight(), 1.f);
+    }
+    else if((mappedVal - center) < 0.0f)
+    {
+        g.fillRect(mappedVal, (float)bounds.getY(), center, (float)bounds.getHeight());
+        g.setColour(Colours::greenyellow.withAlpha(0.8f));
+        g.drawRect(mappedVal, (float)bounds.getY(), center, (float)bounds.getHeight(), 1.f);
+    }
+        
 }
