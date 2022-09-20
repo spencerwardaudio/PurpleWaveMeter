@@ -94,6 +94,8 @@ void Pfmcpp_project10AudioProcessorEditor::timerCallback()
 
         histogramRMS.update(avgRMS);
         histogramPeak.update(avgPeak);
+        
+        correlationMeter.update();
     }
     else
     {

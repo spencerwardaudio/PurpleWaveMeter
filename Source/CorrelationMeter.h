@@ -22,9 +22,9 @@ private:
     using FilterType = juce::dsp::FIR::Filter<float>;
     
     dsp::ProcessSpec spec;
-    dsp::ProcessorDuplicator<FilterType, dsp::FIR::Coefficients<float>> lowpassFilter;
+    std::array<FilterType, 3> filters;
     
-    Averager<float> slowAverager{1024*3, 0}, peakAverager{512, 0};
+    Averager<float> slowAverager{ 1024*3, 0 }, peakAverager{ 512, 0 };
     
     void drawAverage(Graphics& g,
                      Rectangle<int> bounds,
