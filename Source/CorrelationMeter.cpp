@@ -12,7 +12,11 @@
 
 CorrelationMeter::CorrelationMeter(AudioBuffer<float>& buf, double sampleRate) : buffer(buf)
 {
-    filters = { FilterType(dsp::FilterDesign<float>::designFIRLowpassWindowMethod(100, sampleRate, 2, juce::dsp::WindowingFunction<float>::blackmanHarris)), FilterType(dsp::FilterDesign<float>::designFIRLowpassWindowMethod(100, sampleRate, 2, juce::dsp::WindowingFunction<float>::blackmanHarris)), FilterType(dsp::FilterDesign<float>::designFIRLowpassWindowMethod(100, sampleRate, 2, juce::dsp::WindowingFunction<float>::blackmanHarris)) };
+    auto coefficients = dsp::FilterDesign<float>::designFIRLowpassWindowMethod(50.f, sampleRate, 2, dsp::FilterDesign<float>::WindowingMethod::rectangular);
+    
+    filters[0] = dsp::FIR::Filter<float>(coefficients);
+    filters[1] = dsp::FIR::Filter<float>(coefficients);
+    filters[2] = dsp::FIR::Filter<float>(coefficients);
     
     spec.sampleRate = sampleRate;
     spec.numChannels = 1;
@@ -56,7 +60,10 @@ void CorrelationMeter::update()
         
         result = H0 / (std::sqrt(H1 * H2));
         
-        if(isnan(result))
+        if(H1 == 0 || H2 == 0)
+            result = 0;
+        
+        if(isnan(result) || isinf(result))
             result = 0;
      
         slowAverager.add(result);
@@ -71,31 +78,18 @@ void CorrelationMeter::drawAverage(Graphics& g,
                  float avg,
                  bool drawBorder)
 {
-    DBG("avg: " << avg);
     g.setColour ( Colours::yellowgreen );
     
-    auto center = (float)bounds.getWidth()/2;
-    
-    float mappedVal = jmap(avg, -1.f, 1.0f, (float)bounds.getX(), (float)bounds.getWidth());
+    float mappedVal = jmap(avg, -1.f, 1.0f, 0.f
+                           , (float)bounds.getWidth());
     
     g.setColour(Colours::greenyellow.withAlpha(0.8f));
     
-    if(mappedVal > 1.0f)
-        mappedVal = (float)bounds.getWidth();
+    Rectangle<float> rN(mappedVal, 0.f, getLocalBounds().getWidth()/2, getLocalBounds().getHeight());
+    Rectangle<float> rP(getLocalBounds().getWidth()/2, 0.f, (mappedVal - getLocalBounds().getWidth()/2), getLocalBounds().getHeight());
     
-    if((mappedVal - center) > 0.0f)
-    {
-        g.fillRect(center, (float)bounds.getY(), mappedVal - center, (float)bounds.getHeight());
-        g.drawRect(center, (float)bounds.getY(), mappedVal - center, (float)bounds.getHeight(), 1.f);
-    }
-    else if((mappedVal - center) < 0.0f)
-    {
-        g.fillRect(mappedVal, (float)bounds.getY(), center, (float)bounds.getHeight());
-        g.drawRect(mappedVal, (float)bounds.getY(), center, (float)bounds.getHeight(), 1.f);
-    }
-    else
-    {
-        g.fillRect(center, (float)bounds.getY(), 1.0f, (float)bounds.getHeight());
-    }
-        
+    if(avg < 0.f)
+        g.fillRect(rN);
+    else if (avg >= 0.f)
+        g.fillRect(rP);
 }
