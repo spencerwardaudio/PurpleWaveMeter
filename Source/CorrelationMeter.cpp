@@ -58,16 +58,21 @@ void CorrelationMeter::update()
         auto H1 = filters[1].processSample(LTSquared);
         auto H2 = filters[2].processSample(RTSquared);
         
-        result = H0 / (std::sqrt(H1 * H2));
-        
         if(H1 == 0 || H2 == 0)
+        {
             result = 0;
-        
-        if(isnan(result) || isinf(result))
+        }
+        else if(isnan(result) || isinf(result))
+        {
             result = 0;
-     
-        slowAverager.add(result);
-        peakAverager.add(result);
+        }
+        else
+        {
+            result = H0 / (std::sqrt(H1 * H2));
+            
+            slowAverager.add(result);
+            peakAverager.add(result);
+        }
     }
     
     repaint();
@@ -85,11 +90,11 @@ void CorrelationMeter::drawAverage(Graphics& g,
     
     g.setColour(Colours::greenyellow.withAlpha(0.8f));
     
-    Rectangle<float> rN(mappedVal, 0.f, getLocalBounds().getWidth()/2, getLocalBounds().getHeight());
+    Rectangle<float> rN(mappedVal, 0.f, getLocalBounds().getWidth()/2 - mappedVal, getLocalBounds().getHeight());
     Rectangle<float> rP(getLocalBounds().getWidth()/2, 0.f, (mappedVal - getLocalBounds().getWidth()/2), getLocalBounds().getHeight());
     
     if(avg < 0.f)
         g.fillRect(rN);
-    else if (avg >= 0.f)
+    else if(avg >= 0.f)
         g.fillRect(rP);
 }
