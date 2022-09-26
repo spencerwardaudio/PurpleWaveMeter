@@ -45,7 +45,7 @@ void CorrelationMeter::paint(Graphics& g)
     drawAverage(g, rSA, slowAverager.getAverage(), true);
     drawAverage(g, rPA, peakAverager.getAverage(), true);
     
-    g.setColour (Colours::red);
+//    g.setColour (Colours::red);
 //    g.drawRect(rSA, 1);
 //    g.drawRect(rPA, 1);
 }

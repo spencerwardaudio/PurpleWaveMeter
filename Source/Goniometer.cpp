@@ -90,8 +90,8 @@ void Goniometer::paint(Graphics& g)
         
         auto colors = std::vector<Colour>
         {
-            Colours::green,
-            Colours::blue
+            Colours::blueviolet,
+            Colours::whitesmoke
         };
         
         ColourGradient gFill;
