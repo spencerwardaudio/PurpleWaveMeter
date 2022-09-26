@@ -32,13 +32,22 @@ CorrelationMeter::CorrelationMeter(AudioBuffer<float>& buf, double sampleRate) :
 
 void CorrelationMeter::paint(Graphics& g)
 {
-    Rectangle<float> r = Rectangle<float> (getLocalBounds().toFloat());
+    Rectangle<int> rSA = Rectangle<int> (25, 5, getLocalBounds().getWidth() - 50, getLocalBounds().getHeight() - 5);
+    Rectangle<int> rPA = Rectangle<int> (25, 0, getLocalBounds().getWidth() - 50, getLocalBounds().getHeight() - 15);
     
-    drawAverage(g, getLocalBounds().removeFromBottom(15), slowAverager.getAverage(), true);
-    drawAverage(g, getLocalBounds().removeFromTop(5), peakAverager.getAverage(), true);
+    juce::String labels[2] { "-1", "+1"};
+    
+    g.setColour(Colours::whitesmoke.withAlpha(0.7f));
+    
+    g.drawText(labels[0], 0, 0, 20, 20, Justification::centred);
+    g.drawText(labels[1], getWidth() - 20, 0, 20, 20, Justification::centred);
+    
+    drawAverage(g, rSA, slowAverager.getAverage(), true);
+    drawAverage(g, rPA, peakAverager.getAverage(), true);
     
     g.setColour (Colours::red);
-    g.drawRect(r);
+//    g.drawRect(rSA, 1);
+//    g.drawRect(rPA, 1);
 }
 
 void CorrelationMeter::update()
@@ -62,17 +71,18 @@ void CorrelationMeter::update()
         {
             result = 0;
         }
-        else if(isnan(result) || isinf(result))
-        {
-            result = 0;
-        }
         else
         {
             result = H0 / (std::sqrt(H1 * H2));
-            
-            slowAverager.add(result);
-            peakAverager.add(result);
         }
+        
+        if(isnan(result) || isinf(result))
+        {
+            result = 0;
+        }
+
+        slowAverager.add(result);
+        peakAverager.add(result);
     }
     
     repaint();
@@ -83,18 +93,25 @@ void CorrelationMeter::drawAverage(Graphics& g,
                  float avg,
                  bool drawBorder)
 {
-    g.setColour ( Colours::yellowgreen );
+//    avg = 0.95f;
     
     float mappedVal = jmap(avg, -1.f, 1.0f, 0.f
                            , (float)bounds.getWidth());
     
-    g.setColour(Colours::greenyellow.withAlpha(0.8f));
-    
-    Rectangle<float> rN(mappedVal, 0.f, getLocalBounds().getWidth()/2 - mappedVal, getLocalBounds().getHeight());
-    Rectangle<float> rP(getLocalBounds().getWidth()/2, 0.f, (mappedVal - getLocalBounds().getWidth()/2), getLocalBounds().getHeight());
+    Rectangle<float> rN(mappedVal + 25, bounds.getY(), bounds.getWidth()/2 - mappedVal, bounds.getHeight());
+    Rectangle<float> rP(bounds.getWidth()/2 + 25, bounds.getY(), (mappedVal - bounds.getWidth()/2), bounds.getHeight());
     
     if(avg < 0.f)
+    {
+        g.setGradientFill (ColourGradient (Colours::whitesmoke, 25, 0,
+                                            Colours::blueviolet, bounds.getWidth()/2, 0, false));
         g.fillRect(rN);
+    }
     else if(avg >= 0.f)
+    {
+        g.setGradientFill (ColourGradient (Colours::blueviolet, bounds.getWidth()/2 + 25, 0,
+                                            Colours::whitesmoke, bounds.getWidth(), 0, false));
         g.fillRect(rP);
+    }
+        
 }
