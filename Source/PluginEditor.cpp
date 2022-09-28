@@ -16,8 +16,16 @@
 
 //==============================================================================
 Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmcpp_project10AudioProcessor& p)
-: AudioProcessorEditor (&p), stereoImageMeter(editorBuffer, p.getSampleRate()), processor (p)
-{
+: AudioProcessorEditor (&p), processor (p), stereoImageMeter(editorBuffer, p.getSampleRate()), decayLabel ("decayLabel", "DECAY"){
+    decayLabel.setFont(20.0);
+    decayLabel.setColour (juce::Label::textColourId, juce::Colours::orange);
+    addAndMakeVisible(decayLabel);
+    
+    addAndMakeVisible(decayRateControl);
+//    {"-3dB/s", "-6dB/s", "-12dB/s", "-24dB/s", "-36dB/s"}
+    decayRateControl.addItem("-3dB/s", 1);
+    decayRateControl.addItem("-6dB/s", 2);
+    
     editorBuffer.setSize(2, processor.maxBufferSize);
     editorBuffer.clear();
     
@@ -51,7 +59,7 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
         stereoMeterPk.setThreshold(newThreshold);
     };
     
-    setSize (450, 450);
+    setSize (550, 450);
     startTimerHz(30);
 }
 
@@ -68,6 +76,9 @@ void Pfmcpp_project10AudioProcessorEditor::paint (Graphics& g)
 
     g.setColour (Colours::black);
     g.setFont (15.0f);
+    
+    g.setColour (Colours::white);
+    g.drawLine(stereoMeterRMS.getWidth(), decayRateControl.getBottom() + 10, decayRateControl.getWidth(), decayRateControl.getBottom()  + 10, 2);
 }
 
 void Pfmcpp_project10AudioProcessorEditor::resized()
@@ -82,6 +93,14 @@ void Pfmcpp_project10AudioProcessorEditor::resized()
     histogramPeak.setBounds(0, histogramRMS.getBottom(), getWidth(), (bounds.getHeight() - stereoMeterPk.getBottom()) / 2);
     
     stereoImageMeter.setBounds(stereoMeterRMS.getWidth(), 0, bounds.getWidth(), stereoMeterRMS.getHeight());
+    decayLabel.setBounds(stereoMeterRMS.getWidth(), 0, 50, 25);
+    decayRateControl.setBounds(stereoMeterRMS.getWidth(), decayLabel.getHeight(), 50, 25);
+    avgLabel.setBounds(stereoMeterRMS.getWidth(), 0, 50, 25);;
+    avgControl.setBounds(stereoMeterRMS.getWidth(), decayLabel.getHeight(), 50, 25);;
+    
+    
+    meterLabel.setBounds(stereoMeterRMS.getWidth(), 0, 50, 25);;
+    meterControl.setBounds(stereoMeterRMS.getWidth(), decayLabel.getHeight(), 50, 25);;
 }
 
 void Pfmcpp_project10AudioProcessorEditor::timerCallback()

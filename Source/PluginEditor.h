@@ -43,6 +43,17 @@ private:
 
     Pfmcpp_project10AudioProcessor& processor;
     AudioBuffer<float> editorBuffer;
+    
+    Label    decayLabel;
+    ComboBox decayRateControl;
+    
+    Label    avgLabel;
+    ComboBox avgControl;
+    
+    Label    meterLabel;
+    ComboBox meterControl;
+    
+    
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Pfmcpp_project10AudioProcessorEditor)
 };
