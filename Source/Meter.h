@@ -226,4 +226,11 @@ struct Meter : Component
     float level { NEGATIVE_INFINITY };
     
     DecayingValueHolder decayingValueHolder;
+    
+    void setThreshold(float thresholdDB) { threshold = thresholdDB; }
+    
+private:
+    
+    float threshold = 0;
+    bool dBLevelClip = false;
 };

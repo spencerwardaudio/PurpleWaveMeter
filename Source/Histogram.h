@@ -26,6 +26,7 @@ struct Histogram : Component
     void resized() override;
     void mouseDown(const MouseEvent& e) override;
     void update(float value);
+    void setThreshold(float threshAsDecibels);
     
 private:
 
@@ -41,4 +42,8 @@ private:
     const String title;
     
     DBScale dBScale;
+    
+    bool dBLevelClip = false;
+    
+    float threshold;
 };

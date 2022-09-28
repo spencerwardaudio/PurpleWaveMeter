@@ -23,6 +23,7 @@ struct MacroMeter : Component
     void resized() override;
     
     void update(float levelInDB);
+    void setThreshold(float threshAsDecibels);
 
     std::vector<Tick> getDBTick();
     int getDBBounds();
@@ -37,4 +38,6 @@ private:
     Meter meterAverage;
     
     Averager<float> averageValue { 10, NEGATIVE_INFINITY };
+    float threshold;
+    bool overThreshold;
 };

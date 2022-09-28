@@ -23,6 +23,14 @@ StereoMeter::StereoMeter(const String MeterName) : labelLR( MeterName, MeterName
     addAndMakeVisible(macroMeterRight);
     
     addAndMakeVisible(labelLR);
+
+    thresholdSlider.setSliderStyle (juce::Slider::SliderStyle::LinearVertical);
+    
+    thresholdSlider.setValue(8.5f);
+    
+    thresholdSlider.setLookAndFeel(&sliderLookAndFeel);
+    
+    addAndMakeVisible(thresholdSlider);
 }
 
 void StereoMeter::update(int channel, float levelInDB)
@@ -67,6 +75,8 @@ void StereoMeter::resized()
                       DB_SCALE_WIDTH,
                       220);
                       //JUCE_LIVE_CONSTANT (250)
+    
+    thresholdSlider.setBounds(dBScale.getX(), macroMeterLeft.getY(), DB_SCALE_WIDTH, dBScale.getHeight());
 
     macroMeterRight.setBounds(MACRO_METER_WIDTH + DB_SCALE_WIDTH,
                               0,
@@ -81,6 +91,14 @@ void StereoMeter::resized()
     labelLR.setJustificationType(Justification::centred);
 
     labelLR.setBounds(labelRect);
+}
+
+void StereoMeter::setThreshold(float threshAsDecibels)
+{
+    threshold = threshAsDecibels;
+    
+    macroMeterLeft.setThreshold(threshAsDecibels);
+    macroMeterRight.setThreshold(threshAsDecibels);
 }
 
 
