@@ -32,6 +32,8 @@
       <FILE id="wyE4QJ" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
       <FILE id="t40WPD" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+      <FILE id="XiD14M" name="ScalerLookAndFeel.h" compile="0" resource="0"
+            file="Source/ScalerLookAndFeel.h"/>
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>

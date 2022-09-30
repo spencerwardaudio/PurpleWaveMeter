@@ -15,16 +15,71 @@
 
 
 //==============================================================================
-Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmcpp_project10AudioProcessor& p)
+Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmcpp_project10AudioProcessor& p): AudioProcessorEditor (&p), processor (p), stereoImageMeter(editorBuffer, p.getSampleRate()), decayLabel ("decayLabel", "DECAY")        
+		decayLabel ("decayLabel", "DECAY"),        avgLabel ("avgLabel", "AVG"),
+        meterLabel ("meterLabel", "VIEW"),
+        scaleLabel ("scaleLabel", "SCALE"),
+        histLabel ("histLabel", "HIST")
+    : AudioProcessorEditor (&p), processor (p), goniometer(editorBuffer), correlationMeter(editorBuffer, p.getSampleRate()),
 : AudioProcessorEditor (&p), processor (p), stereoImageMeter(editorBuffer, p.getSampleRate()), decayLabel ("decayLabel", "DECAY"){
     decayLabel.setFont(20.0);
     decayLabel.setColour (juce::Label::textColourId, juce::Colours::orange);
     addAndMakeVisible(decayLabel);
     
     addAndMakeVisible(decayRateControl);
-//    {"-3dB/s", "-6dB/s", "-12dB/s", "-24dB/s", "-36dB/s"}
     decayRateControl.addItem("-3dB/s", 1);
     decayRateControl.addItem("-6dB/s", 2);
+    decayRateControl.addItem("-12dB/s", 3);
+    decayRateControl.addItem("-24dB/s", 4);
+    decayRateControl.addItem("-36dB/s", 5);
+    
+    avgLabel.setFont(20.0);
+    avgLabel.setColour (juce::Label::textColourId, juce::Colours::orange);
+    addAndMakeVisible(avgLabel);
+    
+    addAndMakeVisible(avgControl);
+    avgControl.addItem("100ms", 1);
+    avgControl.addItem("250ms", 2);
+    avgControl.addItem("500ms", 3);
+    avgControl.addItem("1000ms", 4);
+    avgControl.addItem("2000ms", 5);
+    
+    meterLabel.setFont(20.0);
+    meterLabel.setColour (juce::Label::textColourId, juce::Colours::orange);
+    addAndMakeVisible(meterLabel);
+    
+    addAndMakeVisible(meterControl);
+    meterControl.addItem("Both", 1);
+    meterControl.addItem("Peak", 2);
+    meterControl.addItem("Avg", 3);
+    
+    scaleLabel.setFont(20.0);
+    scaleLabel.setColour (juce::Label::textColourId, juce::Colours::orange);
+    addAndMakeVisible(scaleLabel);
+    
+    scaleControl.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
+    scaleControl.setTextBoxStyle(Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
+    scaleControl.setLookAndFeel(&scalerLookAndFeel);
+    addAndMakeVisible(scaleControl);
+    
+    enableHoldButton.setColour(ComboBox::outlineColourId, juce::Colours::orange);
+    addAndMakeVisible(enableHoldButton);
+    
+    addAndMakeVisible(holdControl);
+    holdControl.addItem("0s", 1);
+    holdControl.addItem("0.5s", 2);
+    holdControl.addItem("2s", 3);
+    holdControl.addItem("4s", 4);
+    holdControl.addItem("6s", 5);
+    holdControl.addItem("inf", 6);
+    
+    histLabel.setFont(20.0);
+    histLabel.setColour (juce::Label::textColourId, juce::Colours::orange);
+    addAndMakeVisible(histLabel);
+    
+    addAndMakeVisible(histControl);
+    histControl.addItem("Stacked", 1);
+    histControl.addItem("Side-by-Side", 2);
     
     editorBuffer.setSize(2, processor.maxBufferSize);
     editorBuffer.clear();
@@ -59,7 +114,7 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
         stereoMeterPk.setThreshold(newThreshold);
     };
     
-    setSize (550, 450);
+    setSize (650, 500);
     startTimerHz(30);
 }
 
@@ -77,8 +132,27 @@ void Pfmcpp_project10AudioProcessorEditor::paint (Graphics& g)
     g.setColour (Colours::black);
     g.setFont (15.0f);
     
+    Rectangle<float> r(stereoMeterRMS.getRight(), 0, goniometer.getX() - stereoMeterRMS.getRight(), histogramRMS.getY());
+    g.fillRect(r);
+    
+    r = Rectangle<float> (goniometer.getRight(), 0, stereoMeterPk.getRight() - goniometer.getRight(), histogramRMS.getY());
+    g.fillRect(r);
+    
+    //Combo Box GUI Dividers LEFT
     g.setColour (Colours::white);
-    g.drawLine(stereoMeterRMS.getWidth(), decayRateControl.getBottom() + 10, decayRateControl.getWidth(), decayRateControl.getBottom()  + 10, 2);
+    
+    g.drawLine(stereoMeterRMS.getRight(), decayRateControl.getBottom() + 10, stereoMeterRMS.getWidth() + decayRateControl.getWidth(), decayRateControl.getBottom() + 10, 1);
+    
+    g.drawLine(stereoMeterRMS.getRight(), avgControl.getBottom() + 10, stereoMeterRMS.getWidth() + decayRateControl.getWidth(), avgControl.getBottom() + 10, 1);
+    
+    g.drawLine(stereoMeterRMS.getRight(), meterControl.getBottom() + 10, stereoMeterRMS.getWidth() + decayRateControl.getWidth(), meterControl.getBottom() + 10, 1);
+    
+    //Combo Box GUI Dividers RIGHT
+    g.drawLine(goniometer.getRight(), scaleControl.getBottom() + 10, scaleControl.getWidth() + goniometer.getRight(), scaleControl.getBottom() + 10, 1);
+    
+    g.drawLine(goniometer.getRight(), holdControl.getBottom() + 10, scaleControl.getWidth() + goniometer.getRight(), holdControl.getBottom() + 10, 1);
+    
+    g.drawLine(goniometer.getRight(), histControl.getBottom() + 10, scaleControl.getWidth() + goniometer.getRight(), histControl.getBottom() + 10, 1);
 }
 
 void Pfmcpp_project10AudioProcessorEditor::resized()
@@ -93,14 +167,19 @@ void Pfmcpp_project10AudioProcessorEditor::resized()
     histogramPeak.setBounds(0, histogramRMS.getBottom(), getWidth(), (bounds.getHeight() - stereoMeterPk.getBottom()) / 2);
     
     stereoImageMeter.setBounds(stereoMeterRMS.getWidth(), 0, bounds.getWidth(), stereoMeterRMS.getHeight());
-    decayLabel.setBounds(stereoMeterRMS.getWidth(), 0, 50, 25);
     decayRateControl.setBounds(stereoMeterRMS.getWidth(), decayLabel.getHeight(), 50, 25);
+    decayLabel.setBounds(stereoMeterRMS.getWidth(), 0, 50, 25);
     avgLabel.setBounds(stereoMeterRMS.getWidth(), 0, 50, 25);;
     avgControl.setBounds(stereoMeterRMS.getWidth(), decayLabel.getHeight(), 50, 25);;
-    
-    
     meterLabel.setBounds(stereoMeterRMS.getWidth(), 0, 50, 25);;
     meterControl.setBounds(stereoMeterRMS.getWidth(), decayLabel.getHeight(), 50, 25);;
+    scaleLabel.setBounds(goniometer.getRight() + 35, 15, 50, 25);
+    scaleControl.setBounds(goniometer.getRight(), scaleLabel.getBottom(), 70, 70);
+    enableHoldButton.setBounds(goniometer.getRight() + 35, scaleControl.getBottom() + 10, 50, 25);
+    holdControl.setBounds(goniometer.getRight(), enableHoldButton.getBottom(), 75, 25);
+    histLabel.setBounds(goniometer.getRight() + 35, holdControl.getBottom() + 20, 50, 25);
+    histControl.setBounds(goniometer.getRight(), histLabel.getBottom(), 75, 25);
+    
 }
 
 void Pfmcpp_project10AudioProcessorEditor::timerCallback()

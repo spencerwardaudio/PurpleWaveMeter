@@ -15,6 +15,7 @@
 #include "StereoMeter.h"
 #include "Histogram.h"
 #include "StereoImageMeter.h"
+#include "ScalerLookAndFeel.h"
 
 //==============================================================================
 /**
@@ -53,7 +54,15 @@ private:
     Label    meterLabel;
     ComboBox meterControl;
     
+    Label    scaleLabel;
+    Slider scaleControl;
+    ScalerLookAndFeel scalerLookAndFeel;
     
-
+    TextButton   enableHoldButton {"Hold"};
+    ComboBox holdControl;
+    
+    Label    histLabel;
+    ComboBox histControl;
+    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Pfmcpp_project10AudioProcessorEditor)
 };
