@@ -95,7 +95,8 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
     addAndMakeVisible(meterControlColumnL);
     addAndMakeVisible(meterControlColumnR);
     
-    addAndMakeVisible(histogramContainer);
+    addAndMakeVisible(histogramRMS);
+    addAndMakeVisible(histogramPeak);
     
     meterControlColumnL.decayRateControl.onChange = [this]()
     {
@@ -114,11 +115,11 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
         
         if(ID == 1)
         {
-            histogramContainer.stack();
+            stack();
         }
         else if (ID == 2)
         {
-            histogramContainer.setSideBySide();
+            setSideBySide();
         }
     };
     
@@ -127,7 +128,7 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
        const auto newThreshold = stereoMeterRMS.thresholdSlider.getValue();
 
         //update the histogramRMS
-        histogramContainer.histogramRMS.setThreshold(newThreshold);
+        histogramRMS.setThreshold(newThreshold);
         
         //update the macrometersRMS
         stereoMeterRMS.setThreshold(newThreshold);
@@ -138,7 +139,7 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
         const auto newThreshold = stereoMeterPk.thresholdSlider.getValue();
 
         //update the histogramPk
-        histogramContainer.histogramPeak.setThreshold(newThreshold);
+        histogramPeak.setThreshold(newThreshold);
         
         //update the macrometersPk
         stereoMeterPk.setThreshold(newThreshold);
@@ -167,13 +168,12 @@ void Pfmcpp_project10AudioProcessorEditor::resized()
     
     stereoMeterRMS.setBounds(bounds.removeFromLeft(100).removeFromTop(METER_HEIGHT + 40));
     stereoMeterPk.setBounds(bounds.removeFromRight(100).removeFromTop(METER_HEIGHT + 40));
-    
     //from the bottom of the stereo meter to the bottom of the application height / 2
     stereoImageMeter.setBounds(stereoMeterRMS.getWidth(), 0, bounds.getWidth(), stereoMeterRMS.getHeight());
     histogramContainer.setBounds(0, stereoMeterRMS.getHeight(), getLocalBounds().getWidth(), getLocalBounds().getHeight() - stereoMeterRMS.getHeight());
     
-    meterControlColumnL.setBounds(stereoMeterRMS.getRight(), 0, goniometer.getX() - stereoMeterRMS.getRight(), histogramContainer.getY());
-    meterControlColumnR.setBounds(goniometer.getRight(), 0, stereoMeterPk.getX() - goniometer.getRight(), histogramContainer.getY());
+    meterControlColumnL.setBounds(stereoMeterRMS.getRight(), 0, goniometer.getX() - stereoMeterRMS.getRight(), stereoMeterRMS.getHeight());
+    meterControlColumnR.setBounds(goniometer.getRight(), 0, stereoMeterPk.getX() - goniometer.getRight(), stereoMeterRMS.getHeight());
 }
 
 void Pfmcpp_project10AudioProcessorEditor::timerCallback()
@@ -202,8 +202,8 @@ void Pfmcpp_project10AudioProcessorEditor::timerCallback()
         auto avgRMS = (levelDBRMSL + levelDBRMSR) / 2;
         auto avgPeak = (levelDBL + levelDBR) / 2;
 
-        histogramContainer.histogramRMS.update(avgRMS);
-        histogramContainer.histogramPeak.update(avgPeak);
+        histogramRMS.update(avgRMS);
+        histogramPeak.update(avgPeak);
         
         stereoImageMeter.update();
     }

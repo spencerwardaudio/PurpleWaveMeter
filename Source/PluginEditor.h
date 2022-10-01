@@ -16,7 +16,6 @@
 #include "HistogramContainer.h"
 #include "MeterControlColumnL.h"
 #include "MeterControlColumnR.h"
-#include "StereoImageMeter.h"
 #include "ScalerLookAndFeel.h"
 
 //==============================================================================
@@ -33,10 +32,44 @@ public:
     void paint (Graphics&) override;
     void resized() override;
     void timerCallback() override;
+    
+    void stack()
+    {
+        FlexBox fb;
+//                fb.flexWrap = juce::FlexBox::Wrap::wrap;
+        fb.justifyContent = juce::FlexBox::JustifyContent::flexStart;
+        fb.alignContent = juce::FlexBox::AlignContent::flexStart;
+        
+        Rectangle<float> r(0.f, stereoMeterRMS.getBottom(), getLocalBounds().getWidth(), getLocalBounds().getHeight() - stereoMeterRMS.getBottom());
+
+        fb.items.add (juce::FlexItem (histogramRMS).withMaxHeight (r.getHeight()/2).withMinWidth(getLocalBounds().getWidth()).withFlex (1));
+
+        fb.items.add (juce::FlexItem (histogramPeak).withMaxHeight (r.getHeight()/2).withMinWidth (getLocalBounds().getWidth()).withFlex (1));
+
+
+        fb.performLayout (r);
+    }
+    
+    
+    void setSideBySide()
+    {
+        FlexBox fb;
+//                fb.flexWrap = juce::FlexBox::Wrap::wrap;
+        fb.justifyContent = juce::FlexBox::JustifyContent::center;
+        fb.alignContent = juce::FlexBox::AlignContent::center;
+
+        fb.items.add (juce::FlexItem (histogramRMS).withMaxHeight(getLocalBounds().getHeight() - stereoMeterRMS.getBottom()).withMaxWidth(getLocalBounds().getWidth()/2).withFlex (1));
+
+        fb.items.add (juce::FlexItem (histogramPeak).withMaxHeight(getLocalBounds().getHeight() - stereoMeterRMS.getBottom()).withMaxWidth(getLocalBounds().getWidth()/2).withFlex (1));
+
+        Rectangle<float> r(0.f, stereoMeterRMS.getBottom(), getLocalBounds().getWidth(), getLocalBounds().getHeight() - stereoMeterRMS.getBottom());
+        fb.performLayout (r);
+    }
 
 private:
-    
-    HistogramContainer histogramContainer;
+
+    Histogram histogramRMS { "RMS Histogram" };
+    Histogram histogramPeak { "Peak Histogram" };
 
     StereoMeter stereoMeterRMS { "L  RMS  R" };
     StereoMeter stereoMeterPk { "L  Peak  R" };
