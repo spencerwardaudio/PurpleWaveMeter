@@ -24,6 +24,11 @@ struct MacroMeter : Component
     
     void update(float levelInDB);
     void setThreshold(float threshAsDecibels);
+    void setDecayRate(float decay)
+    {
+        meterInstant.setDecayRate(decay);
+        meterAverage.setDecayRate(decay);
+    }
 
     std::vector<Tick> getDBTick();
     int getDBBounds();

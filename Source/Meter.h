@@ -219,6 +219,8 @@ struct Meter : Component
 {
     void update(float audioValue);
     
+    void setDecayRate(float decay) { decayingValueHolder.setDecayRate(decay); }
+    
     void paint(Graphics& g) override;
     
     void resized() override;

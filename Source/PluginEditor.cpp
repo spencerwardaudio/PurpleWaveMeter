@@ -92,12 +92,42 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
     
     addAndMakeVisible(stereoImageMeter);
     
+    addAndMakeVisible(meterControlColumnL);
+    addAndMakeVisible(meterControlColumnR);
+    
+    addAndMakeVisible(histogramContainer);
+    
+    meterControlColumnL.decayRateControl.onChange = [this]()
+    {
+//        stereoMeterRMS
+        juce::String value = meterControlColumnL.decayRateControl.getText();
+        float decay = value.dropLastCharacters(4).getFloatValue();
+        DBG("selected" << value);
+        
+        stereoMeterRMS.setDecayRate(std::abs(decay));
+        stereoMeterPk.setDecayRate(std::abs(decay));
+    };
+    
+    meterControlColumnR.histControl.onChange = [this]()
+    {
+        auto ID = meterControlColumnR.histControl.getSelectedId();
+        
+        if(ID == 1)
+        {
+            histogramContainer.stack();
+        }
+        else if (ID == 2)
+        {
+            histogramContainer.setSideBySide();
+        }
+    };
+    
     stereoMeterRMS.thresholdSlider.onValueChange = [this]()
     {
        const auto newThreshold = stereoMeterRMS.thresholdSlider.getValue();
 
         //update the histogramRMS
-        histogramRMS.setThreshold(newThreshold);
+        histogramContainer.histogramRMS.setThreshold(newThreshold);
         
         //update the macrometersRMS
         stereoMeterRMS.setThreshold(newThreshold);
@@ -108,7 +138,7 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
         const auto newThreshold = stereoMeterPk.thresholdSlider.getValue();
 
         //update the histogramPk
-        histogramPeak.setThreshold(newThreshold);
+        histogramContainer.histogramPeak.setThreshold(newThreshold);
         
         //update the macrometersPk
         stereoMeterPk.setThreshold(newThreshold);
@@ -128,31 +158,7 @@ void Pfmcpp_project10AudioProcessorEditor::paint (Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
     g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
-
-    g.setColour (Colours::black);
-    g.setFont (15.0f);
     
-    Rectangle<float> r(stereoMeterRMS.getRight(), 0, goniometer.getX() - stereoMeterRMS.getRight(), histogramRMS.getY());
-    g.fillRect(r);
-    
-    r = Rectangle<float> (goniometer.getRight(), 0, stereoMeterPk.getRight() - goniometer.getRight(), histogramRMS.getY());
-    g.fillRect(r);
-    
-    //Combo Box GUI Dividers LEFT
-    g.setColour (Colours::white);
-    
-    g.drawLine(stereoMeterRMS.getRight(), decayRateControl.getBottom() + 10, stereoMeterRMS.getWidth() + decayRateControl.getWidth(), decayRateControl.getBottom() + 10, 1);
-    
-    g.drawLine(stereoMeterRMS.getRight(), avgControl.getBottom() + 10, stereoMeterRMS.getWidth() + decayRateControl.getWidth(), avgControl.getBottom() + 10, 1);
-    
-    g.drawLine(stereoMeterRMS.getRight(), meterControl.getBottom() + 10, stereoMeterRMS.getWidth() + decayRateControl.getWidth(), meterControl.getBottom() + 10, 1);
-    
-    //Combo Box GUI Dividers RIGHT
-    g.drawLine(goniometer.getRight(), scaleControl.getBottom() + 10, scaleControl.getWidth() + goniometer.getRight(), scaleControl.getBottom() + 10, 1);
-    
-    g.drawLine(goniometer.getRight(), holdControl.getBottom() + 10, scaleControl.getWidth() + goniometer.getRight(), holdControl.getBottom() + 10, 1);
-    
-    g.drawLine(goniometer.getRight(), histControl.getBottom() + 10, scaleControl.getWidth() + goniometer.getRight(), histControl.getBottom() + 10, 1);
 }
 
 void Pfmcpp_project10AudioProcessorEditor::resized()
@@ -163,23 +169,11 @@ void Pfmcpp_project10AudioProcessorEditor::resized()
     stereoMeterPk.setBounds(bounds.removeFromRight(100).removeFromTop(METER_HEIGHT + 40));
     
     //from the bottom of the stereo meter to the bottom of the application height / 2
-    histogramRMS.setBounds(0, stereoMeterRMS.getBottom(), getWidth(), (bounds.getHeight() - stereoMeterPk.getBottom()) / 2);
-    histogramPeak.setBounds(0, histogramRMS.getBottom(), getWidth(), (bounds.getHeight() - stereoMeterPk.getBottom()) / 2);
-    
     stereoImageMeter.setBounds(stereoMeterRMS.getWidth(), 0, bounds.getWidth(), stereoMeterRMS.getHeight());
-    decayRateControl.setBounds(stereoMeterRMS.getWidth(), decayLabel.getHeight(), 50, 25);
-    decayLabel.setBounds(stereoMeterRMS.getWidth(), 0, 50, 25);
-    avgLabel.setBounds(stereoMeterRMS.getWidth(), 0, 50, 25);;
-    avgControl.setBounds(stereoMeterRMS.getWidth(), decayLabel.getHeight(), 50, 25);;
-    meterLabel.setBounds(stereoMeterRMS.getWidth(), 0, 50, 25);;
-    meterControl.setBounds(stereoMeterRMS.getWidth(), decayLabel.getHeight(), 50, 25);;
-    scaleLabel.setBounds(goniometer.getRight() + 35, 15, 50, 25);
-    scaleControl.setBounds(goniometer.getRight(), scaleLabel.getBottom(), 70, 70);
-    enableHoldButton.setBounds(goniometer.getRight() + 35, scaleControl.getBottom() + 10, 50, 25);
-    holdControl.setBounds(goniometer.getRight(), enableHoldButton.getBottom(), 75, 25);
-    histLabel.setBounds(goniometer.getRight() + 35, holdControl.getBottom() + 20, 50, 25);
-    histControl.setBounds(goniometer.getRight(), histLabel.getBottom(), 75, 25);
+    histogramContainer.setBounds(0, stereoMeterRMS.getHeight(), getLocalBounds().getWidth(), getLocalBounds().getHeight() - stereoMeterRMS.getHeight());
     
+    meterControlColumnL.setBounds(stereoMeterRMS.getRight(), 0, goniometer.getX() - stereoMeterRMS.getRight(), histogramContainer.getY());
+    meterControlColumnR.setBounds(goniometer.getRight(), 0, stereoMeterPk.getX() - goniometer.getRight(), histogramContainer.getY());
 }
 
 void Pfmcpp_project10AudioProcessorEditor::timerCallback()
@@ -208,8 +202,8 @@ void Pfmcpp_project10AudioProcessorEditor::timerCallback()
         auto avgRMS = (levelDBRMSL + levelDBRMSR) / 2;
         auto avgPeak = (levelDBL + levelDBR) / 2;
 
-        histogramRMS.update(avgRMS);
-        histogramPeak.update(avgPeak);
+        histogramContainer.histogramRMS.update(avgRMS);
+        histogramContainer.histogramPeak.update(avgPeak);
         
         stereoImageMeter.update();
     }

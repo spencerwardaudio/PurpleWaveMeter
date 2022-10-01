@@ -13,7 +13,9 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PluginProcessor.h"
 #include "StereoMeter.h"
-#include "Histogram.h"
+#include "HistogramContainer.h"
+#include "MeterControlColumnL.h"
+#include "MeterControlColumnR.h"
 #include "StereoImageMeter.h"
 #include "ScalerLookAndFeel.h"
 
@@ -33,36 +35,19 @@ public:
     void timerCallback() override;
 
 private:
+    
+    HistogramContainer histogramContainer;
 
     StereoMeter stereoMeterRMS { "L  RMS  R" };
     StereoMeter stereoMeterPk { "L  Peak  R" };
-    
-    Histogram histogramRMS { "RMS Histogram" };
-    Histogram histogramPeak { "Peak Histogram" };
     
     StereoImageMeter stereoImageMeter;
 
     Pfmcpp_project10AudioProcessor& processor;
     AudioBuffer<float> editorBuffer;
     
-    Label    decayLabel;
-    ComboBox decayRateControl;
-    
-    Label    avgLabel;
-    ComboBox avgControl;
-    
-    Label    meterLabel;
-    ComboBox meterControl;
-    
-    Label    scaleLabel;
-    Slider scaleControl;
-    ScalerLookAndFeel scalerLookAndFeel;
-    
-    TextButton   enableHoldButton {"Hold"};
-    ComboBox holdControl;
-    
-    Label    histLabel;
-    ComboBox histControl;
+    MeterControlColumnL meterControlColumnL;
+    MeterControlColumnR meterControlColumnR;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Pfmcpp_project10AudioProcessorEditor)
 };
