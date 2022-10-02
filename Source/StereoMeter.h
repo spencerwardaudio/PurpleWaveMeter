@@ -119,8 +119,6 @@ public:
             }
         }
     }
-    
-//    void drawLinearSliderThumb
 };
 
 struct StereoMeter : Component
