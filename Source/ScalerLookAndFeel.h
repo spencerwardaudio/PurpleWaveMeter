@@ -22,13 +22,15 @@ public:
         //TODO draw ellipse for the knob
         
         //TODO draw rectangle for the knob arrow and make it arc
-        //TODO add two labels to the slider
+        //TODO add two labels to the slide
+        
+        
         auto outline = juce::Colours::orange;
         auto fill    = juce::Colours::orange;
 
         auto bounds = Rectangle<int> (x, y, width, height).toFloat().reduced (10);
 
-        auto radius = jmin (bounds.getWidth(), bounds.getHeight()) / 2.0f;
+        auto radius = jmin (bounds.getWidth(), bounds.getHeight()) / 3.0f;
         auto toAngle = rotaryStartAngle + sliderPos * (rotaryEndAngle - rotaryStartAngle);
         auto lineW = jmin (8.0f, radius * 0.5f);
         auto arcRadius = radius - lineW * 0.5f;
@@ -68,6 +70,9 @@ public:
 
         g.setColour (juce::Colours::orange);
         g.drawLine (bounds.getCentreX(), bounds.getCentreY(), thumbPoint.getX(), thumbPoint.getY(), lineW /3);
+        
+        g.drawText("50%", bounds, Justification::bottomLeft);
+        g.drawText("200%", bounds, Justification::bottomRight);
     }
     
     void drawComboBox (Graphics& g, int width, int height, bool,
