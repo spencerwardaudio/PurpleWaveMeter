@@ -32,18 +32,23 @@ CorrelationMeter::CorrelationMeter(AudioBuffer<float>& buf, double sampleRate) :
 
 void CorrelationMeter::paint(Graphics& g)
 {
-    Rectangle<int> rSA = Rectangle<int> (25, 5, getLocalBounds().getWidth() - 50, getLocalBounds().getHeight() - 5);
-    Rectangle<int> rPA = Rectangle<int> (25, 0, getLocalBounds().getWidth() - 50, getLocalBounds().getHeight() - 15);
+    auto bounds = getLocalBounds();
+    auto leftLabelArea = bounds.removeFromLeft(20);
+    auto rightLabelArea = bounds.removeFromRight(20);
     
-    juce::String labels[2] { "-1", "+1"};
+    g.setColour(Colours::black);
+    g.fillRect(getLocalBounds());
     
     g.setColour(Colours::whitesmoke.withAlpha(0.7f));
     
-    g.drawText(labels[0], 0, 0, 20, 20, Justification::centred);
-    g.drawText(labels[1], getWidth() - 20, 0, 20, 20, Justification::centred);
+    g.drawText("-1", leftLabelArea, Justification::centred);
+    g.drawText("+1", rightLabelArea, Justification::centred);
     
-    drawAverage(g, rSA, slowAverager.getAverage(), true);
-    drawAverage(g, rPA, peakAverager.getAverage(), true);
+    auto slowMeterArea = bounds.removeFromTop(getHeight() - 5);
+    auto peakMeterArea = bounds.removeFromTop(getHeight() - 15);
+    
+    drawAverage(g, slowMeterArea, slowAverager.getAverage(), true);
+    drawAverage(g, peakMeterArea, peakAverager.getAverage(), true);
     
 //    g.setColour (Colours::red);
 //    g.drawRect(rSA, 1);

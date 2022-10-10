@@ -25,13 +25,14 @@ struct StereoImageMeter : public Component
     
     void resized()
     {
-        goniometer.setBounds(0, 0, getLocalBounds().getWidth(), getLocalBounds().getHeight());
-        
-        correlationMeter.setBounds(goniometer.getX() + 10, goniometer.getHeight() - 20, getLocalBounds().getWidth() - 20, 20);
+        goniometer.setBounds(getLocalBounds().removeFromTop(getHeight() - 10));
+        correlationMeter.setBounds(getLocalBounds().removeFromBottom(20));
     }
+    
     void update()
     {
         correlationMeter.update();
+        goniometer.repaint();
     }
     
     private:
