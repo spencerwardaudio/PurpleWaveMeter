@@ -33,7 +33,7 @@ CorrelationMeter::CorrelationMeter(AudioBuffer<float>& buf, double sampleRate) :
 void CorrelationMeter::paint(Graphics& g)
 {
     auto bounds = getLocalBounds();
-    auto leftLabelArea = bounds.removeFromLeft(20);
+    auto leftLabelArea = bounds.removeFromLeft(30);
     auto rightLabelArea = bounds.removeFromRight(20);
     
     g.setColour(Colours::black);
@@ -44,15 +44,11 @@ void CorrelationMeter::paint(Graphics& g)
     g.drawText("-1", leftLabelArea, Justification::centred);
     g.drawText("+1", rightLabelArea, Justification::centred);
     
-    auto slowMeterArea = bounds.removeFromTop(getHeight() - 5);
-    auto peakMeterArea = bounds.removeFromTop(getHeight() - 15);
+    auto slowMeterArea = bounds.removeFromTop(15);
+    auto peakMeterArea = bounds.removeFromTop(5);
     
     drawAverage(g, slowMeterArea, slowAverager.getAverage(), true);
     drawAverage(g, peakMeterArea, peakAverager.getAverage(), true);
-    
-//    g.setColour (Colours::red);
-//    g.drawRect(rSA, 1);
-//    g.drawRect(rPA, 1);
 }
 
 void CorrelationMeter::update()
