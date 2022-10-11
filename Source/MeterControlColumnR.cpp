@@ -67,11 +67,11 @@ void MeterControlColumnR::paint (Graphics& g)
 void MeterControlColumnR::resized()
 {
     scaleLabel.setBounds(getLocalBounds().getCentreX() - 40, 15, 70, 25);
-    scaleControl.setBounds(getLocalBounds().getCentreX() - 40, scaleLabel.getBottom(), 100, 100);
+    scaleControl.setBounds(getLocalBounds().getCentreX() - 50, scaleLabel.getBottom() - 30, 100, 100);
     
     enableHoldButton.setBounds(getLocalBounds().getCentreX() - 25, scaleControl.getBottom() + 10, 50, 25);
     holdControl.setBounds(getLocalBounds().getCentreX() - 40, enableHoldButton.getBottom(), 75, 25);
     
-    histLabel.setBounds(getLocalBounds().getCentreX() - 25, holdControl.getBottom() + 20, 50, 25);
+    histLabel.setBounds(getLocalBounds().getCentreX() - 25, holdControl.getBottom() + 10, 50, 25);
     histControl.setBounds(getLocalBounds().getCentreX() - 40, histLabel.getBottom(), 75, 25);
 }
