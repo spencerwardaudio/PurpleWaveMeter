@@ -94,25 +94,25 @@ void CorrelationMeter::drawAverage(Graphics& g,
                  float avg,
                  bool drawBorder)
 {
-//    avg = 0.95f;
-    
     float mappedVal = jmap(avg, -1.f, 1.0f, 0.f
                            , (float)bounds.getWidth());
-    
-    Rectangle<float> rN(mappedVal + 25, bounds.getY(), bounds.getWidth()/2 - mappedVal, bounds.getHeight());
-    Rectangle<float> rP(bounds.getWidth()/2 + 25, bounds.getY(), (mappedVal - bounds.getWidth()/2), bounds.getHeight());
+
+    auto centerPoint = bounds.getRelativePoint(bounds.getCentre(), bounds.getTopLeft());
+    auto correlationPoint = bounds.getRelativePoint(mappedVal, bounds.getBottom());
+    auto r = juce::Rectangle<int>(centerPoint, correlationPoint);
     
     if(avg < 0.f)
     {
         g.setGradientFill (ColourGradient (Colours::whitesmoke, 25, 0,
                                             Colours::blueviolet, bounds.getWidth()/2, 0, false));
-        g.fillRect(rN);
+        
     }
     else if(avg >= 0.f)
     {
         g.setGradientFill (ColourGradient (Colours::blueviolet, bounds.getWidth()/2 + 25, 0,
                                             Colours::whitesmoke, bounds.getWidth(), 0, false));
-        g.fillRect(rP);
+
     }
-        
+    
+    g.fillRect(r);
 }
