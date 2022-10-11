@@ -10,8 +10,7 @@
 
 #include "Goniometer.h"
 
-Goniometer::Goniometer(AudioBuffer<float>& buffer) : _buffer(buffer), image(Image::RGB, 250,
-    220, true), backgroundGraphic(image)
+Goniometer::Goniometer(AudioBuffer<float>& buffer) : _buffer(buffer)
 {
     internalBuffer.setSize(2, 1024); 
     internalBuffer.clear();
@@ -82,7 +81,7 @@ void Goniometer::paint(Graphics& g)
             p.lineTo(p1);
         }
         
-        i = i+25;
+        i = i+6;
     }
     
     if(!p.isEmpty())
@@ -118,6 +117,11 @@ void Goniometer::resized()
     h = getLocalBounds().getHeight();
     center = Point<int>(w/2, h/2);
     
+    juce::Image image { Image::RGB, w,
+        h, true };
+    
+    Graphics backgroundGraphic { image };
+
     drawBackground(backgroundGraphic);
 }
 

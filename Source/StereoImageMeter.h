@@ -26,7 +26,7 @@ struct StereoImageMeter : public Component
     void resized()
     {
         auto bounds = getLocalBounds();
-        goniometer.setBounds(bounds.removeFromTop(JUCE_LIVE_CONSTANT(220)));
+        goniometer.setBounds(bounds.removeFromTop(220));
         correlationMeter.setBounds(bounds);
     }
     
