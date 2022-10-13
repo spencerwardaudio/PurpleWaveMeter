@@ -94,25 +94,31 @@ void CorrelationMeter::drawAverage(Graphics& g,
                  float avg,
                  bool drawBorder)
 {
-    float mappedVal = jmap(avg, -1.f, 1.0f, 0.f
-                           , (float)bounds.getWidth());
+    float textBoundaryOffset = bounds.getWidth()/8;
+    
+    float mappedVal = jmap(avg, -1.f, 1.0f, textBoundaryOffset, (float)bounds.getWidth() - textBoundaryOffset);
+    
+//    mappedVal = 0.5f;
+    //modify bounds to include text offset
 
-    auto centerPoint = bounds.getRelativePoint(bounds.getCentre(), bounds.getTopLeft());
-    auto correlationPoint = bounds.getRelativePoint(mappedVal, bounds.getBottom());
+    auto centerPoint = bounds.getRelativePoint(0.5f, 0.f);
+    auto correlationPoint = bounds.getRelativePoint(mappedVal, 1.0f);
     auto r = juce::Rectangle<int>(centerPoint, correlationPoint);
     
     if(avg < 0.f)
     {
-        g.setGradientFill (ColourGradient (Colours::whitesmoke, 25, 0,
+        g.setGradientFill (ColourGradient (Colours::whitesmoke, textBoundaryOffset, 0,
                                             Colours::blueviolet, bounds.getWidth()/2, 0, false));
+        g.fillRect(r);
         
     }
-    else if(avg >= 0.f)
+    else if(avg > 0.f)
     {
-        g.setGradientFill (ColourGradient (Colours::blueviolet, bounds.getWidth()/2 + 25, 0,
-                                            Colours::whitesmoke, bounds.getWidth(), 0, false));
+        g.setGradientFill (ColourGradient (Colours::blueviolet, bounds.getWidth()/2, 0,
+                                            Colours::whitesmoke, bounds.getWidth() - (textBoundaryOffset*2), 0, false));
+        g.fillRect(r);
 
     }
     
-    g.fillRect(r);
+
 }
