@@ -116,10 +116,9 @@ void Goniometer::resized()
     w = getLocalBounds().getWidth();
     h = getLocalBounds().getHeight();
     center = Point<int>(w/2, h/2);
-    
-    juce::Image image { Image::RGB, w,
-        h, true };
-    
+
+    image = Image(Image::RGB, w, h, true);
+
     Graphics backgroundGraphic { image };
 
     drawBackground(backgroundGraphic);
