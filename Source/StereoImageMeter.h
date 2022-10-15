@@ -25,9 +25,13 @@ struct StereoImageMeter : public Component
     
     void resized()
     {
+        const auto verticalOffset = 20;
+        const auto h = 25;
+        const auto gonioHeight = 235;
         auto bounds = getLocalBounds();
-        goniometer.setBounds(bounds.removeFromTop(235));
-        correlationMeter.setBounds(0, goniometer.getHeight() - 30, getLocalBounds().getWidth(), 30);
+        
+        goniometer.setBounds(bounds.removeFromTop(gonioHeight));
+        correlationMeter.setBounds(0, goniometer.getHeight() - verticalOffset, getLocalBounds().getWidth(), h);
     }
     
     void update()

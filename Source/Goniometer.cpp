@@ -115,7 +115,7 @@ void Goniometer::resized()
 {
     w = getLocalBounds().getWidth();
     h = getLocalBounds().getHeight();
-    center = Point<int>(w/2, h/2);
+    center = Point<int>(getLocalBounds().getCentre());
 
     image = Image(Image::RGB, w, h, true);
 
