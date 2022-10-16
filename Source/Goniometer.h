@@ -31,5 +31,4 @@ private:
     void drawBackground(Graphics& g);
     
     juce::Image image;
-    Graphics backgroundGraphic;
 };

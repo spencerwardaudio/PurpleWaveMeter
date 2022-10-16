@@ -16,6 +16,12 @@
       <FILE id="Gvrkd7" name="Histogram.h" compile="0" resource="0" file="Source/Histogram.h"/>
       <FILE id="GLtPez" name="Goniometer.cpp" compile="1" resource="0" file="Source/Goniometer.cpp"/>
       <FILE id="o1P2Xz" name="Goniometer.h" compile="0" resource="0" file="Source/Goniometer.h"/>
+      <FILE id="iludqo" name="CorrelationMeter.cpp" compile="1" resource="0"
+            file="Source/CorrelationMeter.cpp"/>
+      <FILE id="pe0WPX" name="CorrelationMeter.h" compile="0" resource="0"
+            file="Source/CorrelationMeter.h"/>
+      <FILE id="hiBwvU" name="StereoImageMeter.h" compile="0" resource="0"
+            file="Source/StereoImageMeter.h"/>
     </GROUP>
     <GROUP id="{A92DB368-5243-6129-F1D5-73D06AFB4761}" name="Source">
       <FILE id="GoZaVW" name="PluginProcessor.cpp" compile="1" resource="0"

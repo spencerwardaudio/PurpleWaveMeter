@@ -10,7 +10,7 @@
 
 #include "Goniometer.h"
 
-Goniometer::Goniometer(AudioBuffer<float>& buffer) : _buffer(buffer), image(Image::RGB, 250, 240, true), backgroundGraphic(image)
+Goniometer::Goniometer(AudioBuffer<float>& buffer) : _buffer(buffer)
 {
     internalBuffer.setSize(2, 1024); 
     internalBuffer.clear();
@@ -49,7 +49,7 @@ void Goniometer::paint(Graphics& g)
     
     const auto sub3 = Decibels::decibelsToGain(-3.f);
 
-//  get the left channel sample and right channel sample.
+//    get the left channel sample and right channel sample.
     for (int i = 0; i < iBufNumSamples;)
     {
         auto sampleL = internalBuffer.getSample(0, i);
@@ -81,7 +81,7 @@ void Goniometer::paint(Graphics& g)
             p.lineTo(p1);
         }
         
-        i = i+3;
+        i = i+6;
     }
     
     if(!p.isEmpty())
@@ -90,8 +90,8 @@ void Goniometer::paint(Graphics& g)
         
         auto colors = std::vector<Colour>
         {
-            Colours::green,
-            Colours::blue
+            Colours::blueviolet,
+            Colours::whitesmoke
         };
         
         ColourGradient gFill;
@@ -115,8 +115,12 @@ void Goniometer::resized()
 {
     w = getLocalBounds().getWidth();
     h = getLocalBounds().getHeight();
-    center = Point<int>(w/2, h/2);
-    
+    center = Point<int>(getLocalBounds().getCentre());
+
+    image = Image(Image::RGB, w, h, true);
+
+    Graphics backgroundGraphic { image };
+
     drawBackground(backgroundGraphic);
 }
 

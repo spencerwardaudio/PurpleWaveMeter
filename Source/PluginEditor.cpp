@@ -16,10 +16,9 @@
 
 //==============================================================================
 Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmcpp_project10AudioProcessor& p)
-    : AudioProcessorEditor (&p), processor (p), goniometer(editorBuffer)
+: AudioProcessorEditor (&p), stereoImageMeter(editorBuffer, p.getSampleRate()), processor (p)
 {
     editorBuffer.setSize(2, processor.maxBufferSize);
-    
     editorBuffer.clear();
     
     addAndMakeVisible(stereoMeterPk);
@@ -28,7 +27,7 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
     addAndMakeVisible(histogramRMS);
     addAndMakeVisible(histogramPeak);
     
-    addAndMakeVisible(goniometer);
+    addAndMakeVisible(stereoImageMeter);
     
     setSize (450, 450);
     startTimerHz(30);
@@ -60,7 +59,7 @@ void Pfmcpp_project10AudioProcessorEditor::resized()
     histogramRMS.setBounds(0, stereoMeterRMS.getBottom(), getWidth(), (bounds.getHeight() - stereoMeterPk.getBottom()) / 2);
     histogramPeak.setBounds(0, histogramRMS.getBottom(), getWidth(), (bounds.getHeight() - stereoMeterPk.getBottom()) / 2);
     
-    goniometer.setBounds(stereoMeterRMS.getWidth(), 0, bounds.getWidth(), stereoMeterRMS.getHeight());
+    stereoImageMeter.setBounds(stereoMeterRMS.getWidth(), 0, bounds.getWidth(), stereoMeterRMS.getHeight());
 }
 
 void Pfmcpp_project10AudioProcessorEditor::timerCallback()
@@ -91,6 +90,8 @@ void Pfmcpp_project10AudioProcessorEditor::timerCallback()
 
         histogramRMS.update(avgRMS);
         histogramPeak.update(avgPeak);
+        
+        stereoImageMeter.update();
     }
     else
     {
@@ -98,5 +99,5 @@ void Pfmcpp_project10AudioProcessorEditor::timerCallback()
         editorBuffer.applyGain( Decibels::decibelsToGain(-3.f) );
     }
     
-    goniometer.repaint();
+    stereoImageMeter.repaint();
 }
