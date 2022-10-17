@@ -49,7 +49,13 @@ struct StereoMeter : Component
     void setDecayRate(float decay)
     {
         macroMeterLeft.setDecayRate(decay);
-        macroMeterLeft.setDecayRate(decay);
+        macroMeterRight.setDecayRate(decay);
+    }
+    
+    void setAverageDuration(float ms)
+    {
+        macroMeterLeft.setAverageDuration(ms);
+        macroMeterRight.setAverageDuration(ms);
     }
     
     void paint (Graphics& g) override;

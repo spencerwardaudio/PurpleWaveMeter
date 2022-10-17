@@ -26,6 +26,7 @@ MeterControlColumnL::MeterControlColumnL() :
     decayRateControl.addItem("-12dB/s", 3);
     decayRateControl.addItem("-24dB/s", 4);
     decayRateControl.addItem("-36dB/s", 5);
+    decayRateControl.setSelectedId(1);
     
     avgLabel.setFont(20.0);
     avgLabel.setColour (juce::Label::textColourId, juce::Colours::orange);
@@ -38,6 +39,7 @@ MeterControlColumnL::MeterControlColumnL() :
     avgControl.addItem("500ms", 3);
     avgControl.addItem("1000ms", 4);
     avgControl.addItem("2000ms", 5);
+    avgControl.setSelectedId(1);
     
     meterLabel.setFont(20.0);
     meterLabel.setColour (juce::Label::textColourId, juce::Colours::orange);
@@ -48,6 +50,7 @@ MeterControlColumnL::MeterControlColumnL() :
     meterControl.addItem("Both", 1);
     meterControl.addItem("Peak", 2);
     meterControl.addItem("Avg", 3);
+    meterControl.setSelectedId(1);
 }
 
 

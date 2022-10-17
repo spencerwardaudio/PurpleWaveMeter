@@ -100,13 +100,23 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
     
     meterControlColumnL.decayRateControl.onChange = [this]()
     {
-//        stereoMeterRMS
+//        StereoMeter RMS & Peak
         juce::String value = meterControlColumnL.decayRateControl.getText();
         float decay = value.dropLastCharacters(4).getFloatValue();
         DBG("selected" << value);
         
         stereoMeterRMS.setDecayRate(std::abs(decay));
         stereoMeterPk.setDecayRate(std::abs(decay));
+    };
+    
+    meterControlColumnL.avgControl.onChange = [this]()
+    {
+        juce::String value = meterControlColumnL.avgControl.getText();
+        float avgVal = value.dropLastCharacters(2).getFloatValue();
+        DBG("selected" << avgVal);
+        
+        stereoMeterRMS.setAverageDuration(avgVal);
+        stereoMeterPk.setAverageDuration(avgVal);
     };
     
     meterControlColumnR.histControl.onChange = [this]()

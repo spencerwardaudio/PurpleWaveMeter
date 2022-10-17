@@ -34,6 +34,7 @@ MeterControlColumnR::MeterControlColumnR() :
     holdControl.addItem("4s", 4);
     holdControl.addItem("6s", 5);
     holdControl.addItem("inf", 6);
+    holdControl.setSelectedId(1);
     
     histLabel.setFont(20.0);
     histLabel.setColour (juce::Label::textColourId, juce::Colours::orange);
@@ -43,6 +44,7 @@ MeterControlColumnR::MeterControlColumnR() :
     histControl.setLookAndFeel(&scalerLookAndFeel);
     histControl.addItem("Stacked", 1);
     histControl.addItem("Side-by-Side", 2);
+    histControl.setSelectedId(1);
 }
 
 

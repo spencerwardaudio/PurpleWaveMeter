@@ -86,15 +86,15 @@ public:
 
         g.setColour (juce::Colours::orange);
         g.drawRoundedRectangle (boxBounds.toFloat().reduced (0.5f, 0.5f), cornerSize, 1.0f);
+    }
+    
+    void positionComboBoxText (ComboBox& box, Label& label) override
+    {
+        label.setBounds (box.getWidth()/4, 1,
+                         box.getWidth() - 30,
+                         box.getHeight() - 2);
 
-        Rectangle<int> arrowZone (width - 20, 0, 10, height);
-        Path path;
-        path.startNewSubPath ((float) arrowZone.getX() + 3.0f, (float) arrowZone.getCentreY() - 2.0f);
-        path.lineTo ((float) arrowZone.getCentreX(), (float) arrowZone.getCentreY() + 3.0f);
-        path.lineTo ((float) arrowZone.getRight() - 3.0f, (float) arrowZone.getCentreY() - 2.0f);
-
-        g.setColour (box.findColour (ComboBox::arrowColourId).withAlpha ((box.isEnabled() ? 0.9f : 0.2f)));
-        g.strokePath (path, PathStrokeType (2.0f));
+        label.setFont (getComboBoxFont (box));
     }
     
 };

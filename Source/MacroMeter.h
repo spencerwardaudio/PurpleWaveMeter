@@ -24,10 +24,17 @@ struct MacroMeter : Component
     
     void update(float levelInDB);
     void setThreshold(float threshAsDecibels);
+    
     void setDecayRate(float decay)
     {
         meterInstant.setDecayRate(decay);
         meterAverage.setDecayRate(decay);
+    }
+    
+    void setAverageDuration(float ms)
+    {
+        //TODO how to convert to number of calls to timercallback
+        averageValue.resize(ms, NEGATIVE_INFINITY);
     }
 
     std::vector<Tick> getDBTick();
