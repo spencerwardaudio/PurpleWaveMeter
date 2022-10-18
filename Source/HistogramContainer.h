@@ -41,33 +41,37 @@ struct HistogramContainer : Component
     
     void stack()
     {
-        FlexBox fb;
-            
-        fb.justifyContent = juce::FlexBox::JustifyContent::flexStart;
-        fb.alignContent = juce::FlexBox::AlignContent::flexStart;
+        auto h = getLocalBounds().getHeight()/2;
+        auto w = getLocalBounds().getWidth();
         
-        fb.items.add (juce::FlexItem (histogramRMS).withMaxHeight (getLocalBounds().getHeight()/2).withMinWidth(getLocalBounds().getWidth()).withFlex (1));
+        const auto makeItem = [&h, &w] (Component& comp)
+        {
+            return FlexItem { comp }.withWidth (w).withHeight(h).withMargin ({ 6 });
+        };
 
-        fb.items.add (juce::FlexItem (histogramPeak).withMaxHeight(getLocalBounds().getHeight()/2).withMinWidth (getLocalBounds().getWidth()).withFlex (1));
+        FlexBox box;
+        box.flexDirection = FlexBox::Direction::column;
+        box.items = { makeItem (histogramRMS), makeItem (histogramPeak) };
 
-        auto bounds = getLocalBounds();
-        fb.performLayout (bounds);
+        box.performLayout (getLocalBounds());
     }
     
     
     void setSideBySide()
     {
-        FlexBox fb;
+        auto h = getLocalBounds().getHeight();
+        auto w = getLocalBounds().getWidth()/2;
         
-        fb.justifyContent = juce::FlexBox::JustifyContent::center;
-        fb.alignContent = juce::FlexBox::AlignContent::center;
+        const auto makeItem = [&h, &w] (Component& comp)
+        {
+            return FlexItem { comp }.withWidth (w).withHeight(h).withMargin ({ 6 });
+        };
 
-        fb.items.add (juce::FlexItem (histogramRMS).withMaxHeight(getLocalBounds().getHeight()).withMaxWidth(getLocalBounds().getWidth()/2).withFlex (1));
+        FlexBox box;
+        box.flexDirection = FlexBox::Direction::row;
+        box.items = { makeItem (histogramRMS), makeItem (histogramPeak) };
 
-        fb.items.add (juce::FlexItem (histogramPeak).withMaxHeight(getLocalBounds().getHeight()).withMaxWidth(getLocalBounds().getWidth()/2).withFlex (1));
-
-        auto bounds = getLocalBounds();
-        fb.performLayout (bounds);
+        box.performLayout (getLocalBounds());
     }
     
     private:
