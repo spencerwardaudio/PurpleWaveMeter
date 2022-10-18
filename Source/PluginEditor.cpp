@@ -29,6 +29,28 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
     
     addAndMakeVisible(stereoImageMeter);
     
+    stereoMeterRMS.thresholdSlider.onValueChange = [this]()
+    {
+       const auto newThreshold = stereoMeterRMS.thresholdSlider.getValue();
+
+        //update the histogramRMS
+        histogramRMS.setThreshold(newThreshold);
+        
+        //update the macrometersRMS
+        stereoMeterRMS.setThreshold(newThreshold);
+    };
+    
+    stereoMeterPk.thresholdSlider.onValueChange = [this]()
+    {        
+        const auto newThreshold = stereoMeterPk.thresholdSlider.getValue();
+
+        //update the histogramPk
+        histogramPeak.setThreshold(newThreshold);
+        
+        //update the macrometersPk
+        stereoMeterPk.setThreshold(newThreshold);
+    };
+    
     setSize (450, 450);
     startTimerHz(30);
 }

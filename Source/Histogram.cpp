@@ -36,9 +36,24 @@ void Histogram::paint(Graphics& g)
     {
         if( i % 3 == 0 )
         {
-            g.drawSingleLineText(juce::String(dBScale.ticks[i].dB), 0, dBScale.ticks[i].y + yOffset);
-            g.drawHorizontalLine(dBScale.ticks[i].y, getX() + xOffset, getWidth());
+            g.drawSingleLineText(juce::String(dBScale.ticks[i].dB), 0, dBScale.ticks[i].y + yOffset, Justification::left);
+            g.drawSingleLineText(juce::String(dBScale.ticks[i].dB), getWidth(), dBScale.ticks[i].y + yOffset, Justification::right);
+            g.drawHorizontalLine(dBScale.ticks[i].y, getX() + xOffset, getWidth() - xOffset);
         }
+    }
+    
+    if(dBLevelClip)
+    {
+        g.setColour(Colours::red.darker().withAlpha(0.5f));
+        auto h = jmap(threshold, MAX_DECIBELS, NEGATIVE_INFINITY, 0.f, (float)getLocalBounds().getHeight());
+        
+        Rectangle<float> r(0.f, 0.f, getLocalBounds().getWidth(), h);
+        
+        DBG("newThreshold" << h);
+        
+        g.fillRect(r);
+        
+        dBLevelClip = false;
     }
 }
 
@@ -79,6 +94,12 @@ void Histogram::mouseDown(const MouseEvent& e)
 void Histogram::update(float value)
 {
     buffer.write(value);
+    
+    if(threshold < value)
+    {
+        dBLevelClip = true;
+    }
+    
     repaint();
 }
 
@@ -163,5 +184,10 @@ Path Histogram::buildPath(Path& p,
     }
 
     return p;
+}
+
+void Histogram::setThreshold(float threshAsDecibels)
+{
+    threshold = threshAsDecibels;
 }
 

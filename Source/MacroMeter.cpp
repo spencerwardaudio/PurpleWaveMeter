@@ -33,6 +33,7 @@ void MacroMeter::paint (Graphics& g)
     g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
 
     g.setColour (Colours::black);
+
 }
 
 void MacroMeter::resized()
@@ -75,4 +76,10 @@ std::vector<Tick> MacroMeter::getDBTick()
 int MacroMeter::getDBBounds()
 {
     return meterInstant.getY();
+}
+
+void MacroMeter::setThreshold(float threshAsDecibels)
+{
+    meterInstant.decayingValueHolder.setThreshold(threshAsDecibels);
+    meterAverage.decayingValueHolder.setThreshold(threshAsDecibels);
 }

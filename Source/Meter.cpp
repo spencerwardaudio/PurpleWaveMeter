@@ -108,6 +108,19 @@ void Meter::paint(Graphics& g)
     auto tickLine = jmap(level, NEGATIVE_INFINITY, MAX_DECIBELS, 0.0f, 1.0f);
 
     g.fillRect(bounds.withY(h * (1 -  (float)tickLine)).withHeight(2));
+ 
+    if(decayingValueHolder.isOverThreshold())
+    {
+        g.setColour(Colours::red.darker().withAlpha(0.5f));
+        
+        auto h = jmap(decayingValueHolder.getThreshold(), MAX_DECIBELS, NEGATIVE_INFINITY, 0.f, (float)getLocalBounds().getHeight());
+        
+        Rectangle<float> r(0.f, 0.f, getLocalBounds().getWidth(), h);
+        
+        DBG("newThreshold" << h);
+        
+        g.fillRect(r);
+    }
 }
 
 void Meter::resized()

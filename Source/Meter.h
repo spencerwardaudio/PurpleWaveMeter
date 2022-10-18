@@ -100,12 +100,22 @@ struct ValueHolderBase : Timer
     
     float getCurrentValue() const { return currentValue; }
     
+    void setThreshold(float _threshold) { threshold = _threshold; }
+    
+    float getThreshold() { return threshold; }
+    
+    bool isOverThreshold() const { return currentValue > threshold; }
+    
 protected:
     
     float currentValue { NEGATIVE_INFINITY };
     
     int64 peakTime { 0 };
     int64 holdTime { 100 };
+    
+    void resetCurrentValue() { currentValue = threshold; }
+
+    float threshold { 0 };
 };
 
 
@@ -121,8 +131,6 @@ struct ValueHolder : ValueHolderBase
             resetCurrentValue();
     }
     
-    void setThreshold(float _threshold) { threshold = _threshold; }
-    
     void updateHeldValue(float input)
     {
         if(input > threshold)
@@ -136,13 +144,8 @@ struct ValueHolder : ValueHolderBase
         }
     }
     
-    bool isOverThreshold() const { return currentValue > threshold; }
-    
 private:
     
-    void resetCurrentValue() { currentValue = threshold; }
-
-    float threshold { 0 };
 };
 
 
@@ -226,4 +229,7 @@ struct Meter : Component
     float level { NEGATIVE_INFINITY };
     
     DecayingValueHolder decayingValueHolder;
+    
+private:
+
 };
