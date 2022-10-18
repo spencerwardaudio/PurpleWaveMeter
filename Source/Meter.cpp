@@ -117,8 +117,6 @@ void Meter::paint(Graphics& g)
         
         Rectangle<float> r(0.f, 0.f, getLocalBounds().getWidth(), h);
         
-        DBG("newThreshold" << h);
-        
         g.fillRect(r);
     }
 }
