@@ -26,6 +26,8 @@ StereoMeter::StereoMeter(const String MeterName) : labelLR( MeterName, MeterName
 
     thresholdSlider.setSliderStyle (juce::Slider::SliderStyle::LinearVertical);
     
+    thresholdSlider.setRange(NEGATIVE_INFINITY, MAX_DECIBELS);
+    
     thresholdSlider.setValue(8.5f);
     
     thresholdSlider.setLookAndFeel(&sliderLookAndFeel);
@@ -95,8 +97,6 @@ void StereoMeter::resized()
 
 void StereoMeter::setThreshold(float threshAsDecibels)
 {
-    threshold = threshAsDecibels;
-    
     macroMeterLeft.setThreshold(threshAsDecibels);
     macroMeterRight.setThreshold(threshAsDecibels);
 }

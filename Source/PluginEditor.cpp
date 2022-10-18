@@ -31,7 +31,7 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
     
     stereoMeterRMS.thresholdSlider.onValueChange = [this]()
     {
-        auto newThreshold = jmap((float)stereoMeterRMS.thresholdSlider.getValue(), 0.f, 10.f, NEGATIVE_INFINITY, MAX_DECIBELS);
+       const auto newThreshold = stereoMeterRMS.thresholdSlider.getValue();
 
         //update the histogramRMS
         histogramRMS.setThreshold(newThreshold);
@@ -41,8 +41,8 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
     };
     
     stereoMeterPk.thresholdSlider.onValueChange = [this]()
-    {
-        auto newThreshold = jmap((float)stereoMeterPk.thresholdSlider.getValue(), 0.f, 10.f, NEGATIVE_INFINITY, MAX_DECIBELS);
+    {        
+        const auto newThreshold = stereoMeterPk.thresholdSlider.getValue();
 
         //update the histogramPk
         histogramPeak.setThreshold(newThreshold);

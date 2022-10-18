@@ -80,7 +80,6 @@ int MacroMeter::getDBBounds()
 
 void MacroMeter::setThreshold(float threshAsDecibels)
 {
-    threshold = threshAsDecibels;
-    meterInstant.setThreshold(threshAsDecibels);
-    meterAverage.setThreshold(threshAsDecibels);
+    meterInstant.decayingValueHolder.setThreshold(threshAsDecibels);
+    meterAverage.decayingValueHolder.setThreshold(threshAsDecibels);
 }

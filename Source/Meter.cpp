@@ -63,11 +63,6 @@ void Meter::update(float audioValue)
     
     audioPassingVal = audioValue;
     
-    if(threshold < audioValue)
-    {
-        dBLevelClip = true;
-    }
-    
     repaint();
 }
 
@@ -114,18 +109,17 @@ void Meter::paint(Graphics& g)
 
     g.fillRect(bounds.withY(h * (1 -  (float)tickLine)).withHeight(2));
  
-    if(dBLevelClip)
+    if(decayingValueHolder.isOverThreshold())
     {
         g.setColour(Colours::red.darker().withAlpha(0.5f));
-        auto h = jmap(threshold, MAX_DECIBELS, NEGATIVE_INFINITY, 0.f, (float)getLocalBounds().getHeight());
+        
+        auto h = jmap(decayingValueHolder.getThreshold(), MAX_DECIBELS, NEGATIVE_INFINITY, 0.f, (float)getLocalBounds().getHeight());
         
         Rectangle<float> r(0.f, 0.f, getLocalBounds().getWidth(), h);
         
         DBG("newThreshold" << h);
         
         g.fillRect(r);
-        
-        dBLevelClip = false;
     }
 }
 
