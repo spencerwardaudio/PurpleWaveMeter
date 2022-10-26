@@ -36,42 +36,32 @@ struct HistogramContainer : Component
     
     void resized()
     {
-        stack();
+        align(0);
     }
     
-    void stack()
+    void align(int formation)
     {
-        auto h = getLocalBounds().getHeight()/2;
-        auto w = getLocalBounds().getWidth();
-        
-        const auto makeItem = [&h, &w] (Component& comp)
+        const auto makeItem = [] (Component& comp)
         {
-            return FlexItem { comp }.withWidth (w).withHeight(h).withMargin ({ 6 });
+            return FlexItem { comp }.withFlex(0.5f).withMargin ({ 6 });
         };
-
+        
         FlexBox box;
-        box.flexDirection = FlexBox::Direction::column;
+        
+        if(formation == 0)
+        {
+            box.flexDirection = FlexBox::Direction::row;
+        }
+        else if (formation == 1)
+        {
+            box.flexDirection = FlexBox::Direction::column;
+        }
+        
         box.items = { makeItem (histogramRMS), makeItem (histogramPeak) };
 
         box.performLayout (getLocalBounds());
-    }
-    
-    
-    void setSideBySide()
-    {
-        auto h = getLocalBounds().getHeight();
-        auto w = getLocalBounds().getWidth()/2;
         
-        const auto makeItem = [&h, &w] (Component& comp)
-        {
-            return FlexItem { comp }.withWidth (w).withHeight(h).withMargin ({ 6 });
-        };
-
-        FlexBox box;
-        box.flexDirection = FlexBox::Direction::row;
-        box.items = { makeItem (histogramRMS), makeItem (histogramPeak) };
-
-        box.performLayout (getLocalBounds());
+        histogramRMS.repaint();
     }
     
     private:

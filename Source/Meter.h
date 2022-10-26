@@ -213,6 +213,12 @@ struct DBScale : Component
 
     std::vector<Tick> ticks;
     int yOffset = 0;
+    
+private:
+    
+//    void drawDBBackground(Graphics& g, Rectangle<int> bounds);
+//    
+//    juce::Image image;
 };
 
 struct Meter : Component
@@ -234,4 +240,7 @@ struct Meter : Component
     
 private:
 
+    void drawMeterGradient(Graphics& g, Rectangle<int> bounds);
+    
+    juce::Image image;
 };

@@ -42,20 +42,23 @@ void TextMeter::paint(Graphics& g)
 
 void DBScale::paint(Graphics& g)
 {
-    g.fillAll(Colours::black);
     g.setColour(Colours::white);
-    
-    Rectangle<int> r;
-    r.setWidth(getWidth());
-    r.setHeight(14);
-    r.setX(0);
-    r.setY(0);
 
     for(auto t : ticks)
     {
         g.drawSingleLineText(juce::String(t.dB), 0, t.y + yOffset);
     }
 }
+
+//void DBScale::drawDBBackground(Graphics& g, Rectangle<int> bounds)
+//{
+//    g.setColour(Colours::white);
+//
+//    for(auto t : ticks)
+//    {
+//        g.drawSingleLineText(juce::String(t.dB), 0, t.y + yOffset);
+//    }
+//}
 
 void Meter::update(float audioValue)
 {
@@ -89,17 +92,14 @@ void Meter::paint(Graphics& g)
         }
     }
     
-    auto h = bounds.getHeight();
+    const auto h = bounds.getHeight();
+    const auto w = bounds.getWidth();
+    
     auto level = jmap(audioPassingVal, NEGATIVE_INFINITY, MAX_DECIBELS, 0.0f, 1.0f);
     
-    g.setColour(Colours::steelblue);
+    const auto meterYPos = h * (1.0 - level);
     
-    g.setOpacity(0.28);
-    
-    g.setGradientFill (ColourGradient (Colours::lightblue, 0,  level,
-                                        Colours::blueviolet, 0, h, false));
-
-    g.fillRect(bounds.withHeight(h * level).withY(h * (1.0 - level)));
+    g.drawImage(image, 0, meterYPos, w, h, 0, meterYPos, w, h);
     
     //tick meter
     
@@ -123,7 +123,8 @@ void Meter::paint(Graphics& g)
 
 void Meter::resized()
 {
-    auto h = getHeight();
+    const auto h = getHeight();
+    const auto w = getWidth();
     
     ticks.clear();
     Tick tck;
@@ -137,4 +138,20 @@ void Meter::resized()
         
         ticks.push_back(tck);
     }
+    
+    image = Image(Image::RGB, w, h, true);
+    
+    Graphics backgroundGraphic { image };
+
+    drawMeterGradient(backgroundGraphic, getLocalBounds());
+}
+
+void Meter::drawMeterGradient(Graphics& g, Rectangle<int> bounds)
+{
+    g.setOpacity(0.28);
+    
+    g.setGradientFill (ColourGradient (Colours::lightblue, 0,  0,
+                                        Colours::blueviolet, 0, bounds.getHeight(), false));
+
+    g.fillRect(bounds);
 }

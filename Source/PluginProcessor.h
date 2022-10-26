@@ -15,7 +15,6 @@
 
 #define VerifyDbScale  false
 
-
 class Pfmcpp_project10AudioProcessor  : public AudioProcessor
 {
 public:

@@ -58,11 +58,11 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
         
         if(ID == 1)
         {
-            histogramContainer.stack();
+            histogramContainer.align(0);
         }
         else if (ID == 2)
         {
-            histogramContainer.setSideBySide();
+            histogramContainer.align(1);
         }
     };
     
@@ -103,6 +103,10 @@ void Pfmcpp_project10AudioProcessorEditor::paint (Graphics& g)
     // (Our component is opaque, so we must completely fill the background with a solid colour)
     g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
     
+    g.setColour(Colours::lightskyblue);
+    auto bounds = getLocalBounds();
+    g.fillRect(bounds);
+    
 }
 
 void Pfmcpp_project10AudioProcessorEditor::resized()
@@ -120,6 +124,7 @@ void Pfmcpp_project10AudioProcessorEditor::resized()
     stereoImageMeter.setBounds(bounds.removeFromTop(meterControlColumnL.getHeight()));
     
     histogramContainer.setBounds(0, stereoMeterRMS.getHeight(), getLocalBounds().getWidth(), (getLocalBounds().getHeight() - stereoMeterRMS.getHeight()));
+    
 }
 
 void Pfmcpp_project10AudioProcessorEditor::timerCallback()

@@ -30,4 +30,8 @@ private:
                      Rectangle<int> bounds,
                      float avg,
                      bool drawBorder);
+    
+    void drawBackground(Graphics& g);
+    
+    juce::Image image;
 };

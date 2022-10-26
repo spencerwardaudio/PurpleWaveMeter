@@ -60,7 +60,7 @@ void MacroMeter::update(float levelInDB)
     meterInstant.update(levelInDB);
     
     textMeter.update(levelInDB);
-    
+    // modify so it calls only 100ms
     averageValue.add(levelInDB);
     
     auto avg = averageValue.getAverage();

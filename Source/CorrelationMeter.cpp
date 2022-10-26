@@ -100,8 +100,6 @@ void CorrelationMeter::drawAverage(Graphics& g,
     auto correlationPoint = bounds.getRelativePoint(mappedVal, 1.0f);
     auto r = juce::Rectangle<int>(centerPoint, correlationPoint);
     
-//    jassert (mappedVal > 1.0f || mappedVal < 0.0f);
-    
     if(mappedVal <= 0.f)
     {
         g.setGradientFill (ColourGradient (Colours::whitesmoke, bounds.getX(), 0,
@@ -114,4 +112,9 @@ void CorrelationMeter::drawAverage(Graphics& g,
     }
     
     g.fillRect(r);
+}
+
+void CorrelationMeter::drawBackground(Graphics& g)
+{
+    //draw two rectangle images (in phase out of phase) with the gradient
 }
