@@ -39,10 +39,8 @@ private:
                           ReadAllAfterWriteCircularBuffer<float>& buffer,
                           Rectangle<float> bounds);
     
-    void drawColourGradientRect(Graphics& g, Rectangle<int> bounds);
     void drawBackground(Graphics& g);
     
-    juce::Image image;
     juce::Image imagebackground;
     
     const String title;
@@ -52,10 +50,5 @@ private:
     bool dBLevelClip = false;
     
     float threshold;
-    
-    std::vector<float> levels;
-    size_t count{};
 };
-
-
 
