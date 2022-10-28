@@ -80,7 +80,15 @@ struct Averager
         return elements.size();
     }
     
+    void setDuration(float ms)
+    {
+        duration = ms;
+        
+    }
+    
 private:
+    
+    float duration { 0 };
     
     std::vector<T> elements { };
     
@@ -210,15 +218,20 @@ struct Tick
 struct DBScale : Component
 {
     void paint(Graphics& g) override;
+    void resized() override;
 
     std::vector<Tick> ticks;
     int yOffset = 0;
     
+    void drawDBBackground(Graphics& g);
+    
+    int w, h;
+    Point<int> center;
+    
+    juce::Image image;
+    
 private:
     
-//    void drawDBBackground(Graphics& g, Rectangle<int> bounds);
-//    
-//    juce::Image image;
 };
 
 struct Meter : Component

@@ -11,6 +11,8 @@ void Histogram::paint(Graphics& g)
 {
     g.drawImage(imagebackground, getLocalBounds().toFloat());
     
+    displayPath(g, getBounds().toFloat());
+    
     if(dBLevelClip)
     {
         g.setColour(Colours::red.darker().withAlpha(0.5f));
@@ -190,3 +192,5 @@ void Histogram::drawBackground(Graphics& g)
         }
     }
 }
+
+

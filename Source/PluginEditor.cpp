@@ -89,7 +89,7 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
     };
     
     setSize (650, 500);
-    startTimerHz(30);
+    startTimerHz(TimerHz);
 }
 
 Pfmcpp_project10AudioProcessorEditor::~Pfmcpp_project10AudioProcessorEditor()

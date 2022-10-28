@@ -23,6 +23,8 @@
 /**
 */
 
+#define TimerHz 30
+
 class Pfmcpp_project10AudioProcessorEditor  : public AudioProcessorEditor, public Timer
 {
 public:

@@ -90,10 +90,14 @@ public:
     
     void positionComboBoxText (ComboBox& box, Label& label) override
     {
-        label.setBounds (box.getWidth()/4, 1,
-                         box.getWidth() - 30,
-                         box.getHeight() - 2);
-
+        label.setJustificationType(Justification(Justification::horizontallyCentred));
+        
+        label.setBounds (box.getWidth()/6, 1,
+                         box.getWidth() - 15,
+                         box.getHeight());
+        
+        label.setMinimumHorizontalScale(0.1);
+        
         label.setFont (getComboBoxFont (box));
     }
     

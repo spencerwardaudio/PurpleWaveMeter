@@ -42,6 +42,24 @@ void TextMeter::paint(Graphics& g)
 
 void DBScale::paint(Graphics& g)
 {
+    g.drawImage(image, getLocalBounds().toFloat());
+}
+
+void DBScale::resized()
+{
+    w = getLocalBounds().getWidth();
+    h = getLocalBounds().getHeight();
+    center = Point<int>(getLocalBounds().getCentre());
+
+    image = Image(Image::RGB, w, h, true);
+
+    Graphics backgroundGraphic { image };
+
+    drawDBBackground(backgroundGraphic);
+}
+
+void DBScale::drawDBBackground(Graphics& g)
+{
     g.setColour(Colours::white);
 
     for(auto t : ticks)
@@ -49,16 +67,6 @@ void DBScale::paint(Graphics& g)
         g.drawSingleLineText(juce::String(t.dB), 0, t.y + yOffset);
     }
 }
-
-//void DBScale::drawDBBackground(Graphics& g, Rectangle<int> bounds)
-//{
-//    g.setColour(Colours::white);
-//
-//    for(auto t : ticks)
-//    {
-//        g.drawSingleLineText(juce::String(t.dB), 0, t.y + yOffset);
-//    }
-//}
 
 void Meter::update(float audioValue)
 {

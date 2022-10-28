@@ -35,6 +35,7 @@ struct MacroMeter : Component
     {
         //TODO how to convert to number of calls to timercallback
         averageValue.resize(ms, NEGATIVE_INFINITY);
+        averageValue.setDuration(ms);
     }
 
     std::vector<Tick> getDBTick();

@@ -113,8 +113,3 @@ void CorrelationMeter::drawAverage(Graphics& g,
     
     g.fillRect(r);
 }
-
-void CorrelationMeter::drawBackground(Graphics& g)
-{
-    //draw two rectangle images (in phase out of phase) with the gradient
-}
