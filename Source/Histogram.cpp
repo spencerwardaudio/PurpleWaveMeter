@@ -5,8 +5,6 @@
 Histogram::Histogram(const String& title_) : title( title_ )
 {
     addAndMakeVisible(dBScale);
-    
-    openGLContext.attachTo(*this);
 }
     
 void Histogram::paint(Graphics& g)

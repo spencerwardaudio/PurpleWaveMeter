@@ -37,7 +37,5 @@ private:
 
     void drawBackground(Graphics& g);
     
-    OpenGLContext openGLContext;
-    
     juce::Image image;
 };

@@ -19,6 +19,7 @@ struct StereoImageMeter : public Component
     {
         addAndMakeVisible(goniometer);
         addAndMakeVisible(correlationMeter);
+        
     }
     
     void paint();

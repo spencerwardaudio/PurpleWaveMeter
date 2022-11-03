@@ -30,7 +30,6 @@ struct Histogram : Component
     
 private:
     
-    OpenGLContext openGLContext;
 
     ReadAllAfterWriteCircularBuffer<float> buffer {float(NEG_INF)};
     Path path;

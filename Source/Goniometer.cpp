@@ -14,8 +14,6 @@ Goniometer::Goniometer(AudioBuffer<float>& buffer) : _buffer(buffer)
 {
     internalBuffer.setSize(2, 1024); 
     internalBuffer.clear();
-    
-    openGLContext.attachTo(*this);
 }
 
 void Goniometer::paint(Graphics& g)
