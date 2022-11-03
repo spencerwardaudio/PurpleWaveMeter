@@ -36,7 +36,6 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
 //        StereoMeter RMS & Peak
         juce::String value = meterControlColumnL.decayRateControl.getText();
         float decay = value.dropLastCharacters(4).getFloatValue();
-        DBG("selected" << value);
         
         stereoMeterRMS.setDecayRate(std::abs(decay));
         stereoMeterPk.setDecayRate(std::abs(decay));
@@ -46,10 +45,25 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
     {
         juce::String value = meterControlColumnL.avgControl.getText();
         float avgVal = value.dropLastCharacters(2).getFloatValue();
-        DBG("selected" << avgVal);
         
-        stereoMeterRMS.setAverageDuration(avgVal);
-        stereoMeterPk.setAverageDuration(avgVal);
+        stereoMeterRMS.setAverageDuration(avgVal, TimerMS);
+        stereoMeterPk.setAverageDuration(avgVal, TimerMS);
+    };
+    
+    meterControlColumnL.meterControl.onChange = [this]()
+    {
+        auto ID = meterControlColumnL.meterControl.getSelectedId();
+    
+        stereoMeterRMS.setMeterVisibility(ID);
+        stereoMeterPk.setMeterVisibility(ID);
+    };
+    
+    meterControlColumnR.scaleControl.onValueChange = [this]()
+    {
+        //get the slider change
+        auto val = meterControlColumnR.scaleControl.getValue();
+        //set this slider value as a multiplyer in the goniometer
+        stereoImageMeter.setGonioScaler(val);
     };
     
     meterControlColumnR.histControl.onChange = [this]()
@@ -65,6 +79,57 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
             histogramContainer.align(1);
         }
     };
+    
+    meterControlColumnR.enableHoldButton.onStateChange = [this]()
+    {
+        if(meterControlColumnR.enableHoldButton.getState() == Button::ButtonState::buttonDown)
+        {
+            stereoMeterPk.displayTick();
+            stereoMeterRMS.displayTick();
+
+            if(!meterControlColumnR.holdButtonOn)
+            {
+                meterControlColumnR.enableHoldButton.setColour (TextButton::buttonColourId, Colours::orange);
+                meterControlColumnR.holdButtonOn = true;
+            }
+            else
+            {
+                meterControlColumnR.enableHoldButton.removeColour(TextButton::buttonColourId);
+                meterControlColumnR.holdButtonOn = false;
+            }
+                
+        }
+    };
+    
+    meterControlColumnR.resetHoldButton.onStateChange = [this]()
+    {
+        if(meterControlColumnR.resetHoldButton.getState() == Button::ButtonState::buttonDown)
+        {
+            stereoMeterRMS.resetDecayingValueHolder();
+            stereoMeterPk.resetDecayingValueHolder();
+        }
+    };
+    
+    meterControlColumnR.holdControl.onChange = [this]()
+    {
+        juce::String value = meterControlColumnR.holdControl.getText();
+        
+        if(value == "inf")
+        {
+            meterControlColumnR.resetHoldButton.setVisible(true);
+        }
+        else
+        {
+            meterControlColumnR.resetHoldButton.setVisible(false);
+        }
+            
+        float valInSeconds = value.dropLastCharacters(1).getFloatValue();
+        
+        stereoMeterRMS.setHoldTime(valInSeconds);
+        stereoMeterPk.setHoldTime(valInSeconds);
+    };
+    
+    //TODO reset the DecayingValueHolder's internal values to NEGATIVE_INFINITY
     
     stereoMeterRMS.thresholdSlider.onValueChange = [this]()
     {
@@ -106,20 +171,19 @@ void Pfmcpp_project10AudioProcessorEditor::paint (Graphics& g)
     g.setColour(Colours::lightskyblue);
     auto bounds = getLocalBounds();
     g.fillRect(bounds);
-    
 }
 
 void Pfmcpp_project10AudioProcessorEditor::resized()
 {
     auto bounds = getLocalBounds();
     
-    stereoMeterRMS.setBounds(bounds.removeFromLeft(100).removeFromTop(METER_HEIGHT + 40));
-    stereoMeterPk.setBounds(bounds.removeFromRight(100).removeFromTop(METER_HEIGHT + 40));
+    stereoMeterRMS.setBounds(bounds.removeFromLeft(105).removeFromTop(METER_HEIGHT + 40));
+    stereoMeterPk.setBounds(bounds.removeFromRight(105).removeFromTop(METER_HEIGHT + 40));
     //from the bottom of the stereo meter to the bottom of the application height / 2
     
-    meterControlColumnL.setBounds(bounds.removeFromLeft(stereoMeterRMS.getWidth()).removeFromTop(stereoMeterRMS.getHeight()));
+    meterControlColumnL.setBounds(bounds.removeFromLeft(stereoMeterRMS.getWidth() - 5).removeFromTop(stereoMeterRMS.getHeight()));
     
-    meterControlColumnR.setBounds(bounds.removeFromRight(stereoMeterRMS.getWidth()).removeFromTop(stereoMeterRMS.getHeight()));
+    meterControlColumnR.setBounds(bounds.removeFromRight(stereoMeterRMS.getWidth()- 5).removeFromTop(stereoMeterRMS.getHeight()));
     
     stereoImageMeter.setBounds(bounds.removeFromTop(meterControlColumnL.getHeight()));
     

@@ -83,3 +83,5 @@ void MacroMeter::setThreshold(float threshAsDecibels)
     meterInstant.decayingValueHolder.setThreshold(threshAsDecibels);
     meterAverage.decayingValueHolder.setThreshold(threshAsDecibels);
 }
+
+

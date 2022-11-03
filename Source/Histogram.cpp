@@ -5,6 +5,8 @@
 Histogram::Histogram(const String& title_) : title( title_ )
 {
     addAndMakeVisible(dBScale);
+    
+    openGLContext.attachTo(*this);
 }
     
 void Histogram::paint(Graphics& g)
@@ -47,9 +49,7 @@ void Histogram::resized()
     for(int i = (int)NEGATIVE_INFINITY; i <= (int)MAX_DECIBELS; i += 6)
     {
         tck.y = jmap(i, (int)NEGATIVE_INFINITY, (int)MAX_DECIBELS, h, 0) + 4;
-        std::cout << tck.y << " : y " << std::endl;
         tck.dB = i;
-        std::cout << tck.dB << " : dB " << std::endl;
         
         dBScale.ticks.push_back(tck);
     }
@@ -90,14 +90,14 @@ void Histogram::displayPath(Graphics& g, Rectangle<float> bounds)
         Colours::blue.withAlpha(0.8f),
         Colours::whitesmoke.withAlpha(0.8f),
     };
-    
+
     ColourGradient cg;
-    
+
     for(int i = 0; i < colors.size(); ++i)
     {
         cg.addColour((double(i) / double(colors.size() - 1)), colors[i]);
     }
-    
+
     if(!fill.isEmpty())
     {
         cg.point1 = {0, (float)getHeight()};

@@ -12,6 +12,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "ScalerLookAndFeel.h"
+#include "GlobalVisualDefines.h"
 
 struct MeterControlColumnR : public Component
 {
@@ -26,7 +27,11 @@ struct MeterControlColumnR : public Component
     Slider scaleControl;
 
     TextButton   enableHoldButton {"Hold"};
+    bool        holdButtonOn { false };
+    Colour buttonOff { TextButton::buttonColourId };
+    
     ComboBox holdControl;
+    TextButton   resetHoldButton {"Reset"};
     
     Label    histLabel;
     ComboBox histControl;

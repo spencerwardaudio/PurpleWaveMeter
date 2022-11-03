@@ -25,17 +25,71 @@ struct MacroMeter : Component
     void update(float levelInDB);
     void setThreshold(float threshAsDecibels);
     
+    void setHoldTime(float time)
+    {
+        meterInstant.setHoldTime(time);
+        meterAverage.setHoldTime(time);
+    }
+    
     void setDecayRate(float decay)
     {
         meterInstant.setDecayRate(decay);
         meterAverage.setDecayRate(decay);
     }
     
-    void setAverageDuration(float ms)
+    void setAverageDuration(float valueDurationMS, float timerMS)
     {
-        //TODO how to convert to number of calls to timercallback
-        averageValue.resize(ms, NEGATIVE_INFINITY);
-        averageValue.setDuration(ms);
+        averageValue.resize(valueDurationMS / timerMS, NEGATIVE_INFINITY);
+    }
+    
+    void setMeterVisibility(int meter)
+    {
+        //Both
+        if(meter == 1)
+        {
+            meterInstant.setVisible(true);
+            meterAverage.setVisible(true);
+            
+            meterInstant.setBounds(meterIPos,
+                                   10,
+                                   METER_WIDTH,
+                                   METER_HEIGHT);
+            
+            meterAverage.setBounds(meterAVGPos,
+                                   10,
+                                   METER_WIDTH / 3,
+                                   METER_HEIGHT);
+        }
+        //Peak
+        else if(meter == 2)
+        {
+            meterInstant.setVisible(true);
+            meterAverage.setVisible(false);
+            
+            meterInstant.setBounds(0, 10, METER_WIDTH + (METER_WIDTH / 3), METER_HEIGHT);
+            meterInstant.repaint();
+        }
+        //Average
+        else if(meter == 3)
+        {
+            meterInstant.setVisible(false);
+            meterAverage.setVisible(true);
+            
+            meterAverage.setBounds(0, 10, METER_WIDTH + (METER_WIDTH / 3), METER_HEIGHT);
+            meterAverage.repaint();
+        }
+    }
+    
+    void displayTick()
+    {
+        meterInstant.displayTick();
+        meterAverage.displayTick();
+    }
+    
+    void resetDecayingValueHolder()
+    {
+        meterInstant.resetDecayingValueHolder();
+        meterAverage.resetDecayingValueHolder();
     }
 
     std::vector<Tick> getDBTick();

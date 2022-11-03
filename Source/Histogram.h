@@ -29,6 +29,8 @@ struct Histogram : Component
     void setThreshold(float threshAsDecibels);
     
 private:
+    
+    OpenGLContext openGLContext;
 
     ReadAllAfterWriteCircularBuffer<float> buffer {float(NEG_INF)};
     Path path;

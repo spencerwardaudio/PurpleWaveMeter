@@ -90,6 +90,7 @@ void Meter::paint(Graphics& g)
     auto center = bounds.getCentreX();
 
     auto numTicks = ticks.size();
+    
     for( int i = 0; i < numTicks; ++i )
     {
         g.setColour (juce::Colours::whitesmoke);
@@ -107,16 +108,19 @@ void Meter::paint(Graphics& g)
     
     const auto meterYPos = h * (1.0 - level);
     
-    g.drawImage(image, 0, meterYPos, w, h, 0, meterYPos, w, h);
+    g.drawImage(image, 0, meterYPos, w, h   , 0, meterYPos, w, h);
     
     //tick meter
     
     level = decayingValueHolder.getCurrentValue();
     
-    auto tickLine = jmap(level, NEGATIVE_INFINITY, MAX_DECIBELS, 0.0f, 1.0f);
+    if(ticksVisible)
+    {
+        auto tickLine = jmap(level, NEGATIVE_INFINITY, MAX_DECIBELS, 0.0f, 1.0f);
 
-    g.fillRect(bounds.withY(h * (1 -  (float)tickLine)).withHeight(2));
- 
+        g.fillRect(bounds.withY(h * (1 -  (float)tickLine)).withHeight(2));
+    }
+    
     if(decayingValueHolder.isOverThreshold())
     {
         g.setColour(Colours::red.darker().withAlpha(0.5f));
@@ -140,9 +144,7 @@ void Meter::resized()
     for(int i = (int)NEGATIVE_INFINITY; i <= (int)MAX_DECIBELS; i += 6)
     {
         tck.y = jmap(i, (int)NEGATIVE_INFINITY, (int)MAX_DECIBELS, h, 0) + 4;
-        std::cout << tck.y << " : y " << std::endl;
         tck.dB = i;
-        std::cout << tck.dB << " : dB " << std::endl;
         
         ticks.push_back(tck);
     }

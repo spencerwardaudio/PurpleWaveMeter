@@ -15,7 +15,7 @@ MeterControlColumnR::MeterControlColumnR() :
     histLabel ("histLabel", "HIST")
 {
     scaleLabel.setFont(20.0);
-    scaleLabel.setColour (juce::Label::textColourId, juce::Colours::orange);
+    scaleLabel.setColour (juce::Label::textColourId, TEXT_COLOUR);
     addAndMakeVisible(scaleLabel);
     
     scaleControl.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
@@ -23,7 +23,7 @@ MeterControlColumnR::MeterControlColumnR() :
     scaleControl.setLookAndFeel(&scalerLookAndFeel);
     addAndMakeVisible(scaleControl);
     
-    enableHoldButton.setColour(ComboBox::outlineColourId, juce::Colours::orange);
+    enableHoldButton.setColour(ComboBox::outlineColourId, TEXT_COLOUR);
     addAndMakeVisible(enableHoldButton);
     
     addAndMakeVisible(holdControl);
@@ -36,8 +36,12 @@ MeterControlColumnR::MeterControlColumnR() :
     holdControl.addItem("inf", 6);
     holdControl.setSelectedId(1);
     
+    addAndMakeVisible(resetHoldButton);
+    resetHoldButton.setLookAndFeel(&scalerLookAndFeel);
+    resetHoldButton.setVisible(false);
+    
     histLabel.setFont(20.0);
-    histLabel.setColour (juce::Label::textColourId, juce::Colours::orange);
+    histLabel.setColour (juce::Label::textColourId, TEXT_COLOUR);
     addAndMakeVisible(histLabel);
     
     addAndMakeVisible(histControl);
@@ -51,29 +55,41 @@ MeterControlColumnR::MeterControlColumnR() :
 void MeterControlColumnR::paint (Graphics& g)
 {
     //paint background
-    g.setColour (Colours::black);
+    g.setColour (BACKGROUND_COLOUR);
     g.setFont (15.0f);
     
     Rectangle<float> r(getLocalBounds().getX(), 0, getLocalBounds().getWidth(), getLocalBounds().getHeight());
     g.fillRect(r);
     
+    //draw grey panel
+    g.setColour (PANEL_COLOUR);
+    Rectangle<float> greyBox(getLocalBounds().getX() + 5, 10, getLocalBounds().getWidth() - 10, getLocalBounds().getHeight() - 10);
+    g.fillRoundedRectangle(greyBox, 6.0f);
+    
     //Combo Box GUI Dividers RIGHT
     g.setColour (Colours::white);
     
-    g.drawLine(getLocalBounds().getX(), scaleControl.getBottom() -10, getLocalBounds().getWidth(), scaleControl.getBottom() -10, 1);
+    auto xOffset = 10;
     
-    g.drawLine(getLocalBounds().getX(), holdControl.getBottom() + 10, getLocalBounds().getWidth(), holdControl.getBottom() + 10, 1);
+    g.drawLine(getLocalBounds().getX() + xOffset, scaleControl.getBottom() -10, getLocalBounds().getWidth() - xOffset, scaleControl.getBottom() -10, 1);
     
-    g.drawLine(getLocalBounds().getX(), histControl.getBottom() + 10, getLocalBounds().getWidth(), histControl.getBottom() + 10, 1);
+    g.drawLine(getLocalBounds().getX() + xOffset, resetHoldButton.getBottom() + 10, getLocalBounds().getWidth() - xOffset, resetHoldButton.getBottom() + 10, 1);
+    
+    g.drawLine(getLocalBounds().getX() + xOffset, histControl.getBottom() + 10, getLocalBounds().getWidth() - xOffset, histControl.getBottom() + 10, 1);
 }
+
 void MeterControlColumnR::resized()
 {
-    scaleLabel.setBounds(getLocalBounds().getCentreX() - 40, 15, 70, 25);
-    scaleControl.setBounds(getLocalBounds().getCentreX() - 50, scaleLabel.getBottom() - 30, 100, 100);
+    scaleLabel.setBounds(0, 10, getLocalBounds().getWidth(), 25);
+    scaleLabel.setJustificationType(Justification::horizontallyCentred);
     
-    enableHoldButton.setBounds(getLocalBounds().getCentreX() - 25, scaleControl.getBottom() + 10, 50, 25);
+    scaleControl.setBounds(getLocalBounds().getCentreX() - 42, scaleLabel.getBottom() - 25, 85, 85);
+    
+    enableHoldButton.setBounds(getLocalBounds().getCentreX() - 25, scaleControl.getBottom() - 5, 50, 25);
     holdControl.setBounds(getLocalBounds().getCentreX() - 40, enableHoldButton.getBottom(), 75, 25);
     
-    histLabel.setBounds(getLocalBounds().getCentreX() - 25, holdControl.getBottom() + 10, 50, 25);
+    resetHoldButton.setBounds(getLocalBounds().getCentreX() - 40, holdControl.getBottom(), 75, 25);
+    
+    histLabel.setBounds(getLocalBounds().getCentreX() - 25, resetHoldButton.getBottom() + 10, 50, 25);
     histControl.setBounds(getLocalBounds().getCentreX() - 40, histLabel.getBottom(), 75, 25);
 }

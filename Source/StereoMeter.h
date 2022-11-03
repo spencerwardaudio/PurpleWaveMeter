@@ -52,10 +52,34 @@ struct StereoMeter : Component
         macroMeterRight.setDecayRate(decay);
     }
     
-    void setAverageDuration(float ms)
+    void setAverageDuration(float valueDurationMS, float timerMS)
     {
-        macroMeterLeft.setAverageDuration(ms);
-        macroMeterRight.setAverageDuration(ms);
+        macroMeterLeft.setAverageDuration(valueDurationMS, timerMS);
+        macroMeterRight.setAverageDuration(valueDurationMS, timerMS);
+    }
+    
+    void setMeterVisibility(int meterType)
+    {
+        macroMeterLeft.setMeterVisibility(meterType);
+        macroMeterRight.setMeterVisibility(meterType);
+    }
+    
+    void displayTick()
+    {
+        macroMeterLeft.displayTick();
+        macroMeterRight.displayTick();
+    }
+    
+    void setHoldTime(float time)
+    {
+        macroMeterLeft.setHoldTime(time);
+        macroMeterRight.setHoldTime(time);
+    }
+    
+    void resetDecayingValueHolder()
+    {
+        macroMeterLeft.resetDecayingValueHolder();
+        macroMeterRight.resetDecayingValueHolder();
     }
     
     void paint (Graphics& g) override;

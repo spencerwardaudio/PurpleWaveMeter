@@ -40,6 +40,11 @@ struct StereoImageMeter : public Component
         goniometer.repaint();
     }
     
+    void setGonioScaler(double val)
+    {
+        goniometer.setGonioScaler(val);
+    }
+    
     private:
     
     CorrelationMeter correlationMeter;

@@ -20,6 +20,11 @@ struct Goniometer : Component
     void paint(Graphics& g) override;
     void resized() override;
     
+    void setGonioScaler(double val)
+    {
+        scaler = jmap(val, 0.0, 10.0, 0.5, 2.0);
+    }
+    
 private:
     
     AudioBuffer<float>& _buffer;
@@ -27,8 +32,12 @@ private:
     Path p;
     int w, h;
     Point<int> center;
+    
+    double scaler { 0 };
 
     void drawBackground(Graphics& g);
+    
+    OpenGLContext openGLContext;
     
     juce::Image image;
 };

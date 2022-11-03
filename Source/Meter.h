@@ -80,15 +80,7 @@ struct Averager
         return elements.size();
     }
     
-    void setDuration(float ms)
-    {
-        duration = ms;
-        
-    }
-    
 private:
-    
-    float duration { 0 };
     
     std::vector<T> elements { };
     
@@ -108,6 +100,8 @@ struct ValueHolderBase : Timer
     
     float getCurrentValue() const { return currentValue; }
     
+    void setCurrentValue(float val) { currentValue = val; }
+    
     void setThreshold(float _threshold) { threshold = _threshold; }
     
     float getThreshold() { return threshold; }
@@ -119,7 +113,7 @@ protected:
     float currentValue { NEGATIVE_INFINITY };
     
     int64 peakTime { 0 };
-    int64 holdTime { 100 };
+    int64 holdTime { 0 };
     
     void resetCurrentValue() { currentValue = threshold; }
 
@@ -240,9 +234,28 @@ struct Meter : Component
     
     void setDecayRate(float decay) { decayingValueHolder.setDecayRate(decay); }
     
+    void setHoldTime(float time)
+    {
+        time *= 1000;
+        decayingValueHolder.setHoldTime((int)time);
+    }
+    
+    void resetDecayingValueHolder()
+    {
+        decayingValueHolder.setCurrentValue(NEGATIVE_INFINITY);
+    }
+    
     void paint(Graphics& g) override;
     
     void resized() override;
+    
+    void displayTick()
+    {
+        if(ticksVisible)
+            ticksVisible = false;
+        else
+            ticksVisible = true;
+    }
     
     std::vector<Tick> ticks;
     
@@ -252,6 +265,8 @@ struct Meter : Component
     DecayingValueHolder decayingValueHolder;
     
 private:
+    
+    bool ticksVisible = true;
 
     void drawMeterGradient(Graphics& g, Rectangle<int> bounds);
     

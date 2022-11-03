@@ -12,6 +12,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "ScalerLookAndFeel.h"
+#include "GlobalVisualDefines.h"
 
 struct MeterControlColumnL : public Component
 {

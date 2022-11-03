@@ -16,7 +16,7 @@ MeterControlColumnL::MeterControlColumnL() :
     meterLabel ("meterLabel", "VIEW")
 {
     decayLabel.setFont(20.0);
-    decayLabel.setColour (juce::Label::textColourId, juce::Colours::orange);
+    decayLabel.setColour (juce::Label::textColourId, TEXT_COLOUR);
     addAndMakeVisible(decayLabel);
     
     addAndMakeVisible(decayRateControl);
@@ -29,7 +29,7 @@ MeterControlColumnL::MeterControlColumnL() :
     decayRateControl.setSelectedId(1);
     
     avgLabel.setFont(20.0);
-    avgLabel.setColour (juce::Label::textColourId, juce::Colours::orange);
+    avgLabel.setColour (juce::Label::textColourId, TEXT_COLOUR);
     addAndMakeVisible(avgLabel);
     
     addAndMakeVisible(avgControl);
@@ -42,7 +42,7 @@ MeterControlColumnL::MeterControlColumnL() :
     avgControl.setSelectedId(1);
     
     meterLabel.setFont(20.0);
-    meterLabel.setColour (juce::Label::textColourId, juce::Colours::orange);
+    meterLabel.setColour (juce::Label::textColourId, TEXT_COLOUR);
     addAndMakeVisible(meterLabel);
     
     addAndMakeVisible(meterControl);
@@ -57,20 +57,27 @@ MeterControlColumnL::MeterControlColumnL() :
 void MeterControlColumnL::paint (Graphics& g)
 {
     //paint background
-    g.setColour (Colours::black);
+    g.setColour (BACKGROUND_COLOUR);
     g.setFont (15.0f);
     
     Rectangle<float> r(getLocalBounds().getX(), 0, getLocalBounds().getWidth(), getLocalBounds().getHeight());
     g.fillRect(r);
     
+    //draw grey panel
+    g.setColour (Colours::slategrey);
+    Rectangle<float> greyBox(getLocalBounds().getX() + 5, 10, getLocalBounds().getWidth() - 10, getLocalBounds().getHeight() - 10);
+    g.fillRoundedRectangle(greyBox, 6.0f);
+    
     //Combo Box GUI Dividers LEFT
     g.setColour (Colours::white);
     
-    g.drawLine(getLocalBounds().getX(), decayRateControl.getBottom() + 10, getLocalBounds().getWidth(), decayRateControl.getBottom() + 10, 1);
+    auto xOffset = 10;
     
-    g.drawLine(getLocalBounds().getX(), avgControl.getBottom() + 10, getLocalBounds().getWidth(), avgControl.getBottom() + 10, 1);
+    g.drawLine(getLocalBounds().getX() + xOffset, decayRateControl.getBottom() + 10, getLocalBounds().getWidth() - xOffset, decayRateControl.getBottom() + 10, 1);
     
-    g.drawLine(getLocalBounds().getX(), meterControl.getBottom() + 10, getLocalBounds().getWidth(), meterControl.getBottom() + 10, 1);
+    g.drawLine(getLocalBounds().getX() + xOffset, avgControl.getBottom() + 10, getLocalBounds().getWidth() - xOffset, avgControl.getBottom() + 10, 1);
+    
+    g.drawLine(getLocalBounds().getX() + xOffset, meterControl.getBottom() + 10, getLocalBounds().getWidth() - xOffset, meterControl.getBottom() + 10, 1);
 }
 void MeterControlColumnL::resized()
 {
