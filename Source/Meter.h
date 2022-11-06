@@ -155,18 +155,28 @@ struct DecayingValueHolder : ValueHolderBase
 {
     DecayingValueHolder()
     {
-        setDecayRate(3);
+        setDecayRate(0);
     }
+    
+    //get the threshold of the top level
     
     void timerCallback() override
     {
         currentTime = Time::currentTimeMillis();
         elapsedTime = currentTime - peakTime;
         
-        if(elapsedTime >= holdTime)
+        if(!holdINF)
         {
-            currentValue -= decayRate;
+            if(elapsedTime >= holdTime)
+            {
+                currentValue -= decayRate;
+            }
         }
+    }
+    
+    void setHoldTimeINF(bool val)
+    {
+        holdINF = val;
     }
 
     void updateHeldValue(float input)
@@ -188,6 +198,8 @@ private:
     int64 currentTime { 0 };
     int64 elapsedTime { 0 };
     double decayRate { 0 };
+    
+    bool holdINF { false };
 };
 
 
@@ -234,6 +246,11 @@ struct Meter : Component
     
     void setDecayRate(float decay) { decayingValueHolder.setDecayRate(decay); }
     
+    void setHoldTimeINF(bool val)
+    {
+        decayingValueHolder.setHoldTimeINF(val);
+    }
+    
     void setHoldTime(float time)
     {
         time *= 1000;
@@ -248,14 +265,6 @@ struct Meter : Component
     void paint(Graphics& g) override;
     
     void resized() override;
-    
-    void displayTick()
-    {
-        if(ticksVisible)
-            ticksVisible = false;
-        else
-            ticksVisible = true;
-    }
     
     std::vector<Tick> ticks;
     

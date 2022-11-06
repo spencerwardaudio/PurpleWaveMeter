@@ -84,20 +84,28 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
     {
         if(meterControlColumnR.enableHoldButton.getState() == Button::ButtonState::buttonDown)
         {
-            stereoMeterPk.displayTick();
-            stereoMeterRMS.displayTick();
-
             if(!meterControlColumnR.holdButtonOn)
             {
+                meterControlColumnR.holdControl.setVisible(true);
                 meterControlColumnR.enableHoldButton.setColour (TextButton::buttonColourId, Colours::orange);
                 meterControlColumnR.holdButtonOn = true;
+                
+                takeHoldVal();
             }
             else
             {
+                meterControlColumnR.holdControl.setVisible(false);
                 meterControlColumnR.enableHoldButton.removeColour(TextButton::buttonColourId);
+                meterControlColumnR.resetHoldButton.setVisible(false);
                 meterControlColumnR.holdButtonOn = false;
-            }
                 
+                //set hold time to zero
+                stereoMeterRMS.setHoldTime(0);
+                stereoMeterPk.setHoldTime(0);
+                
+                stereoMeterRMS.setHoldTimeINF(false);
+                stereoMeterPk.setHoldTimeINF(false);
+            }
         }
     };
     
@@ -112,21 +120,7 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
     
     meterControlColumnR.holdControl.onChange = [this]()
     {
-        juce::String value = meterControlColumnR.holdControl.getText();
-        
-        if(value == "inf")
-        {
-            meterControlColumnR.resetHoldButton.setVisible(true);
-        }
-        else
-        {
-            meterControlColumnR.resetHoldButton.setVisible(false);
-        }
-            
-        float valInSeconds = value.dropLastCharacters(1).getFloatValue();
-        
-        stereoMeterRMS.setHoldTime(valInSeconds);
-        stereoMeterPk.setHoldTime(valInSeconds);
+        takeHoldVal();
     };
     
     //TODO reset the DecayingValueHolder's internal values to NEGATIVE_INFINITY
@@ -228,4 +222,28 @@ void Pfmcpp_project10AudioProcessorEditor::timerCallback()
     }
     
     stereoImageMeter.repaint();
+}
+
+void Pfmcpp_project10AudioProcessorEditor::takeHoldVal()
+{
+    juce::String value = meterControlColumnR.holdControl.getText();
+    
+    if(value == "inf")
+    {
+        meterControlColumnR.resetHoldButton.setVisible(true);
+        
+        stereoMeterRMS.setHoldTimeINF(true);
+        stereoMeterPk.setHoldTimeINF(true);
+    }
+    else
+    {
+        meterControlColumnR.resetHoldButton.setVisible(false);
+        stereoMeterRMS.setHoldTimeINF(false);
+        stereoMeterPk.setHoldTimeINF(false);
+    }
+        
+    float valInSeconds = value.dropLastCharacters(1).getFloatValue();
+    
+    stereoMeterRMS.setHoldTime(valInSeconds);
+    stereoMeterPk.setHoldTime(valInSeconds);
 }

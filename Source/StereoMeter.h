@@ -64,10 +64,10 @@ struct StereoMeter : Component
         macroMeterRight.setMeterVisibility(meterType);
     }
     
-    void displayTick()
+    void setHoldTimeINF(bool val)
     {
-        macroMeterLeft.displayTick();
-        macroMeterRight.displayTick();
+        macroMeterLeft.setHoldTimeINF(val);
+        macroMeterRight.setHoldTimeINF(val);
     }
     
     void setHoldTime(float time)

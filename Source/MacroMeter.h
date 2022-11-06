@@ -25,6 +25,12 @@ struct MacroMeter : Component
     void update(float levelInDB);
     void setThreshold(float threshAsDecibels);
     
+    void setHoldTimeINF(bool val)
+    {
+        meterInstant.setHoldTimeINF(val);
+        meterAverage.setHoldTimeINF(val);
+    }
+    
     void setHoldTime(float time)
     {
         meterInstant.setHoldTime(time);
@@ -78,12 +84,6 @@ struct MacroMeter : Component
             meterAverage.setBounds(0, 10, METER_WIDTH + (METER_WIDTH / 3), METER_HEIGHT);
             meterAverage.repaint();
         }
-    }
-    
-    void displayTick()
-    {
-        meterInstant.displayTick();
-        meterAverage.displayTick();
     }
     
     void resetDecayingValueHolder()

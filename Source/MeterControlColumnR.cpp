@@ -26,7 +26,6 @@ MeterControlColumnR::MeterControlColumnR() :
     enableHoldButton.setColour(ComboBox::outlineColourId, TEXT_COLOUR);
     addAndMakeVisible(enableHoldButton);
     
-    addAndMakeVisible(holdControl);
     holdControl.setLookAndFeel(&scalerLookAndFeel);
     holdControl.addItem("0s", 1);
     holdControl.addItem("0.5s", 2);
@@ -35,10 +34,12 @@ MeterControlColumnR::MeterControlColumnR() :
     holdControl.addItem("6s", 5);
     holdControl.addItem("inf", 6);
     holdControl.setSelectedId(1);
+    addAndMakeVisible(holdControl);
+    holdControl.setVisible(false);
     
-    addAndMakeVisible(resetHoldButton);
     resetHoldButton.setLookAndFeel(&scalerLookAndFeel);
     resetHoldButton.setVisible(false);
+    addAndMakeVisible(resetHoldButton);
     
     histLabel.setFont(20.0);
     histLabel.setColour (juce::Label::textColourId, TEXT_COLOUR);
