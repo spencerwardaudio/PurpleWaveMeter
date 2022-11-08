@@ -46,6 +46,12 @@ struct StereoMeter : Component
     void update(int channel, float levelInDB);
     void setThreshold(float threshAsDecibels);
     
+    void displayTick()
+    {
+        macroMeterLeft.displayTick();
+        macroMeterRight.displayTick();
+    }
+    
     void setDecayRate(float decay)
     {
         macroMeterLeft.setDecayRate(decay);

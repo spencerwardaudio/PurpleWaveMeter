@@ -25,6 +25,12 @@ struct MacroMeter : Component
     void update(float levelInDB);
     void setThreshold(float threshAsDecibels);
     
+    void displayTick()
+    {
+        meterInstant.displayTick();
+        meterAverage.displayTick();
+    }
+    
     void setHoldTimeINF(bool val)
     {
         meterInstant.setHoldTimeINF(val);

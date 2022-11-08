@@ -33,7 +33,7 @@ private:
     int w, h;
     Point<int> center;
     
-    double scaler { 0 };
+    double scaler { 0.5 };
 
     void drawBackground(Graphics& g);
     

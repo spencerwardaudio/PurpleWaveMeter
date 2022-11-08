@@ -266,6 +266,14 @@ struct Meter : Component
     
     void resized() override;
     
+    void displayTick()
+    {
+        if(ticksVisible)
+            ticksVisible = false;
+        else
+            ticksVisible = true;
+    }
+    
     std::vector<Tick> ticks;
     
     float audioPassingVal { NEGATIVE_INFINITY };
@@ -275,7 +283,7 @@ struct Meter : Component
     
 private:
     
-    bool ticksVisible = true;
+    bool ticksVisible = false;
 
     void drawMeterGradient(Graphics& g, Rectangle<int> bounds);
     

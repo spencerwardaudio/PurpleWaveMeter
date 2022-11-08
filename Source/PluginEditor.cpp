@@ -84,6 +84,9 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
     {
         if(meterControlColumnR.enableHoldButton.getState() == Button::ButtonState::buttonDown)
         {
+            stereoMeterPk.displayTick();
+            stereoMeterRMS.displayTick();
+            
             if(!meterControlColumnR.holdButtonOn)
             {
                 meterControlColumnR.holdControl.setVisible(true);
