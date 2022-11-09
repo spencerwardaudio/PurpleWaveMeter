@@ -42,14 +42,25 @@ void TextMeter::paint(Graphics& g)
 
 void DBScale::paint(Graphics& g)
 {
-    g.fillAll(Colours::black);
+    g.drawImage(image, getLocalBounds().toFloat());
+}
+
+void DBScale::resized()
+{
+    w = getLocalBounds().getWidth();
+    h = getLocalBounds().getHeight();
+    center = Point<int>(getLocalBounds().getCentre());
+
+    image = Image(Image::RGB, w, h, true);
+
+    Graphics backgroundGraphic { image };
+
+    drawDBBackground(backgroundGraphic);
+}
+
+void DBScale::drawDBBackground(Graphics& g)
+{
     g.setColour(Colours::white);
-    
-    Rectangle<int> r;
-    r.setWidth(getWidth());
-    r.setHeight(14);
-    r.setX(0);
-    r.setY(0);
 
     for(auto t : ticks)
     {
@@ -79,6 +90,7 @@ void Meter::paint(Graphics& g)
     auto center = bounds.getCentreX();
 
     auto numTicks = ticks.size();
+    
     for( int i = 0; i < numTicks; ++i )
     {
         g.setColour (juce::Colours::whitesmoke);
@@ -89,26 +101,26 @@ void Meter::paint(Graphics& g)
         }
     }
     
-    auto h = bounds.getHeight();
+    const auto h = bounds.getHeight();
+    const auto w = bounds.getWidth();
+    
     auto level = jmap(audioPassingVal, NEGATIVE_INFINITY, MAX_DECIBELS, 0.0f, 1.0f);
     
-    g.setColour(Colours::steelblue);
+    const auto meterYPos = h * (1.0 - level);
     
-    g.setOpacity(0.28);
-    
-    g.setGradientFill (ColourGradient (Colours::lightblue, 0,  level,
-                                        Colours::blueviolet, 0, h, false));
-
-    g.fillRect(bounds.withHeight(h * level).withY(h * (1.0 - level)));
+    g.drawImage(image, 0, meterYPos, w, h   , 0, meterYPos, w, h);
     
     //tick meter
     
     level = decayingValueHolder.getCurrentValue();
     
-    auto tickLine = jmap(level, NEGATIVE_INFINITY, MAX_DECIBELS, 0.0f, 1.0f);
+    if(ticksVisible)
+    {
+        auto tickLine = jmap(level, NEGATIVE_INFINITY, MAX_DECIBELS, 0.0f, 1.0f);
 
-    g.fillRect(bounds.withY(h * (1 -  (float)tickLine)).withHeight(2));
- 
+        g.fillRect(bounds.withY(h * (1 -  (float)tickLine)).withHeight(2));
+    }
+    
     if(decayingValueHolder.isOverThreshold())
     {
         g.setColour(Colours::red.darker().withAlpha(0.5f));
@@ -123,7 +135,8 @@ void Meter::paint(Graphics& g)
 
 void Meter::resized()
 {
-    auto h = getHeight();
+    const auto h = getHeight();
+    const auto w = getWidth();
     
     ticks.clear();
     Tick tck;
@@ -131,10 +144,24 @@ void Meter::resized()
     for(int i = (int)NEGATIVE_INFINITY; i <= (int)MAX_DECIBELS; i += 6)
     {
         tck.y = jmap(i, (int)NEGATIVE_INFINITY, (int)MAX_DECIBELS, h, 0) + 4;
-        std::cout << tck.y << " : y " << std::endl;
         tck.dB = i;
-        std::cout << tck.dB << " : dB " << std::endl;
         
         ticks.push_back(tck);
     }
+    
+    image = Image(Image::RGB, w, h, true);
+    
+    Graphics backgroundGraphic { image };
+
+    drawMeterGradient(backgroundGraphic, getLocalBounds());
+}
+
+void Meter::drawMeterGradient(Graphics& g, Rectangle<int> bounds)
+{
+    g.setOpacity(0.28);
+    
+    g.setGradientFill (ColourGradient (Colours::lightblue, 0,  0,
+                                        Colours::blueviolet, 0, bounds.getHeight(), false));
+
+    g.fillRect(bounds);
 }

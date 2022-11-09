@@ -46,6 +46,48 @@ struct StereoMeter : Component
     void update(int channel, float levelInDB);
     void setThreshold(float threshAsDecibels);
     
+    void displayTick()
+    {
+        macroMeterLeft.displayTick();
+        macroMeterRight.displayTick();
+    }
+    
+    void setDecayRate(float decay)
+    {
+        macroMeterLeft.setDecayRate(decay);
+        macroMeterRight.setDecayRate(decay);
+    }
+    
+    void setAverageDuration(float valueDurationMS, float timerMS)
+    {
+        macroMeterLeft.setAverageDuration(valueDurationMS, timerMS);
+        macroMeterRight.setAverageDuration(valueDurationMS, timerMS);
+    }
+    
+    void setMeterVisibility(int meterType)
+    {
+        macroMeterLeft.setMeterVisibility(meterType);
+        macroMeterRight.setMeterVisibility(meterType);
+    }
+    
+    void setHoldTimeINF(bool val)
+    {
+        macroMeterLeft.setHoldTimeINF(val);
+        macroMeterRight.setHoldTimeINF(val);
+    }
+    
+    void setHoldTime(float time)
+    {
+        macroMeterLeft.setHoldTime(time);
+        macroMeterRight.setHoldTime(time);
+    }
+    
+    void resetDecayingValueHolder()
+    {
+        macroMeterLeft.resetDecayingValueHolder();
+        macroMeterRight.resetDecayingValueHolder();
+    }
+    
     void paint (Graphics& g) override;
     void resized() override;
     

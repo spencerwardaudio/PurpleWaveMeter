@@ -100,6 +100,8 @@ struct ValueHolderBase : Timer
     
     float getCurrentValue() const { return currentValue; }
     
+    void setCurrentValue(float val) { currentValue = val; }
+    
     void setThreshold(float _threshold) { threshold = _threshold; }
     
     float getThreshold() { return threshold; }
@@ -111,7 +113,7 @@ protected:
     float currentValue { NEGATIVE_INFINITY };
     
     int64 peakTime { 0 };
-    int64 holdTime { 100 };
+    int64 holdTime { 0 };
     
     void resetCurrentValue() { currentValue = threshold; }
 
@@ -153,18 +155,28 @@ struct DecayingValueHolder : ValueHolderBase
 {
     DecayingValueHolder()
     {
-        setDecayRate(3);
+        setDecayRate(0);
     }
+    
+    //get the threshold of the top level
     
     void timerCallback() override
     {
         currentTime = Time::currentTimeMillis();
         elapsedTime = currentTime - peakTime;
         
-        if(elapsedTime >= holdTime)
+        if(!holdINF)
         {
-            currentValue -= decayRate;
+            if(elapsedTime >= holdTime)
+            {
+                currentValue -= decayRate;
+            }
         }
+    }
+    
+    void setHoldTimeINF(bool val)
+    {
+        holdINF = val;
     }
 
     void updateHeldValue(float input)
@@ -186,6 +198,8 @@ private:
     int64 currentTime { 0 };
     int64 elapsedTime { 0 };
     double decayRate { 0 };
+    
+    bool holdINF { false };
 };
 
 
@@ -210,18 +224,55 @@ struct Tick
 struct DBScale : Component
 {
     void paint(Graphics& g) override;
+    void resized() override;
 
     std::vector<Tick> ticks;
     int yOffset = 0;
+    
+    void drawDBBackground(Graphics& g);
+    
+    int w, h;
+    Point<int> center;
+    
+    juce::Image image;
+    
+private:
+    
 };
 
 struct Meter : Component
 {
     void update(float audioValue);
     
+    void setDecayRate(float decay) { decayingValueHolder.setDecayRate(decay); }
+    
+    void setHoldTimeINF(bool val)
+    {
+        decayingValueHolder.setHoldTimeINF(val);
+    }
+    
+    void setHoldTime(float time)
+    {
+//        time *= 1000;
+        decayingValueHolder.setHoldTime((int)(time * 1000));
+    }
+    
+    void resetDecayingValueHolder()
+    {
+        decayingValueHolder.setCurrentValue(NEGATIVE_INFINITY);
+    }
+    
     void paint(Graphics& g) override;
     
     void resized() override;
+    
+    void displayTick()
+    {
+        if(ticksVisible)
+            ticksVisible = false;
+        else
+            ticksVisible = true;
+    }
     
     std::vector<Tick> ticks;
     
@@ -231,5 +282,10 @@ struct Meter : Component
     DecayingValueHolder decayingValueHolder;
     
 private:
+    
+    bool ticksVisible = false;
 
+    void drawMeterGradient(Graphics& g, Rectangle<int> bounds);
+    
+    juce::Image image;
 };

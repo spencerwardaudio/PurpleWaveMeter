@@ -47,6 +47,8 @@ void Goniometer::paint(Graphics& g)
         internalBuffer = _buffer;
     }
     
+    internalBuffer.applyGain(scaler);
+    
     const auto sub3 = Decibels::decibelsToGain(-3.f);
 
 //    get the left channel sample and right channel sample.

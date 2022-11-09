@@ -1,12 +1,3 @@
-/*
-  ==============================================================================
-
-    Histogram.cpp
-    Created: 21 Aug 2022 9:08:31pm
-    Author:  Spencer Ward
-
-  ==============================================================================
-*/
 
 #include "Histogram.h"
 
@@ -18,29 +9,9 @@ Histogram::Histogram(const String& title_) : title( title_ )
     
 void Histogram::paint(Graphics& g)
 {
-    g.setColour(Colours::black);
-    g.fillRect(getLocalBounds());
+    g.drawImage(imagebackground, getLocalBounds().toFloat());
     
-    g.setColour(Colours::orange);
-    g.drawText(title, getLocalBounds().removeFromBottom(40), Justification::centredBottom);
     displayPath(g, getBounds().toFloat());
-    
-    auto xOffset = 30;
-    auto yOffset = 5;
-    
-    auto numTicks = dBScale.ticks.size();
-    
-    g.setColour (juce::Colours::dimgrey);
-    
-    for( int i = 0; i < numTicks; ++i )
-    {
-        if( i % 3 == 0 )
-        {
-            g.drawSingleLineText(juce::String(dBScale.ticks[i].dB), 0, dBScale.ticks[i].y + yOffset, Justification::left);
-            g.drawSingleLineText(juce::String(dBScale.ticks[i].dB), getWidth(), dBScale.ticks[i].y + yOffset, Justification::right);
-            g.drawHorizontalLine(dBScale.ticks[i].y, getX() + xOffset, getWidth() - xOffset);
-        }
-    }
     
     if(dBLevelClip)
     {
@@ -57,17 +28,18 @@ void Histogram::paint(Graphics& g)
 
 void Histogram::resized()
 {
-    buffer.resize(getWidth(), NEG_INF);
-    buffer.clear(NEG_INF);
+    const auto h = getHeight();
+    const auto w = getWidth();
     
-    auto h = getHeight();
+    buffer.resize(w, NEG_INF);
+    buffer.clear(NEG_INF);
     
     dBScale.yOffset = h;
 
     dBScale.setBounds(getX(),
                       getY(),
-                      getHeight(),
-                      getWidth());
+                      h,
+                      w);
     
     dBScale.ticks.clear();
     Tick tck;
@@ -75,12 +47,16 @@ void Histogram::resized()
     for(int i = (int)NEGATIVE_INFINITY; i <= (int)MAX_DECIBELS; i += 6)
     {
         tck.y = jmap(i, (int)NEGATIVE_INFINITY, (int)MAX_DECIBELS, h, 0) + 4;
-        std::cout << tck.y << " : y " << std::endl;
         tck.dB = i;
-        std::cout << tck.dB << " : dB " << std::endl;
         
         dBScale.ticks.push_back(tck);
     }
+    
+    imagebackground = Image(Image::RGB, w, h, true);
+    
+    Graphics backgroundGraphic { imagebackground };
+    
+    drawBackground(backgroundGraphic);
 }
 
 void Histogram::mouseDown(const MouseEvent& e)
@@ -112,14 +88,14 @@ void Histogram::displayPath(Graphics& g, Rectangle<float> bounds)
         Colours::blue.withAlpha(0.8f),
         Colours::whitesmoke.withAlpha(0.8f),
     };
-    
+
     ColourGradient cg;
-    
+
     for(int i = 0; i < colors.size(); ++i)
     {
         cg.addColour((double(i) / double(colors.size() - 1)), colors[i]);
     }
-    
+
     if(!fill.isEmpty())
     {
         cg.point1 = {0, (float)getHeight()};
@@ -188,4 +164,31 @@ void Histogram::setThreshold(float threshAsDecibels)
 {
     threshold = threshAsDecibels;
 }
+
+void Histogram::drawBackground(Graphics& g)
+{
+    g.setColour(Colours::black);
+    g.fillRoundedRectangle(getLocalBounds().toFloat(), 4.0f);
+    
+    g.setColour(Colours::orange);
+    g.drawText(title, getLocalBounds().removeFromBottom(40), Justification::centredBottom);
+    
+    const auto yOffset = 5;
+    const auto lineMargin = 0.075;
+    
+    auto numTicks = dBScale.ticks.size();
+    
+    g.setColour (juce::Colours::dimgrey);
+    
+    for( int i = 0; i < numTicks; ++i )
+    {
+        if( i % 2 == 0 )
+        {
+            g.drawSingleLineText(juce::String(dBScale.ticks[i].dB), 0, dBScale.ticks[i].y + yOffset, Justification::left);
+            g.drawSingleLineText(juce::String(dBScale.ticks[i].dB), getWidth(), dBScale.ticks[i].y + yOffset, Justification::right);
+            g.drawHorizontalLine(dBScale.ticks[i].y, getWidth() * lineMargin, getWidth() - (getWidth() * lineMargin));
+        }
+    }
+}
+
 

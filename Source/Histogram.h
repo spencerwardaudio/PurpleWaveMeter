@@ -29,6 +29,7 @@ struct Histogram : Component
     void setThreshold(float threshAsDecibels);
     
 private:
+    
 
     ReadAllAfterWriteCircularBuffer<float> buffer {float(NEG_INF)};
     Path path;
@@ -39,6 +40,10 @@ private:
                           ReadAllAfterWriteCircularBuffer<float>& buffer,
                           Rectangle<float> bounds);
     
+    void drawBackground(Graphics& g);
+    
+    juce::Image imagebackground;
+    
     const String title;
     
     DBScale dBScale;
@@ -47,3 +52,4 @@ private:
     
     float threshold;
 };
+

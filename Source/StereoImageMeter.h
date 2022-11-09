@@ -19,6 +19,7 @@ struct StereoImageMeter : public Component
     {
         addAndMakeVisible(goniometer);
         addAndMakeVisible(correlationMeter);
+        
     }
     
     void paint();
@@ -38,6 +39,11 @@ struct StereoImageMeter : public Component
     {
         correlationMeter.update();
         goniometer.repaint();
+    }
+    
+    void setGonioScaler(double val)
+    {
+        goniometer.setGonioScaler(val);
     }
     
     private:

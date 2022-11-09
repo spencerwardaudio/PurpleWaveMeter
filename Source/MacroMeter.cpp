@@ -60,7 +60,7 @@ void MacroMeter::update(float levelInDB)
     meterInstant.update(levelInDB);
     
     textMeter.update(levelInDB);
-    
+    // modify so it calls only 100ms
     averageValue.add(levelInDB);
     
     auto avg = averageValue.getAverage();
@@ -83,3 +83,5 @@ void MacroMeter::setThreshold(float threshAsDecibels)
     meterInstant.decayingValueHolder.setThreshold(threshAsDecibels);
     meterAverage.decayingValueHolder.setThreshold(threshAsDecibels);
 }
+
+
