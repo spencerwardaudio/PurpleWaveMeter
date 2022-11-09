@@ -253,8 +253,8 @@ struct Meter : Component
     
     void setHoldTime(float time)
     {
-        time *= 1000;
-        decayingValueHolder.setHoldTime((int)time);
+//        time *= 1000;
+        decayingValueHolder.setHoldTime((int)(time * 1000));
     }
     
     void resetDecayingValueHolder()

@@ -37,6 +37,7 @@ public:
     void resized() override;
     void timerCallback() override;
     void takeHoldVal();
+    void setDecayValue();
 
 private:
 

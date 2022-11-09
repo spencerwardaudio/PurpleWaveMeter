@@ -16,7 +16,7 @@
 
 //==============================================================================
 Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmcpp_project10AudioProcessor& p)
-: AudioProcessorEditor (&p), processor (p), stereoImageMeter(editorBuffer, p.getSampleRate())
+: AudioProcessorEditor (&p), stereoImageMeter(editorBuffer, p.getSampleRate()), processor(p)
 {
     editorBuffer.setSize(2, processor.maxBufferSize);
     editorBuffer.clear();
@@ -33,12 +33,8 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
     
     meterControlColumnL.decayRateControl.onChange = [this]()
     {
-//        StereoMeter RMS & Peak
-        juce::String value = meterControlColumnL.decayRateControl.getText();
-        float decay = value.dropLastCharacters(4).getFloatValue();
-        
-        stereoMeterRMS.setDecayRate(std::abs(decay));
-        stereoMeterPk.setDecayRate(std::abs(decay));
+//        StereoMeter RMS & Peak Decay
+        setDecayValue();
     };
     
     meterControlColumnL.avgControl.onChange = [this]()
@@ -124,6 +120,8 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
     meterControlColumnR.holdControl.onChange = [this]()
     {
         takeHoldVal();
+        
+        setDecayValue();
     };
     
     //TODO reset the DecayingValueHolder's internal values to NEGATIVE_INFINITY
@@ -237,6 +235,8 @@ void Pfmcpp_project10AudioProcessorEditor::takeHoldVal()
         
         stereoMeterRMS.setHoldTimeINF(true);
         stereoMeterPk.setHoldTimeINF(true);
+        
+        return;
     }
     else
     {
@@ -250,3 +250,16 @@ void Pfmcpp_project10AudioProcessorEditor::takeHoldVal()
     stereoMeterRMS.setHoldTime(valInSeconds);
     stereoMeterPk.setHoldTime(valInSeconds);
 }
+
+
+void Pfmcpp_project10AudioProcessorEditor::setDecayValue()
+{
+    //        StereoMeter RMS & Peak Decay
+    juce::String value = meterControlColumnL.decayRateControl.getText();
+    float decay = value.dropLastCharacters(4).getFloatValue();
+
+    stereoMeterRMS.setDecayRate(std::abs(decay));
+    stereoMeterPk.setDecayRate(std::abs(decay));
+}
+
+
