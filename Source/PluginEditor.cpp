@@ -68,11 +68,11 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
         
         if(ID == 1)
         {
-            histogramContainer.align(0);
+            histogramContainer.align(Formation::column);
         }
         else if (ID == 2)
         {
-            histogramContainer.align(1);
+            histogramContainer.align(Formation::row);
         }
     };
     

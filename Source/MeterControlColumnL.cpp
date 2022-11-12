@@ -19,38 +19,29 @@ MeterControlColumnL::MeterControlColumnL() :
     decayLabel.setColour (juce::Label::textColourId, TEXT_COLOUR);
     addAndMakeVisible(decayLabel);
     
-    addAndMakeVisible(decayRateControl);
-    decayRateControl.setLookAndFeel(&scalerLookAndFeel);
-    decayRateControl.addItem("-3dB/s", 1);
-    decayRateControl.addItem("-6dB/s", 2);
-    decayRateControl.addItem("-12dB/s", 3);
-    decayRateControl.addItem("-24dB/s", 4);
-    decayRateControl.addItem("-36dB/s", 5);
+    decayRateControl.addItemList( {"-3dB/s", "-6dB/s", "-12dB/s", "-24dB/s", "-36dB/s" }, 1);
     decayRateControl.setSelectedId(1);
+    decayRateControl.setLookAndFeel(&scalerLookAndFeel);
+    addAndMakeVisible(decayRateControl);
     
     avgLabel.setFont(20.0);
     avgLabel.setColour (juce::Label::textColourId, TEXT_COLOUR);
     addAndMakeVisible(avgLabel);
     
-    addAndMakeVisible(avgControl);
-    avgControl.setLookAndFeel(&scalerLookAndFeel);
-    avgControl.addItem("100ms", 1);
-    avgControl.addItem("250ms", 2);
-    avgControl.addItem("500ms", 3);
-    avgControl.addItem("1000ms", 4);
-    avgControl.addItem("2000ms", 5);
+    avgControl.addItemList( {"100ms", "250ms", "500ms", "1000ms", "2000ms" }, 1);
     avgControl.setSelectedId(1);
+    avgControl.setLookAndFeel(&scalerLookAndFeel);
+    addAndMakeVisible(avgControl);
     
     meterLabel.setFont(20.0);
     meterLabel.setColour (juce::Label::textColourId, TEXT_COLOUR);
     addAndMakeVisible(meterLabel);
     
-    addAndMakeVisible(meterControl);
-    meterControl.setLookAndFeel(&scalerLookAndFeel);
-    meterControl.addItem("Both", 1);
-    meterControl.addItem("Peak", 2);
-    meterControl.addItem("Avg", 3);
+
+    meterControl.addItemList( {"Both", "Peak", "Avg" }, 1);
     meterControl.setSelectedId(1);
+    meterControl.setLookAndFeel(&scalerLookAndFeel);
+    addAndMakeVisible(meterControl);
 }
 
 

@@ -26,14 +26,9 @@ MeterControlColumnR::MeterControlColumnR() :
     enableHoldButton.setColour(ComboBox::outlineColourId, TEXT_COLOUR);
     addAndMakeVisible(enableHoldButton);
     
-    holdControl.setLookAndFeel(&scalerLookAndFeel);
-    holdControl.addItem("0s", 1);
-    holdControl.addItem("0.5s", 2);
-    holdControl.addItem("2s", 3);
-    holdControl.addItem("4s", 4);
-    holdControl.addItem("6s", 5);
-    holdControl.addItem("inf", 6);
+    holdControl.addItemList( {"0s", "0.5s", "2s", "4s", "6s", "inf" }, 1);
     holdControl.setSelectedId(1);
+    holdControl.setLookAndFeel(&scalerLookAndFeel);
     addAndMakeVisible(holdControl);
     holdControl.setVisible(false);
     
@@ -44,12 +39,11 @@ MeterControlColumnR::MeterControlColumnR() :
     histLabel.setFont(20.0);
     histLabel.setColour (juce::Label::textColourId, TEXT_COLOUR);
     addAndMakeVisible(histLabel);
-    
-    addAndMakeVisible(histControl);
-    histControl.setLookAndFeel(&scalerLookAndFeel);
-    histControl.addItem("Stacked", 1);
-    histControl.addItem("Side-by-Side", 2);
+
+    histControl.addItemList( { "Stacked", "Side-by-Side" }, 1);
     histControl.setSelectedId(1);
+    histControl.setLookAndFeel(&scalerLookAndFeel);
+    addAndMakeVisible(histControl);
 }
 
 
