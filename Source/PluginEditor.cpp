@@ -31,10 +31,25 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
     addAndMakeVisible(meterControlColumnL);
     addAndMakeVisible(meterControlColumnR);
     
+    meterControlColumnL.decayRateControl.getSelectedIdAsValue().referTo(processor.valueTree.getPropertyAsValue("decayRate", &processor.undoManager, true));
+    
+    meterControlColumnL.avgControl.getSelectedIdAsValue().referTo(processor.valueTree.getPropertyAsValue("averageTime", &processor.undoManager, true));
+    
+    meterControlColumnL.meterControl.getSelectedIdAsValue().referTo(processor.valueTree.getPropertyAsValue("meterView", &processor.undoManager, true));
+    
+
+    meterControlColumnL.decayRateControl.setSelectedId(1);
+    meterControlColumnL.avgControl.setSelectedId(1);
+    meterControlColumnL.meterControl.setSelectedId(1);
+    
+    DBG(processor.valueTree.getNumProperties());
+    
     meterControlColumnL.decayRateControl.onChange = [this]()
     {
 //        StereoMeter RMS & Peak Decay
         setDecayValue();
+
+        DBG(processor.valueTree.toXmlString());
     };
     
     meterControlColumnL.avgControl.onChange = [this]()
@@ -44,6 +59,8 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
         
         stereoMeterRMS.setAverageDuration(avgVal, TimerMS);
         stereoMeterPk.setAverageDuration(avgVal, TimerMS);
+        
+        DBG(processor.valueTree.toXmlString());
     };
     
     meterControlColumnL.meterControl.onChange = [this]()
@@ -52,6 +69,8 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
     
         stereoMeterRMS.setMeterVisibility(ID);
         stereoMeterPk.setMeterVisibility(ID);
+        
+        DBG(processor.valueTree.toXmlString());
     };
     
     meterControlColumnR.scaleControl.onValueChange = [this]()

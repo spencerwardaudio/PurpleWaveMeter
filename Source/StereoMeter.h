@@ -24,7 +24,7 @@ public:
         setColour (juce::Slider::backgroundColourId, juce::Colours::transparentBlack);
         setColour (juce::Slider::trackColourId, juce::Colours::transparentBlack);
     }
-    
+
     void drawLinearSlider(Graphics& g, int x, int y, int width, int height,
                           float sliderPos,
                           float minSliderPos,

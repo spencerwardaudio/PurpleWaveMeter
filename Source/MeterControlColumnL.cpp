@@ -36,7 +36,6 @@ MeterControlColumnL::MeterControlColumnL() :
     meterLabel.setFont(20.0);
     meterLabel.setColour (juce::Label::textColourId, TEXT_COLOUR);
     addAndMakeVisible(meterLabel);
-    
 
     meterControl.addItemList( {"Both", "Peak", "Avg" }, 1);
     meterControl.setSelectedId(1);

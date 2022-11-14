@@ -20,14 +20,31 @@ Pfmcpp_project10AudioProcessor::Pfmcpp_project10AudioProcessor()
                       #endif
                        .withOutput ("Output", AudioChannelSet::stereo(), true)
                      #endif
-                       )
+                       ), valueTree("parameter")
 #endif
 {
+    static juce::Identifier parameter ("Params"); // pre-create an Identifier
+    juce::ValueTree valueTree (parameter);           // This is a valid node, of type "MyNode"
+    
+    static juce::Identifier decayRate ("decayRate");
+    valueTree.setProperty (decayRate, "-3dB/s", &undoManager);
+    DBG(valueTree.toXmlString());
+    
+    static juce::Identifier averageTime ("averageTime");
+    valueTree.setProperty (averageTime, "100ms", &undoManager);
+    DBG(valueTree.toXmlString());
+    
+    static juce::Identifier meterView ("meterView");
+    valueTree.setProperty (meterView, "Both", &undoManager);
+    DBG(valueTree.toXmlString());
+    
 
+    
 }
 
 Pfmcpp_project10AudioProcessor::~Pfmcpp_project10AudioProcessor()
 {
+//    valueTree.setRootItem (nullptr);
 }
 
 //==============================================================================
@@ -190,12 +207,41 @@ void Pfmcpp_project10AudioProcessor::getStateInformation (MemoryBlock& destData)
     // You should use this method to store your parameters in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
     // as intermediaries to make it easy to save and load complex data.
+    
+//    juce::String name (valueTree.getProperty (propertyName));
+
+//    valueTree.getParent().
+//    std::unique_ptr<juce::XmlElement> xml (valueTree.createXml());
+//    copyXmlToBinary (*xml, destData);
+    std::unique_ptr<XmlElement> xml(valueTree.createXml());
+    copyXmlToBinary(*xml, destData);
+
+    int numProperties = valueTree.getNumProperties();
+    DBG(numProperties);
+    DBG(valueTree.toXmlString() << " getting values out");
+    
 }
 
 void Pfmcpp_project10AudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     // You should use this method to restore your parameters from this memory block,
-    // whose contents will have been created by the getStateInformation() call.
+//    // whose contents will have been created by the getStateInformation() call.
+
+//    if( valueTree.isValid() && hasNeedProperties(valueTree))
+//    {
+//        state = valueTree;
+//    }
+//    valueTree.setProperty("decayControl", label.getText(), &undoMan);
+    std::unique_ptr<juce::XmlElement> xml(getXmlFromBinary (data, sizeInBytes));
+
+    if (xml.get() != nullptr)
+        if (xml->hasTagName (valueTree.getType()))
+            valueTree.copyPropertiesFrom((juce::ValueTree::fromXml (*xml)), &undoManager);
+    
+    static juce::Identifier propertyName ("name");
+    valueTree.setProperty (propertyName, "Fluffmuff", nullptr);
+    DBG(valueTree.toXmlString());
+    
 }
 
 //==============================================================================

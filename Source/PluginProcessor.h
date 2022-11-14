@@ -13,7 +13,7 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "Fifo.h"
 
-#define VerifyDbScale  true
+#define VerifyDbScale  false
 
 class Pfmcpp_project10AudioProcessor  : public AudioProcessor
 {
@@ -55,6 +55,9 @@ public:
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
     
+    ValueTree valueTree;
+    UndoManager undoManager;
+
     Fifo<AudioBuffer<float>> fifo;
     int maxBufferSize {};
     
