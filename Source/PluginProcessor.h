@@ -55,8 +55,7 @@ public:
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
     
-    ValueTree valueTree;
-    UndoManager undoManager;
+    ValueTree valueTree {"parameter"};
 
     Fifo<AudioBuffer<float>> fifo;
     int maxBufferSize {};

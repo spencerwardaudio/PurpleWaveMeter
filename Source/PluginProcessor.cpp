@@ -20,26 +20,27 @@ Pfmcpp_project10AudioProcessor::Pfmcpp_project10AudioProcessor()
                       #endif
                        .withOutput ("Output", AudioChannelSet::stereo(), true)
                      #endif
-                       ), valueTree("parameter")
+                       )
 #endif
 {
-    static juce::Identifier parameter ("Params"); // pre-create an Identifier
+    juce::Identifier parameter ("Params"); // pre-create an Identifier
     juce::ValueTree valueTree (parameter);           // This is a valid node, of type "MyNode"
     
-    static juce::Identifier decayRate ("decayRate");
-    valueTree.setProperty (decayRate, "-3dB/s", &undoManager);
+    juce::Identifier decayRate ("decayRate");
+    valueTree.setProperty (decayRate, "-3dB/s", nullptr);
     DBG(valueTree.toXmlString());
     
-    static juce::Identifier averageTime ("averageTime");
-    valueTree.setProperty (averageTime, "100ms", &undoManager);
+    juce::Identifier averageTime ("averageTime");
+    valueTree.setProperty (averageTime, "100ms", nullptr);
     DBG(valueTree.toXmlString());
     
-    static juce::Identifier meterView ("meterView");
-    valueTree.setProperty (meterView, "Both", &undoManager);
+    juce::Identifier meterView ("meterView");
+    valueTree.setProperty (meterView, "Both", nullptr);
     DBG(valueTree.toXmlString());
-    
 
-    
+    int numProperties = valueTree.getNumProperties();
+    DBG(numProperties);
+    DBG(valueTree.toXmlString() << " getting values out");
 }
 
 Pfmcpp_project10AudioProcessor::~Pfmcpp_project10AudioProcessor()
@@ -207,10 +208,21 @@ void Pfmcpp_project10AudioProcessor::getStateInformation (MemoryBlock& destData)
     // You should use this method to store your parameters in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
     // as intermediaries to make it easy to save and load complex data.
+    
+    File resourceFile = File::getCurrentWorkingDirectory().getChildFile ("pluginState.txt");
+    
+    TemporaryFile tempFile (resourceFile);
 
-    std::unique_ptr<XmlElement> xml(valueTree.createXml());
-    copyXmlToBinary(*xml, destData);
+    FileOutputStream output (tempFile.getFile());
 
+    if (! output.openedOk())
+    {
+        DBG ("FileOutputStream didn't open correctly ...");
+        // ... some other error handling
+    }
+    
+    valueTree.writeToStream(output);
+    
     int numProperties = valueTree.getNumProperties();
     DBG(numProperties);
     DBG(valueTree.toXmlString() << " getting values out");
@@ -219,20 +231,20 @@ void Pfmcpp_project10AudioProcessor::getStateInformation (MemoryBlock& destData)
 
 void Pfmcpp_project10AudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-
-//    if( valueTree.isValid() && hasNeedProperties(valueTree))
-//    {
-//        state = valueTree;
-//    }
-
-    std::unique_ptr<juce::XmlElement> xml(getXmlFromBinary (data, sizeInBytes));
-
-    if (xml.get() != nullptr)
-        if (xml->hasTagName (valueTree.getType()))
-            valueTree.copyPropertiesFrom((juce::ValueTree::fromXml (*xml)), &undoManager);
+    File resourceFile = File::getCurrentWorkingDirectory().getChildFile ("pluginState.txt");
     
+    TemporaryFile tempFile (resourceFile);
+    
+    FileInputStream input (tempFile.getFile());
+
+    ValueTree newValueTree (ValueTree::readFromStream(input));
+
+    if(valueTree.isValid())
+    {
+        valueTree = newValueTree;
+    }
+
     DBG(valueTree.toXmlString());
-    
 }
 
 //==============================================================================

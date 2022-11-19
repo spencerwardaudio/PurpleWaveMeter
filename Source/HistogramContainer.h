@@ -12,9 +12,9 @@
 
 #include "Histogram.h"
 
-enum Formation
+enum class Formation
 {
-    row = 1,
+    row,
     column
 };
 
