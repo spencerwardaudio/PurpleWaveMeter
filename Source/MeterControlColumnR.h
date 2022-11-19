@@ -17,6 +17,7 @@
 struct MeterControlColumnR : public Component
 {
     MeterControlColumnR();
+    ~MeterControlColumnR();
     
     void paint (Graphics& g) override;
     void resized() override;

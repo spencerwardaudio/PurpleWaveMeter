@@ -46,6 +46,11 @@ MeterControlColumnR::MeterControlColumnR() :
     addAndMakeVisible(histControl);
 }
 
+MeterControlColumnR::~MeterControlColumnR()
+{
+    setLookAndFeel(nullptr);
+}
+
 
 void MeterControlColumnR::paint (Graphics& g)
 {

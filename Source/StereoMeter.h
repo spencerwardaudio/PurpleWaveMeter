@@ -24,7 +24,7 @@ public:
         setColour (juce::Slider::backgroundColourId, juce::Colours::transparentBlack);
         setColour (juce::Slider::trackColourId, juce::Colours::transparentBlack);
     }
-
+    
     void drawLinearSlider(Graphics& g, int x, int y, int width, int height,
                           float sliderPos,
                           float minSliderPos,
@@ -41,6 +41,7 @@ public:
 struct StereoMeter : Component
 {
     StereoMeter(const String MeterName);
+    ~StereoMeter();
     
     //provide setters for updating
     void update(int channel, float levelInDB);

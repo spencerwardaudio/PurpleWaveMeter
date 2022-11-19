@@ -43,6 +43,11 @@ MeterControlColumnL::MeterControlColumnL() :
     addAndMakeVisible(meterControl);
 }
 
+MeterControlColumnL::~MeterControlColumnL()
+{
+    setLookAndFeel(nullptr);
+}
+
 
 void MeterControlColumnL::paint (Graphics& g)
 {
