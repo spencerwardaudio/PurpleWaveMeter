@@ -37,7 +37,7 @@ StereoMeter::StereoMeter(const String MeterName) : labelLR( MeterName, MeterName
 
 StereoMeter::~StereoMeter()
 {
-    setLookAndFeel(nullptr);
+    thresholdSlider.setLookAndFeel(nullptr);
 }
 
 void StereoMeter::update(int channel, float levelInDB)

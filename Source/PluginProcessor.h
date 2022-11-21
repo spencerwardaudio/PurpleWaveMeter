@@ -13,7 +13,7 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "Fifo.h"
 
-#define VerifyDbScale  false
+#define VerifyDbScale  false 
 
 class Pfmcpp_project10AudioProcessor  : public AudioProcessor
 {

@@ -45,6 +45,9 @@ MeterControlColumnL::MeterControlColumnL() :
 
 MeterControlColumnL::~MeterControlColumnL()
 {
+    decayRateControl.setLookAndFeel(nullptr);
+    avgControl.setLookAndFeel(nullptr);
+    meterControl.setLookAndFeel(nullptr);
     setLookAndFeel(nullptr);
 }
 

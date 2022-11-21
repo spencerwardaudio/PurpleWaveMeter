@@ -28,19 +28,19 @@ Pfmcpp_project10AudioProcessor::Pfmcpp_project10AudioProcessor()
     
     juce::Identifier decayRate ("decayRate");
     valueTree.setProperty (decayRate, "-3dB/s", nullptr);
-    DBG(valueTree.toXmlString());
+//    DBG(valueTree.toXmlString());
     
     juce::Identifier averageTime ("averageTime");
     valueTree.setProperty (averageTime, "100ms", nullptr);
-    DBG(valueTree.toXmlString());
+//    DBG(valueTree.toXmlString());
     
     juce::Identifier meterView ("meterView");
     valueTree.setProperty (meterView, "Both", nullptr);
-    DBG(valueTree.toXmlString());
+//    DBG(valueTree.toXmlString());
 
     int numProperties = valueTree.getNumProperties();
-    DBG(numProperties);
-    DBG(valueTree.toXmlString() << " getting values out");
+//    DBG(numProperties);
+//    DBG(valueTree.toXmlString() << " getting values out");
 }
 
 Pfmcpp_project10AudioProcessor::~Pfmcpp_project10AudioProcessor()
@@ -205,46 +205,54 @@ AudioProcessorEditor* Pfmcpp_project10AudioProcessor::createEditor()
 //==============================================================================
 void Pfmcpp_project10AudioProcessor::getStateInformation (MemoryBlock& destData)
 {
-    // You should use this method to store your parameters in the memory block.
-    // You could do that either as raw data, or use the XML or ValueTree classes
-    // as intermediaries to make it easy to save and load complex data.
+    //    void YourAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
+    //    {
+    //        // You should use this method to store your parameters in the memory block.
+    //        // You could do that either as raw data, or use the XML or ValueTree classes
+    //        // as intermediaries to make it easy to save and load complex data.
+    juce::MemoryOutputStream mos(destData, true);
     
-    File resourceFile = File::getCurrentWorkingDirectory().getChildFile ("pluginState.txt");
     
-    TemporaryFile tempFile (resourceFile);
+//    auto val = valueTree.getPropertyAsValue("decayRate", nullptr);
+    valueTree.writeToStream(mos);
+ 
+//            valueTree.writeToStream(mos);
+    
+//    valueTree.getProperty("decayRate", -12dB).writeToStream(mos);
+//    valueTree.setProperty ("decayRate", "-12dB/s", nullptr);
+            
+//            int numProperties = valueTree.getNumProperties();
+//            DBG(numProperties);
+//            DBG(valueTree.toXmlString() << " getting values out");
+    
+    DBG("getStateInformation called");
+    
 
-    FileOutputStream output (tempFile.getFile());
-
-    if (! output.openedOk())
-    {
-        DBG ("FileOutputStream didn't open correctly ...");
-        // ... some other error handling
-    }
-    
-    valueTree.writeToStream(output);
-    
-    int numProperties = valueTree.getNumProperties();
-    DBG(numProperties);
-    DBG(valueTree.toXmlString() << " getting values out");
-    
 }
 
 void Pfmcpp_project10AudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    File resourceFile = File::getCurrentWorkingDirectory().getChildFile ("pluginState.txt");
-    
-    TemporaryFile tempFile (resourceFile);
-    
-    FileInputStream input (tempFile.getFile());
 
-    ValueTree newValueTree (ValueTree::readFromStream(input));
+    
+    //    void YourAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
+    //    {
+    //        // You should use this method to restore your parameters from this memory block,
+    //        // whose contents will have been created by the getStateInformation() call.
+    //        auto tree = juce::ValueTree::readFromData(data, static_cast<size_t>(sizeInBytes));
+    //        if( tree.isValid() )
+    //            yourValueTreeMemberVariable = tree;
+    
+    auto tree = ValueTree::readFromData(data, static_cast<size_t>(sizeInBytes));
 
-    if(valueTree.isValid())
+    if(tree.isValid())
     {
-        valueTree = newValueTree;
+        valueTree.copyPropertiesFrom(tree, nullptr);
+        DBG("copyPropertiesToTree called");
     }
+    
 
-    DBG(valueTree.toXmlString());
+
+
 }
 
 //==============================================================================

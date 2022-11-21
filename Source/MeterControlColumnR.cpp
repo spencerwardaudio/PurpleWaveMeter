@@ -48,6 +48,11 @@ MeterControlColumnR::MeterControlColumnR() :
 
 MeterControlColumnR::~MeterControlColumnR()
 {
+    scaleControl.setLookAndFeel(nullptr);
+    holdControl.setLookAndFeel(nullptr);
+    resetHoldButton.setLookAndFeel(nullptr);
+    histControl.setLookAndFeel(nullptr);
+    
     setLookAndFeel(nullptr);
 }
 
