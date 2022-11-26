@@ -38,7 +38,7 @@ Pfmcpp_project10AudioProcessor::Pfmcpp_project10AudioProcessor()
     valueTree.setProperty (meterView, "Both", nullptr);
 //    DBG(valueTree.toXmlString());
 
-    int numProperties = valueTree.getNumProperties();
+//    int numProperties = valueTree.getNumProperties();
 //    DBG(numProperties);
 //    DBG(valueTree.toXmlString() << " getting values out");
 }
@@ -205,54 +205,26 @@ AudioProcessorEditor* Pfmcpp_project10AudioProcessor::createEditor()
 //==============================================================================
 void Pfmcpp_project10AudioProcessor::getStateInformation (MemoryBlock& destData)
 {
-    //    void YourAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
-    //    {
-    //        // You should use this method to store your parameters in the memory block.
-    //        // You could do that either as raw data, or use the XML or ValueTree classes
-    //        // as intermediaries to make it easy to save and load complex data.
     juce::MemoryOutputStream mos(destData, true);
     
-    
-//    auto val = valueTree.getPropertyAsValue("decayRate", nullptr);
     valueTree.writeToStream(mos);
- 
-//            valueTree.writeToStream(mos);
-    
-//    valueTree.getProperty("decayRate", -12dB).writeToStream(mos);
-//    valueTree.setProperty ("decayRate", "-12dB/s", nullptr);
-            
-//            int numProperties = valueTree.getNumProperties();
-//            DBG(numProperties);
-//            DBG(valueTree.toXmlString() << " getting values out");
     
     DBG("getStateInformation called");
     
-
+    DBG(valueTree.toXmlString());
 }
 
 void Pfmcpp_project10AudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-
-    
-    //    void YourAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
-    //    {
-    //        // You should use this method to restore your parameters from this memory block,
-    //        // whose contents will have been created by the getStateInformation() call.
-    //        auto tree = juce::ValueTree::readFromData(data, static_cast<size_t>(sizeInBytes));
-    //        if( tree.isValid() )
-    //            yourValueTreeMemberVariable = tree;
-    
     auto tree = ValueTree::readFromData(data, static_cast<size_t>(sizeInBytes));
 
     if(tree.isValid())
     {
-        valueTree.copyPropertiesFrom(tree, nullptr);
-        DBG("copyPropertiesToTree called");
+        valueTree = tree;
+        DBG("setStateInformation called");
     }
     
-
-
-
+    DBG(valueTree.toXmlString());
 }
 
 //==============================================================================

@@ -41,7 +41,7 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
     meterControlColumnL.avgControl.setSelectedId(1);
     meterControlColumnL.meterControl.setSelectedId(1);
     
-    DBG(processor.valueTree.getNumProperties());
+//    DBG(processor.valueTree.getNumProperties());
     
     meterControlColumnL.decayRateControl.onChange = [this]()
     {
@@ -59,7 +59,7 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
         stereoMeterRMS.setAverageDuration(avgVal, TimerMS);
         stereoMeterPk.setAverageDuration(avgVal, TimerMS);
         
-        DBG(processor.valueTree.toXmlString());
+//        DBG(processor.valueTree.toXmlString());
     };
     
     meterControlColumnL.meterControl.onChange = [this]()
@@ -69,7 +69,7 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
         stereoMeterRMS.setMeterVisibility(ID);
         stereoMeterPk.setMeterVisibility(ID);
         
-        DBG(processor.valueTree.toXmlString());
+//        DBG(processor.valueTree.toXmlString());
     };
     
     meterControlColumnR.scaleControl.onValueChange = [this]()
@@ -172,6 +172,7 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
 
 Pfmcpp_project10AudioProcessorEditor::~Pfmcpp_project10AudioProcessorEditor()
 {
+    setLookAndFeel(nullptr);
     stopTimer();
 }
 
