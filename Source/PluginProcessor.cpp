@@ -23,24 +23,36 @@ Pfmcpp_project10AudioProcessor::Pfmcpp_project10AudioProcessor()
                        )
 #endif
 {
-    juce::Identifier parameter ("Params"); // pre-create an Identifier
-    juce::ValueTree valueTree (parameter);           // This is a valid node, of type "MyNode"
+    juce::Identifier parameter ("Params");
+    juce::ValueTree valueTree (parameter);
     
     juce::Identifier decayRate ("decayRate");
-    valueTree.setProperty (decayRate, "-3dB/s", nullptr);
-//    DBG(valueTree.toXmlString());
+    valueTree.setProperty (decayRate, 1, nullptr);
     
     juce::Identifier averageTime ("averageTime");
-    valueTree.setProperty (averageTime, "100ms", nullptr);
-//    DBG(valueTree.toXmlString());
+    valueTree.setProperty (averageTime, "100", nullptr);
     
     juce::Identifier meterView ("meterView");
     valueTree.setProperty (meterView, "Both", nullptr);
-//    DBG(valueTree.toXmlString());
-
-//    int numProperties = valueTree.getNumProperties();
-//    DBG(numProperties);
-//    DBG(valueTree.toXmlString() << " getting values out");
+    
+    juce::Identifier goniometerScale ("goniometerScale");
+    valueTree.setProperty (goniometerScale, "0", nullptr);
+    
+    juce::Identifier enableHold ("enableHold");
+    valueTree.setProperty (enableHold, "false", nullptr);
+    
+    juce::Identifier holdTime ("holdTime");
+    valueTree.setProperty (holdTime, "0s", nullptr);
+    
+    juce::Identifier histogramView ("histogramView");
+    valueTree.setProperty (histogramView, "Stacked", nullptr);
+    
+    juce::Identifier peakThreshold ("peakThreshold");
+    valueTree.setProperty (peakThreshold, "0", nullptr);
+    
+    juce::Identifier rmsThreshold ("rmsThreshold");
+    valueTree.setProperty (rmsThreshold, "0", nullptr);
+    DBG(valueTree.toXmlString());
 }
 
 Pfmcpp_project10AudioProcessor::~Pfmcpp_project10AudioProcessor()
