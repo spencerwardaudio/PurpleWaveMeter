@@ -27,31 +27,31 @@ Pfmcpp_project10AudioProcessor::Pfmcpp_project10AudioProcessor()
     juce::ValueTree valueTree (parameter);
     
     juce::Identifier decayRate ("decayRate");
-    valueTree.setProperty (decayRate, 1, nullptr);
+    valueTree.setProperty (decayRate, 2, nullptr);
     
-    juce::Identifier averageTime ("averageTime");
-    valueTree.setProperty (averageTime, "100", nullptr);
-    
-    juce::Identifier meterView ("meterView");
-    valueTree.setProperty (meterView, "Both", nullptr);
-    
-    juce::Identifier goniometerScale ("goniometerScale");
-    valueTree.setProperty (goniometerScale, "0", nullptr);
-    
-    juce::Identifier enableHold ("enableHold");
-    valueTree.setProperty (enableHold, "false", nullptr);
-    
-    juce::Identifier holdTime ("holdTime");
-    valueTree.setProperty (holdTime, "0s", nullptr);
-    
-    juce::Identifier histogramView ("histogramView");
-    valueTree.setProperty (histogramView, "Stacked", nullptr);
-    
-    juce::Identifier peakThreshold ("peakThreshold");
-    valueTree.setProperty (peakThreshold, "0", nullptr);
-    
-    juce::Identifier rmsThreshold ("rmsThreshold");
-    valueTree.setProperty (rmsThreshold, "0", nullptr);
+//    juce::Identifier averageTime ("averageTime");
+//    valueTree.setProperty (averageTime, 1, nullptr);
+//    
+//    juce::Identifier meterView ("meterView");
+//    valueTree.setProperty (meterView, 1, nullptr);
+//    
+////    juce::Identifier goniometerScale ("goniometerScale");
+////    valueTree.setProperty (goniometerScale, "0", nullptr);
+//    
+//    juce::Identifier enableHold ("enableHold");
+//    valueTree.setProperty (enableHold, 1, nullptr);
+//    
+////    juce::Identifier holdTime ("holdTime");
+////    valueTree.setProperty (holdTime, "0s", nullptr);
+//    
+//    juce::Identifier histogramView ("histogramView");
+//    valueTree.setProperty (histogramView, 1, nullptr);
+//    
+////    juce::Identifier peakThreshold ("peakThreshold");
+////    valueTree.setProperty (peakThreshold, "0", nullptr);
+//    
+////    juce::Identifier rmsThreshold ("rmsThreshold");
+////    valueTree.setProperty (rmsThreshold, "0", nullptr);
     DBG(valueTree.toXmlString());
 }
 
