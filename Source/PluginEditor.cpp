@@ -31,43 +31,75 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
     addAndMakeVisible(meterControlColumnL);
     addAndMakeVisible(meterControlColumnR);
     
-    DBG(processor.valueTree.getPropertyAsValue("decayRate", nullptr).getValue().toString());
-    
     meterControlColumnL.decayRateControl.getSelectedIdAsValue().referTo(processor.valueTree.getPropertyAsValue("decayRate", nullptr));
+
+    int i = processor.valueTree.getPropertyAsValue("decayRate", nullptr).getValue();
+
+    if(i == 0)
+        i = 1;
+
+    meterControlColumnL.decayRateControl.setSelectedId(i);
     
-    DBG(processor.valueTree.getPropertyAsValue("decayRate", nullptr).getValue().toString());
-//    
-//    int i = processor.valueTree.getPropertyAsValue("decayRate", nullptr).getValue();
-//
-//    if(i == 0)
-//        i = 1;
-//
-//    meterControlColumnL.decayRateControl.setSelectedId(i);
-//
-//    meterControlColumnL.avgControl.getSelectedIdAsValue().referTo(processor.valueTree.getPropertyAsValue("averageTime", nullptr, true));
-//
-////    int i = processor.valueTree.getPropertyAsValue("averageTime", nullptr).getValue();
-////
-////    if(i == 0)
-////        i = 1;
-////
-////    meterControlColumnL.avgControl.setSelectedId(i);
-//
-//    meterControlColumnL.meterControl.getSelectedIdAsValue().referTo(processor.valueTree.getPropertyAsValue("meterView", nullptr, true));
-//
-//    int i = processor.valueTree.getPropertyAsValue("meterView", nullptr).getValue();
-//
-//    if(i == 0)
-//        i = 1;
-//
-//    meterControlColumnL.meterControl.setSelectedId(i);
+    meterControlColumnL.avgControl.getSelectedIdAsValue().referTo(processor.valueTree.getPropertyAsValue("averageTime", nullptr, true));
+    
+    i = processor.valueTree.getPropertyAsValue("averageTime", nullptr).getValue();
+
+    if(i == 0)
+        i = 1;
+
+    meterControlColumnL.avgControl.setSelectedId(i);
+    
+     meterControlColumnL.meterControl.getSelectedIdAsValue().referTo(processor.valueTree.getPropertyAsValue("meterView", nullptr, true));
+
+    i = processor.valueTree.getPropertyAsValue("meterView", nullptr).getValue();
+
+    if(i == 0)
+        i = 1;
+
+    meterControlColumnL.meterControl.setSelectedId(i);
+    
+    meterControlColumnR.scaleControl.getValueObject().referTo(processor.valueTree.getPropertyAsValue("goniometerScale", nullptr, true));
+
+    i = processor.valueTree.getPropertyAsValue("goniometerScale", nullptr).getValue();
+
+    meterControlColumnR.scaleControl.setValue(i);
+    
+    meterControlColumnR.enableHoldButton.getToggleStateValue().referTo(processor.valueTree.getPropertyAsValue("enableHold", nullptr));
+    
+    meterControlColumnR.holdControl.getSelectedIdAsValue().referTo(processor.valueTree.getPropertyAsValue("holdTime", nullptr, true));
+
+   i = processor.valueTree.getPropertyAsValue("holdTime", nullptr).getValue();
+
+   if(i == 0)
+       i = 1;
+
+    meterControlColumnR.holdControl.setSelectedId(i);
+    
+    meterControlColumnR.histControl.getSelectedIdAsValue().referTo(processor.valueTree.getPropertyAsValue("histogramView", nullptr, true));
+    
+    i = processor.valueTree.getPropertyAsValue("histogramView", nullptr).getValue();
+
+    if(i == 0)
+        i = 1;
+
+     meterControlColumnR.histControl.setSelectedId(i);
+    
+    stereoMeterPk.thresholdSlider.getValueObject().referTo(processor.valueTree.getPropertyAsValue("peakThreshold", nullptr, true));
+
+    double z = processor.valueTree.getPropertyAsValue("peakThreshold", nullptr).getValue();
+
+    stereoMeterPk.thresholdSlider.setValue(z);
+    
+    stereoMeterRMS.thresholdSlider.getValueObject().referTo(processor.valueTree.getPropertyAsValue("rmsThreshold", nullptr, true));
+
+    z = processor.valueTree.getPropertyAsValue("rmsThreshold", nullptr).getValue();
+
+    stereoMeterRMS.thresholdSlider.setValue(z);
     
     meterControlColumnL.decayRateControl.onChange = [this]()
     {
 //        StereoMeter RMS & Peak Decay
         setDecayValue();
-//
-//        DBG("decayRate change: " << processor.valueTree.toXmlString());
     };
     
     meterControlColumnL.avgControl.onChange = [this]()
@@ -113,37 +145,48 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
         }
     };
     
-    meterControlColumnR.enableHoldButton.onStateChange = [this]()
+    meterControlColumnR.enableHoldButton.onClick = [this]()
     {
-        if(meterControlColumnR.enableHoldButton.getState() == Button::ButtonState::buttonDown)
-        {
-            stereoMeterPk.displayTick();
-            stereoMeterRMS.displayTick();
+        stereoMeterPk.displayTick();
+        stereoMeterRMS.displayTick();
             
-            if(!meterControlColumnR.holdButtonOn)
-            {
-                meterControlColumnR.holdControl.setVisible(true);
-                meterControlColumnR.enableHoldButton.setColour (TextButton::buttonColourId, Colours::orange);
-                meterControlColumnR.holdButtonOn = true;
+        if(!meterControlColumnR.holdButtonOn)
+        {
+            processor.valueTree.setProperty(processor.enableHold, 1, nullptr);
+
+            meterControlColumnR.holdControl.setVisible(true);
+            
+            takeHoldVal();
                 
-                takeHoldVal();
-            }
-            else
-            {
-                meterControlColumnR.holdControl.setVisible(false);
-                meterControlColumnR.enableHoldButton.removeColour(TextButton::buttonColourId);
-                meterControlColumnR.resetHoldButton.setVisible(false);
-                meterControlColumnR.holdButtonOn = false;
-                
-                //set hold time to zero
-                stereoMeterRMS.setHoldTime(0);
-                stereoMeterPk.setHoldTime(0);
-                
-                stereoMeterRMS.setHoldTimeINF(false);
-                stereoMeterPk.setHoldTimeINF(false);
-            }
+            meterControlColumnR.holdButtonOn = true;
+        }
+        else
+        {
+            processor.valueTree.setProperty(processor.enableHold, 0, nullptr);
+            meterControlColumnR.holdControl.setVisible(false);
+
+            meterControlColumnR.resetHoldButton.setVisible(false);
+
+            meterControlColumnR.holdButtonOn = false;
+            
+            //set hold time to zero
+            stereoMeterRMS.setHoldTime(0);
+            stereoMeterPk.setHoldTime(0);
+
+            stereoMeterRMS.setHoldTimeINF(false);
+            stereoMeterPk.setHoldTimeINF(false);
         }
     };
+    
+    if((processor.valueTree.getPropertyAsValue(processor.enableHold, nullptr).getValue().toString()) == "1")
+    {
+        meterControlColumnR.enableHoldButton.setTriggeredOnMouseDown(true);
+        meterControlColumnR.holdControl.setVisible(true);
+    }
+    else if((processor.valueTree.getPropertyAsValue(processor.enableHold, nullptr).getValue().toString()) == "0")
+    {
+        meterControlColumnR.holdControl.setVisible(false);
+    }
     
     meterControlColumnR.resetHoldButton.onStateChange = [this]()
     {
@@ -193,6 +236,52 @@ Pfmcpp_project10AudioProcessorEditor::~Pfmcpp_project10AudioProcessorEditor()
 {
     setLookAndFeel(nullptr);
     stopTimer();
+}
+
+void Pfmcpp_project10AudioProcessorEditor::holdButtonValueGet()
+{
+//    if(meterControlColumnR.enableHoldButton.getState() == Button::ButtonState::buttonDown)
+//    {
+    
+    
+//        stereoMeterPk.displayTick();
+//        stereoMeterRMS.displayTick();
+        
+//    if(processor.valueTree.getProperty("enableHold").toString() == "1")
+//    {
+//            meterControlColumnR.enableHoldButton.setState(Button::ButtonState::buttonDown);
+//    }
+//            processor.valueTree.setProperty("enableHold", 1, nullptr);
+//            meterControlColumnR.holdControl.setVisible(true);
+//            meterControlColumnR.enableHoldButton.setColour (TextButton::buttonColourId, Colours::orange);
+//            meterControlColumnR.holdButtonOn = true;
+//
+//            takeHoldVal();
+//        }
+//        else
+//        {
+//            meterControlColumnR.holdControl.setVisible(false);
+//            meterControlColumnR.enableHoldButton.removeColour(TextButton::buttonColourId);
+//            meterControlColumnR.resetHoldButton.setVisible(false);
+//            processor.valueTree.setProperty("enableHold", 0, nullptr);
+//            meterControlColumnR.holdButtonOn = false;
+//
+//            //set hold time to zero
+//            stereoMeterRMS.setHoldTime(0);
+//            stereoMeterPk.setHoldTime(0);
+//
+//            stereoMeterRMS.setHoldTimeINF(false);
+//            stereoMeterPk.setHoldTimeINF(false);
+//        }
+//    }
+//
+//    int v = 0;
+//
+//    if(meterControlColumnR.holdButtonOn)
+//        v = 1;
+//
+//    processor.valueTree.setProperty("enableHold", v, nullptr);
+//    DBG(processor.valueTree.getProperty("enableHold").toString());
 }
 
 //==============================================================================

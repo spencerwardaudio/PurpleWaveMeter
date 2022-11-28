@@ -31,6 +31,8 @@ class Pfmcpp_project10AudioProcessorEditor  : public AudioProcessorEditor, publi
 public:
     Pfmcpp_project10AudioProcessorEditor (Pfmcpp_project10AudioProcessor&);
     ~Pfmcpp_project10AudioProcessorEditor();
+    
+    void holdButtonValueGet();
 
     //==============================================================================
     void paint (Graphics&) override;

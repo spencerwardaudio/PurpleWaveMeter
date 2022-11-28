@@ -24,6 +24,7 @@ MeterControlColumnR::MeterControlColumnR() :
     addAndMakeVisible(scaleControl);
     
     enableHoldButton.setColour(ComboBox::outlineColourId, TEXT_COLOUR);
+    enableHoldButton.setColour(TextButton::buttonOnColourId, Colours::orange);
     addAndMakeVisible(enableHoldButton);
     
     holdControl.addItemList( {"0s", "0.5s", "2s", "4s", "6s", "inf" }, 1);

@@ -55,7 +55,19 @@ public:
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
     
+    juce::Identifier parameter {"Params"};
     ValueTree valueTree {"parameter"};
+    
+    juce::Identifier decayRate {"decayRate"};
+    juce::Identifier averageTime {"averageTime"};
+    juce::Identifier meterView {"meterView"};
+    juce::Identifier goniometerScale {"goniometerScale"};
+    juce::Identifier holdTime {"holdTime"};
+    juce::Identifier enableHold {"enableHold"};
+    juce::Identifier histogramView {"histogramView"};
+    
+    juce::Identifier peakThreshold {"peakThreshold"};
+    juce::Identifier rmsThreshold {"rmsThreshold"};
 
     Fifo<AudioBuffer<float>> fifo;
     int maxBufferSize {};
