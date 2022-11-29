@@ -211,7 +211,7 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
        const auto newThreshold = stereoMeterRMS.thresholdSlider.getValue();
 
         //update the histogramRMS
-        histogramContainer.setThreshold(newThreshold);
+        histogramContainer.setRMSThreshold(newThreshold);
         
         //update the macrometersRMS
         stereoMeterRMS.setThreshold(newThreshold);
@@ -222,7 +222,7 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
         const auto newThreshold = stereoMeterPk.thresholdSlider.getValue();
 
         //update the histogramPk
-        histogramContainer.setThreshold(newThreshold);
+        histogramContainer.setPKThreshold(newThreshold);
         
         //update the macrometersPk
         stereoMeterPk.setThreshold(newThreshold);
@@ -236,52 +236,6 @@ Pfmcpp_project10AudioProcessorEditor::~Pfmcpp_project10AudioProcessorEditor()
 {
     setLookAndFeel(nullptr);
     stopTimer();
-}
-
-void Pfmcpp_project10AudioProcessorEditor::holdButtonValueGet()
-{
-//    if(meterControlColumnR.enableHoldButton.getState() == Button::ButtonState::buttonDown)
-//    {
-    
-    
-//        stereoMeterPk.displayTick();
-//        stereoMeterRMS.displayTick();
-        
-//    if(processor.valueTree.getProperty("enableHold").toString() == "1")
-//    {
-//            meterControlColumnR.enableHoldButton.setState(Button::ButtonState::buttonDown);
-//    }
-//            processor.valueTree.setProperty("enableHold", 1, nullptr);
-//            meterControlColumnR.holdControl.setVisible(true);
-//            meterControlColumnR.enableHoldButton.setColour (TextButton::buttonColourId, Colours::orange);
-//            meterControlColumnR.holdButtonOn = true;
-//
-//            takeHoldVal();
-//        }
-//        else
-//        {
-//            meterControlColumnR.holdControl.setVisible(false);
-//            meterControlColumnR.enableHoldButton.removeColour(TextButton::buttonColourId);
-//            meterControlColumnR.resetHoldButton.setVisible(false);
-//            processor.valueTree.setProperty("enableHold", 0, nullptr);
-//            meterControlColumnR.holdButtonOn = false;
-//
-//            //set hold time to zero
-//            stereoMeterRMS.setHoldTime(0);
-//            stereoMeterPk.setHoldTime(0);
-//
-//            stereoMeterRMS.setHoldTimeINF(false);
-//            stereoMeterPk.setHoldTimeINF(false);
-//        }
-//    }
-//
-//    int v = 0;
-//
-//    if(meterControlColumnR.holdButtonOn)
-//        v = 1;
-//
-//    processor.valueTree.setProperty("enableHold", v, nullptr);
-//    DBG(processor.valueTree.getProperty("enableHold").toString());
 }
 
 //==============================================================================

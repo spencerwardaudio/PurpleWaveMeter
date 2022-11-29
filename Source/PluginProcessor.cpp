@@ -34,9 +34,7 @@ Pfmcpp_project10AudioProcessor::Pfmcpp_project10AudioProcessor()
     
     valueTree.setProperty (enableHold, 0, nullptr);
     
-    
     valueTree.setProperty (holdTime, 0, nullptr);
-    
     
     valueTree.setProperty (histogramView, 1, nullptr);
     

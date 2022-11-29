@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="xLbyvx" name="PFMCPP_Project10" projectType="audioplug" cppLanguageStandard="17"
-              companyName="Spencer Ward" jucerFormatVersion="1" useAppConfig="0">
-  <MAINGROUP id="ORymcZ" name="PFMCPP_Project10">
+<JUCERPROJECT id="xLbyvx" name="Purple Wave Meter" projectType="audioplug"
+              cppLanguageStandard="17" companyName="Spencer Ward" jucerFormatVersion="1"
+              useAppConfig="0">
+  <MAINGROUP id="ORymcZ" name="Purple Wave Meter">
     <GROUP id="{23EF9225-D7C3-8021-20C8-2FF2033B6179}" name="Components">
       <FILE id="MuANe7" name="Meter.cpp" compile="1" resource="0" file="Source/Meter.cpp"/>
       <FILE id="KDb5RM" name="Meter.h" compile="0" resource="0" file="Source/Meter.h"/>

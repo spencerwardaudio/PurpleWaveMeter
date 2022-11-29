@@ -26,9 +26,13 @@ struct HistogramContainer : Component
         addAndMakeVisible(histogramPeak);
     }
     
-    void setThreshold(float threshAsDecibels)
+    void setRMSThreshold(float threshAsDecibels)
     {
         histogramRMS.setThreshold(threshAsDecibels);
+    }
+    
+    void setPKThreshold(float threshAsDecibels)
+    {
         histogramPeak.setThreshold(threshAsDecibels);
     }
     
