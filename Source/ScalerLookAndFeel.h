@@ -20,7 +20,6 @@ public:
     void drawRotarySlider (Graphics& g, int x, int y, int width, int height, float sliderPos,
                                             const float rotaryStartAngle, const float rotaryEndAngle, Slider& slider) override
     {
-        auto outline = UI_COLOUR1;
         auto fill    = UI_COLOUR1;
 
         auto bounds = Rectangle<int> (x, y, width, height).toFloat().reduced (10);
@@ -59,7 +58,6 @@ public:
             g.strokePath (valueArc, PathStrokeType (lineW/2, PathStrokeType::curved, PathStrokeType::rounded));
         }
 
-        auto thumbWidth = lineW * 2.0f;
         Point<float> thumbPoint (bounds.getCentreX() + arcRadius * std::cos (toAngle - MathConstants<float>::halfPi),
                                  bounds.getCentreY() + arcRadius * std::sin (toAngle - MathConstants<float>::halfPi));
 
@@ -108,7 +106,7 @@ public:
                             const bool isHighlighted, const bool isTicked,
                             const bool hasSubMenu, const String& text,
                             const String& shortcutKeyText,
-                            const Drawable* icon, const Colour* const textColourToUse)
+                            const Drawable* icon, const Colour* const textColourToUse) override
     {
         {
             if (isSeparator)

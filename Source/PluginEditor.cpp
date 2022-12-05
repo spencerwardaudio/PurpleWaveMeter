@@ -15,7 +15,7 @@
 
 
 //==============================================================================
-Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmcpp_project10AudioProcessor& p)
+PurpleWaveMeterAudioProcessorEditor::PurpleWaveMeterAudioProcessorEditor (PurpleWaveMeterAudioProcessor& p)
 : AudioProcessorEditor (&p), stereoImageMeter(editorBuffer, p.getSampleRate()), processor(p)
 {
     editorBuffer.setSize(2, processor.maxBufferSize);
@@ -31,6 +31,71 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
     addAndMakeVisible(meterControlColumnL);
     addAndMakeVisible(meterControlColumnR);
     
+    meterControlColumnL.decayRateControl.getSelectedIdAsValue().referTo(processor.valueTree.getPropertyAsValue("decayRate", nullptr));
+
+    int i = processor.valueTree.getPropertyAsValue("decayRate", nullptr).getValue();
+
+    if(i == 0)
+        i = 1;
+
+    meterControlColumnL.decayRateControl.setSelectedId(i);
+    
+    meterControlColumnL.avgControl.getSelectedIdAsValue().referTo(processor.valueTree.getPropertyAsValue("averageTime", nullptr, true));
+    
+    i = processor.valueTree.getPropertyAsValue("averageTime", nullptr).getValue();
+
+    if(i == 0)
+        i = 1;
+
+    meterControlColumnL.avgControl.setSelectedId(i);
+    
+     meterControlColumnL.meterControl.getSelectedIdAsValue().referTo(processor.valueTree.getPropertyAsValue("meterView", nullptr, true));
+
+    i = processor.valueTree.getPropertyAsValue("meterView", nullptr).getValue();
+
+    if(i == 0)
+        i = 1;
+
+    meterControlColumnL.meterControl.setSelectedId(i);
+    
+    meterControlColumnR.scaleControl.getValueObject().referTo(processor.valueTree.getPropertyAsValue("goniometerScale", nullptr, true));
+
+    i = processor.valueTree.getPropertyAsValue("goniometerScale", nullptr).getValue();
+
+    meterControlColumnR.scaleControl.setValue(i);
+    
+    meterControlColumnR.enableHoldButton.getToggleStateValue().referTo(processor.valueTree.getPropertyAsValue("enableHold", nullptr));
+    
+    meterControlColumnR.holdControl.getSelectedIdAsValue().referTo(processor.valueTree.getPropertyAsValue("holdTime", nullptr, true));
+
+   i = processor.valueTree.getPropertyAsValue("holdTime", nullptr).getValue();
+
+   if(i == 0)
+       i = 1;
+
+    meterControlColumnR.holdControl.setSelectedId(i);
+    
+    meterControlColumnR.histControl.getSelectedIdAsValue().referTo(processor.valueTree.getPropertyAsValue("histogramView", nullptr, true));
+    
+    i = processor.valueTree.getPropertyAsValue("histogramView", nullptr).getValue();
+
+    if(i == 0)
+        i = 1;
+
+     meterControlColumnR.histControl.setSelectedId(i);
+    
+    stereoMeterPk.thresholdSlider.getValueObject().referTo(processor.valueTree.getPropertyAsValue("peakThreshold", nullptr, true));
+
+    double z = processor.valueTree.getPropertyAsValue("peakThreshold", nullptr).getValue();
+
+    stereoMeterPk.thresholdSlider.setValue(z);
+    
+    stereoMeterRMS.thresholdSlider.getValueObject().referTo(processor.valueTree.getPropertyAsValue("rmsThreshold", nullptr, true));
+
+    z = processor.valueTree.getPropertyAsValue("rmsThreshold", nullptr).getValue();
+
+    stereoMeterRMS.thresholdSlider.setValue(z);
+    
     meterControlColumnL.decayRateControl.onChange = [this]()
     {
 //        StereoMeter RMS & Peak Decay
@@ -44,6 +109,8 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
         
         stereoMeterRMS.setAverageDuration(avgVal, TimerMS);
         stereoMeterPk.setAverageDuration(avgVal, TimerMS);
+        
+//        DBG(processor.valueTree.toXmlString());
     };
     
     meterControlColumnL.meterControl.onChange = [this]()
@@ -52,6 +119,8 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
     
         stereoMeterRMS.setMeterVisibility(ID);
         stereoMeterPk.setMeterVisibility(ID);
+        
+//        DBG(processor.valueTree.toXmlString());
     };
     
     meterControlColumnR.scaleControl.onValueChange = [this]()
@@ -68,45 +137,56 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
         
         if(ID == 1)
         {
-            histogramContainer.align(0);
+            histogramContainer.align(Formation::column);
         }
         else if (ID == 2)
         {
-            histogramContainer.align(1);
+            histogramContainer.align(Formation::row);
         }
     };
     
-    meterControlColumnR.enableHoldButton.onStateChange = [this]()
+    meterControlColumnR.enableHoldButton.onClick = [this]()
     {
-        if(meterControlColumnR.enableHoldButton.getState() == Button::ButtonState::buttonDown)
-        {
-            stereoMeterPk.displayTick();
-            stereoMeterRMS.displayTick();
+        stereoMeterPk.displayTick();
+        stereoMeterRMS.displayTick();
             
-            if(!meterControlColumnR.holdButtonOn)
-            {
-                meterControlColumnR.holdControl.setVisible(true);
-                meterControlColumnR.enableHoldButton.setColour (TextButton::buttonColourId, Colours::orange);
-                meterControlColumnR.holdButtonOn = true;
+        if(!meterControlColumnR.holdButtonOn)
+        {
+            processor.valueTree.setProperty(processor.enableHold, 1, nullptr);
+
+            meterControlColumnR.holdControl.setVisible(true);
+            
+            takeHoldVal();
                 
-                takeHoldVal();
-            }
-            else
-            {
-                meterControlColumnR.holdControl.setVisible(false);
-                meterControlColumnR.enableHoldButton.removeColour(TextButton::buttonColourId);
-                meterControlColumnR.resetHoldButton.setVisible(false);
-                meterControlColumnR.holdButtonOn = false;
-                
-                //set hold time to zero
-                stereoMeterRMS.setHoldTime(0);
-                stereoMeterPk.setHoldTime(0);
-                
-                stereoMeterRMS.setHoldTimeINF(false);
-                stereoMeterPk.setHoldTimeINF(false);
-            }
+            meterControlColumnR.holdButtonOn = true;
+        }
+        else
+        {
+            processor.valueTree.setProperty(processor.enableHold, 0, nullptr);
+            meterControlColumnR.holdControl.setVisible(false);
+
+            meterControlColumnR.resetHoldButton.setVisible(false);
+
+            meterControlColumnR.holdButtonOn = false;
+            
+            //set hold time to zero
+            stereoMeterRMS.setHoldTime(0);
+            stereoMeterPk.setHoldTime(0);
+
+            stereoMeterRMS.setHoldTimeINF(false);
+            stereoMeterPk.setHoldTimeINF(false);
         }
     };
+    
+    if((processor.valueTree.getPropertyAsValue(processor.enableHold, nullptr).getValue().toString()) == "1")
+    {
+        meterControlColumnR.enableHoldButton.setTriggeredOnMouseDown(true);
+        meterControlColumnR.holdControl.setVisible(true);
+    }
+    else if((processor.valueTree.getPropertyAsValue(processor.enableHold, nullptr).getValue().toString()) == "0")
+    {
+        meterControlColumnR.holdControl.setVisible(false);
+    }
     
     meterControlColumnR.resetHoldButton.onStateChange = [this]()
     {
@@ -131,7 +211,7 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
        const auto newThreshold = stereoMeterRMS.thresholdSlider.getValue();
 
         //update the histogramRMS
-        histogramContainer.setThreshold(newThreshold);
+        histogramContainer.setRMSThreshold(newThreshold);
         
         //update the macrometersRMS
         stereoMeterRMS.setThreshold(newThreshold);
@@ -142,7 +222,7 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
         const auto newThreshold = stereoMeterPk.thresholdSlider.getValue();
 
         //update the histogramPk
-        histogramContainer.setThreshold(newThreshold);
+        histogramContainer.setPKThreshold(newThreshold);
         
         //update the macrometersPk
         stereoMeterPk.setThreshold(newThreshold);
@@ -152,13 +232,14 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
     startTimerHz(TimerHz);
 }
 
-Pfmcpp_project10AudioProcessorEditor::~Pfmcpp_project10AudioProcessorEditor()
+PurpleWaveMeterAudioProcessorEditor::~PurpleWaveMeterAudioProcessorEditor()
 {
+    setLookAndFeel(nullptr);
     stopTimer();
 }
 
 //==============================================================================
-void Pfmcpp_project10AudioProcessorEditor::paint (Graphics& g)
+void PurpleWaveMeterAudioProcessorEditor::paint (Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
     g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
@@ -168,7 +249,7 @@ void Pfmcpp_project10AudioProcessorEditor::paint (Graphics& g)
     g.fillRect(bounds);
 }
 
-void Pfmcpp_project10AudioProcessorEditor::resized()
+void PurpleWaveMeterAudioProcessorEditor::resized()
 {
     auto bounds = getLocalBounds();
     
@@ -186,7 +267,7 @@ void Pfmcpp_project10AudioProcessorEditor::resized()
     
 }
 
-void Pfmcpp_project10AudioProcessorEditor::timerCallback()
+void PurpleWaveMeterAudioProcessorEditor::timerCallback()
 {
     if( processor.fifo.pull(editorBuffer) )
     {
@@ -225,7 +306,7 @@ void Pfmcpp_project10AudioProcessorEditor::timerCallback()
     stereoImageMeter.repaint();
 }
 
-void Pfmcpp_project10AudioProcessorEditor::takeHoldVal()
+void PurpleWaveMeterAudioProcessorEditor::takeHoldVal()
 {
     juce::String value = meterControlColumnR.holdControl.getText();
     
@@ -252,7 +333,7 @@ void Pfmcpp_project10AudioProcessorEditor::takeHoldVal()
 }
 
 
-void Pfmcpp_project10AudioProcessorEditor::setDecayValue()
+void PurpleWaveMeterAudioProcessorEditor::setDecayValue()
 {
     //        StereoMeter RMS & Peak Decay
     juce::String value = meterControlColumnL.decayRateControl.getText();

@@ -12,6 +12,12 @@
 
 #include "Histogram.h"
 
+enum class Formation
+{
+    row,
+    column
+};
+
 struct HistogramContainer : Component
 {
     HistogramContainer()
@@ -20,9 +26,13 @@ struct HistogramContainer : Component
         addAndMakeVisible(histogramPeak);
     }
     
-    void setThreshold(float threshAsDecibels)
+    void setRMSThreshold(float threshAsDecibels)
     {
         histogramRMS.setThreshold(threshAsDecibels);
+    }
+    
+    void setPKThreshold(float threshAsDecibels)
+    {
         histogramPeak.setThreshold(threshAsDecibels);
     }
     
@@ -36,10 +46,10 @@ struct HistogramContainer : Component
     
     void resized()
     {
-        align(0);
+        
     }
     
-    void align(int formation)
+    void align(Formation orientation)
     {
         const auto makeItem = [] (Component& comp)
         {
@@ -48,11 +58,11 @@ struct HistogramContainer : Component
         
         FlexBox box;
         
-        if(formation == 0)
+        if(orientation == Formation::row)
         {
             box.flexDirection = FlexBox::Direction::row;
         }
-        else if (formation == 1)
+        else if (orientation == Formation::column)
         {
             box.flexDirection = FlexBox::Direction::column;
         }

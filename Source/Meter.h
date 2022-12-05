@@ -268,10 +268,7 @@ struct Meter : Component
     
     void displayTick()
     {
-        if(ticksVisible)
-            ticksVisible = false;
-        else
-            ticksVisible = true;
+        ticksVisible = !ticksVisible;
     }
     
     std::vector<Tick> ticks;

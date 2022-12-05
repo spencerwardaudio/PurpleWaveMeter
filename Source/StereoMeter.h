@@ -41,6 +41,7 @@ public:
 struct StereoMeter : Component
 {
     StereoMeter(const String MeterName);
+    ~StereoMeter();
     
     //provide setters for updating
     void update(int channel, float levelInDB);
@@ -94,6 +95,9 @@ struct StereoMeter : Component
     juce::Slider thresholdSlider;
     
 private:
+    
+    SliderLookAndFeel sliderLookAndFeel;
+    
     Rectangle<float> r;
     Path p;
     
@@ -101,8 +105,6 @@ private:
     MacroMeter macroMeterRight = MacroMeter(10, 0);
     DBScale dBScale;
     Label labelLR;
-    
-    SliderLookAndFeel sliderLookAndFeel;
 };
 
 
