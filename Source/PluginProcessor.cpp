@@ -11,7 +11,7 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-Pfmcpp_project10AudioProcessor::Pfmcpp_project10AudioProcessor()
+PurpleWaveMeterAudioProcessor::PurpleWaveMeterAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
      : AudioProcessor (BusesProperties()
                      #if ! JucePlugin_IsMidiEffect
@@ -45,18 +45,18 @@ Pfmcpp_project10AudioProcessor::Pfmcpp_project10AudioProcessor()
     DBG(valueTree.toXmlString());
 }
 
-Pfmcpp_project10AudioProcessor::~Pfmcpp_project10AudioProcessor()
+PurpleWaveMeterAudioProcessor::~PurpleWaveMeterAudioProcessor()
 {
 //    valueTree.setRootItem (nullptr);
 }
 
 //==============================================================================
-const String Pfmcpp_project10AudioProcessor::getName() const
+const String PurpleWaveMeterAudioProcessor::getName() const
 {
     return JucePlugin_Name;
 }
 
-bool Pfmcpp_project10AudioProcessor::acceptsMidi() const
+bool PurpleWaveMeterAudioProcessor::acceptsMidi() const
 {
    #if JucePlugin_WantsMidiInput
     return true;
@@ -65,7 +65,7 @@ bool Pfmcpp_project10AudioProcessor::acceptsMidi() const
    #endif
 }
 
-bool Pfmcpp_project10AudioProcessor::producesMidi() const
+bool PurpleWaveMeterAudioProcessor::producesMidi() const
 {
    #if JucePlugin_ProducesMidiOutput
     return true;
@@ -74,7 +74,7 @@ bool Pfmcpp_project10AudioProcessor::producesMidi() const
    #endif
 }
 
-bool Pfmcpp_project10AudioProcessor::isMidiEffect() const
+bool PurpleWaveMeterAudioProcessor::isMidiEffect() const
 {
    #if JucePlugin_IsMidiEffect
     return true;
@@ -83,37 +83,37 @@ bool Pfmcpp_project10AudioProcessor::isMidiEffect() const
    #endif
 }
 
-double Pfmcpp_project10AudioProcessor::getTailLengthSeconds() const
+double PurpleWaveMeterAudioProcessor::getTailLengthSeconds() const
 {
     return 0.0;
 }
 
-int Pfmcpp_project10AudioProcessor::getNumPrograms()
+int PurpleWaveMeterAudioProcessor::getNumPrograms()
 {
     return 1;   // NB: some hosts don't cope very well if you tell them there are 0 programs,
                 // so this should be at least 1, even if you're not really implementing programs.
 }
 
-int Pfmcpp_project10AudioProcessor::getCurrentProgram()
+int PurpleWaveMeterAudioProcessor::getCurrentProgram()
 {
     return 0;
 }
 
-void Pfmcpp_project10AudioProcessor::setCurrentProgram (int index)
+void PurpleWaveMeterAudioProcessor::setCurrentProgram (int index)
 {
 }
 
-const String Pfmcpp_project10AudioProcessor::getProgramName (int index)
+const String PurpleWaveMeterAudioProcessor::getProgramName (int index)
 {
     return {};
 }
 
-void Pfmcpp_project10AudioProcessor::changeProgramName (int index, const String& newName)
+void PurpleWaveMeterAudioProcessor::changeProgramName (int index, const String& newName)
 {
 }
 
 //==============================================================================
-void Pfmcpp_project10AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
+void PurpleWaveMeterAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     fifo.prepare(getNumOutputChannels(), samplesPerBlock);
     
@@ -134,14 +134,14 @@ void Pfmcpp_project10AudioProcessor::prepareToPlay (double sampleRate, int sampl
     
 }
 
-void Pfmcpp_project10AudioProcessor::releaseResources()
+void PurpleWaveMeterAudioProcessor::releaseResources()
 {
     // When playback stops, you can use this as an opportunity to free up any
     // spare memory, etc.
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
-bool Pfmcpp_project10AudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
+bool PurpleWaveMeterAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
   #if JucePlugin_IsMidiEffect
     ignoreUnused (layouts);
@@ -164,7 +164,7 @@ bool Pfmcpp_project10AudioProcessor::isBusesLayoutSupported (const BusesLayout& 
 }
 #endif
 
-void Pfmcpp_project10AudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
+void PurpleWaveMeterAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
 {
     ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = getTotalNumInputChannels();
@@ -194,18 +194,18 @@ void Pfmcpp_project10AudioProcessor::processBlock (AudioBuffer<float>& buffer, M
 }
 
 //==============================================================================
-bool Pfmcpp_project10AudioProcessor::hasEditor() const
+bool PurpleWaveMeterAudioProcessor::hasEditor() const
 {
     return true; // (change this to false if you choose to not supply an editor)
 }
 
-AudioProcessorEditor* Pfmcpp_project10AudioProcessor::createEditor()
+AudioProcessorEditor* PurpleWaveMeterAudioProcessor::createEditor()
 {
-    return new Pfmcpp_project10AudioProcessorEditor (*this);
+    return new PurpleWaveMeterAudioProcessorEditor (*this);
 }
 
 //==============================================================================
-void Pfmcpp_project10AudioProcessor::getStateInformation (MemoryBlock& destData)
+void PurpleWaveMeterAudioProcessor::getStateInformation (MemoryBlock& destData)
 {
     juce::MemoryOutputStream mos(destData, true);
     
@@ -216,7 +216,7 @@ void Pfmcpp_project10AudioProcessor::getStateInformation (MemoryBlock& destData)
     DBG(valueTree.toXmlString());
 }
 
-void Pfmcpp_project10AudioProcessor::setStateInformation (const void* data, int sizeInBytes)
+void PurpleWaveMeterAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     auto tree = ValueTree::readFromData(data, static_cast<size_t>(sizeInBytes));
 
@@ -233,5 +233,5 @@ void Pfmcpp_project10AudioProcessor::setStateInformation (const void* data, int 
 // This creates new instances of the plugin..
 AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
-    return new Pfmcpp_project10AudioProcessor();
+    return new PurpleWaveMeterAudioProcessor();
 }

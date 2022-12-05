@@ -13,14 +13,14 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "Fifo.h"
 
-#define VerifyDbScale  true
+#define VerifyDbScale  false
 
-class Pfmcpp_project10AudioProcessor  : public AudioProcessor
+class PurpleWaveMeterAudioProcessor  : public AudioProcessor
 {
 public:
     //==============================================================================
-    Pfmcpp_project10AudioProcessor();
-    ~Pfmcpp_project10AudioProcessor();
+    PurpleWaveMeterAudioProcessor();
+    ~PurpleWaveMeterAudioProcessor();
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -79,5 +79,5 @@ private:
 #endif
     
     //==============================================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Pfmcpp_project10AudioProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PurpleWaveMeterAudioProcessor)
 };

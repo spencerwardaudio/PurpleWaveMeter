@@ -48,9 +48,11 @@
             file="Source/PluginEditor.cpp"/>
       <FILE id="t40WPD" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
     </GROUP>
+    <FILE id="PMdbQ5" name="PurpleWaveIcon.png" compile="0" resource="1"
+          file="ImageAssets/PurpleWaveIcon.png"/>
   </MAINGROUP>
   <EXPORTFORMATS>
-    <XCODE_MAC targetFolder="Builds/MacOSX">
+    <XCODE_MAC targetFolder="Builds/MacOSX" smallIcon="PMdbQ5" bigIcon="PMdbQ5">
       <CONFIGURATIONS>
         <CONFIGURATION isDebug="1" name="Debug" recommendedWarnings=""/>
         <CONFIGURATION isDebug="0" name="Release"/>

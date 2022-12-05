@@ -15,7 +15,7 @@
 
 
 //==============================================================================
-Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmcpp_project10AudioProcessor& p)
+PurpleWaveMeterAudioProcessorEditor::PurpleWaveMeterAudioProcessorEditor (PurpleWaveMeterAudioProcessor& p)
 : AudioProcessorEditor (&p), stereoImageMeter(editorBuffer, p.getSampleRate()), processor(p)
 {
     editorBuffer.setSize(2, processor.maxBufferSize);
@@ -232,14 +232,14 @@ Pfmcpp_project10AudioProcessorEditor::Pfmcpp_project10AudioProcessorEditor (Pfmc
     startTimerHz(TimerHz);
 }
 
-Pfmcpp_project10AudioProcessorEditor::~Pfmcpp_project10AudioProcessorEditor()
+PurpleWaveMeterAudioProcessorEditor::~PurpleWaveMeterAudioProcessorEditor()
 {
     setLookAndFeel(nullptr);
     stopTimer();
 }
 
 //==============================================================================
-void Pfmcpp_project10AudioProcessorEditor::paint (Graphics& g)
+void PurpleWaveMeterAudioProcessorEditor::paint (Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
     g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
@@ -249,7 +249,7 @@ void Pfmcpp_project10AudioProcessorEditor::paint (Graphics& g)
     g.fillRect(bounds);
 }
 
-void Pfmcpp_project10AudioProcessorEditor::resized()
+void PurpleWaveMeterAudioProcessorEditor::resized()
 {
     auto bounds = getLocalBounds();
     
@@ -267,7 +267,7 @@ void Pfmcpp_project10AudioProcessorEditor::resized()
     
 }
 
-void Pfmcpp_project10AudioProcessorEditor::timerCallback()
+void PurpleWaveMeterAudioProcessorEditor::timerCallback()
 {
     if( processor.fifo.pull(editorBuffer) )
     {
@@ -306,7 +306,7 @@ void Pfmcpp_project10AudioProcessorEditor::timerCallback()
     stereoImageMeter.repaint();
 }
 
-void Pfmcpp_project10AudioProcessorEditor::takeHoldVal()
+void PurpleWaveMeterAudioProcessorEditor::takeHoldVal()
 {
     juce::String value = meterControlColumnR.holdControl.getText();
     
@@ -333,7 +333,7 @@ void Pfmcpp_project10AudioProcessorEditor::takeHoldVal()
 }
 
 
-void Pfmcpp_project10AudioProcessorEditor::setDecayValue()
+void PurpleWaveMeterAudioProcessorEditor::setDecayValue()
 {
     //        StereoMeter RMS & Peak Decay
     juce::String value = meterControlColumnL.decayRateControl.getText();

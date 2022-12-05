@@ -26,11 +26,11 @@
 #define TimerHz 60
 #define TimerMS 16.6
 
-class Pfmcpp_project10AudioProcessorEditor  : public AudioProcessorEditor, public Timer
+class PurpleWaveMeterAudioProcessorEditor  : public AudioProcessorEditor, public Timer
 {
 public:
-    Pfmcpp_project10AudioProcessorEditor (Pfmcpp_project10AudioProcessor&);
-    ~Pfmcpp_project10AudioProcessorEditor();
+    PurpleWaveMeterAudioProcessorEditor (PurpleWaveMeterAudioProcessor&);
+    ~PurpleWaveMeterAudioProcessorEditor();
 
     //==============================================================================
     void paint (Graphics&) override;
@@ -48,11 +48,11 @@ private:
     
     HistogramContainer histogramContainer;
 
-    Pfmcpp_project10AudioProcessor& processor;
+    PurpleWaveMeterAudioProcessor& processor;
     AudioBuffer<float> editorBuffer;
     
     MeterControlColumnL meterControlColumnL;
     MeterControlColumnR meterControlColumnR;
     
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Pfmcpp_project10AudioProcessorEditor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PurpleWaveMeterAudioProcessorEditor)
 };
